@@ -217,7 +217,12 @@ p { margin: 0 0 1em; }
 .hero__media img, .hero__media video { width: 100%; height: 100%; object-fit: cover; }
 .hero__slide img { object-position: 30% 50%; }
 /* No celular, o case pode definir o enquadramento da foto de abertura (posHeroCel no data.js) */
-@media (max-width: 760px) { .hero__slide img { object-position: var(--pos-cel, 30% 50%); } }
+@media (max-width: 760px) {
+  .hero__slide img { object-position: var(--pos-cel, 30% 50%); }
+  /* No celular o título já ocupa a cena: a descrição do case e a régua larga
+     de slides tomavam o meio da tela sem precisar. Fica só a régua, curta. */
+  .hero__caption { display: none; }
+}
 .hero__slide { opacity: 0; transition: opacity var(--t-cena) var(--ease); }
 .hero__slide.is-active { opacity: 1; }
 .hero__slide img { transform: scale(1.05); transition: transform var(--t-ambiente) linear; }
@@ -235,6 +240,10 @@ p { margin: 0 0 1em; }
 .hero__dots { display: flex; gap: .5rem; margin-top: 1rem; }
 .hero__dots button { width: 28px; height: 2px; background: rgba(255,255,255,.35); padding: 0; position: relative; overflow: hidden; }
 .hero__dots button.is-active::after { content: ""; position: absolute; inset: 0; background: var(--roxo-luz); animation: dot var(--t-slide) linear forwards; transform-origin: left; }
+@media (max-width: 760px) {
+  .hero__dots { gap: .35rem; margin-top: 0; }
+  .hero__dots button { width: 16px; }
+}
 @keyframes dot { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 .scroll-cue { position: absolute; left: 50%; bottom: 1.25rem; z-index: 2; width: 1px; height: 48px; background: rgba(255,255,255,.25); overflow: hidden; }
 .scroll-cue::after { content: ""; position: absolute; left: 0; top: -50%; width: 100%; height: 50%; background: var(--branco); animation: cue var(--t-pulso) var(--ease) infinite; }
@@ -787,14 +796,16 @@ p { margin: 0 0 1em; }
   font-size: .82rem; text-transform: uppercase; color: rgba(255, 255, 255, .5);
 }
 
-.manifesto__grade { display: grid; grid-template-columns: 1fr minmax(0, 1.08fr); gap: var(--e-4); align-items: center; }
+.manifesto__grade { display: grid; grid-template-columns: 1fr minmax(0, .88fr); gap: var(--e-4); align-items: center; }
 .manifesto__col { min-width: 0; }
 
 /* --- Órbita das marcas --------------------------------------------------
    Loop infinito gerado a partir dos logos dos cases: eles abrem a partir do
    logotipo, giram e voltam a se fundir nele. Sem áudio, sem controles.
    ----------------------------------------------------------------------- */
-.orbita { position: relative; width: 100%; aspect-ratio: 1; }
+/* A caixa tem a proporção do arquivo (1204x1120), cortado no conteúdo: sem
+   sobra em volta, a cena ocupa tudo o que a coluna dá. */
+.orbita { position: relative; width: 100%; aspect-ratio: 1204 / 1120; }
 /* O vídeo passa um pouco da coluna: dentro dela ele ficava pequeno demais e
    a cena virava um selo girando no canto. */
 .orbita__video { transform: scale(1.12); }
@@ -813,8 +824,8 @@ p { margin: 0 0 1em; }
      sobrar altura para o vídeo. */
   .manifesto__stage { padding-block: var(--ev-2); }
   .orbita {
-    width: auto; max-width: none; max-height: 54svh;
-    margin-inline: calc(var(--gutter) * -1);
+    width: auto; max-width: none; max-height: 58svh;
+    margin-inline: calc(var(--gutter) * -.45);
   }
   .orbita__video { transform: none; }
 }

@@ -74,6 +74,11 @@ sem recarregar, porque recarregar voltaria o filme para o começo. Com
 sim com controle e tela cheia, deixou de tocar sozinho para os dois não
 rodarem juntos.
 
+**Hero no celular.** A descrição do case (o "2020 · Sonhos Concretos" e a
+linha abaixo dele) sai da tela, e a régua de slides encolhe de 28 para 16 px
+por traço. No celular o título já ocupa a cena inteira e esses dois elementos
+cobriam o meio da foto. No desktop continuam os dois.
+
 **Hover do card.** Passar o mouse no card toca o filme do case, não mais só
 a prévia. Os dois trabalham juntos: a prévia montada com as fotos
 (`assets/media/previa/<slug>.mp4`) entra na hora, porque é arquivo do próprio
@@ -99,18 +104,24 @@ o que vale ali é o nome escrito e os dois recordes, não uma imitação do selo
 
 | Arquivo | Para quem | Tamanho |
 |---|---|---|
-| `orbita.webm` | padrão, 1480 px, fundo transparente | 1,9 MB |
+| `orbita.webm` | padrão, 1204 px, fundo transparente | 1,8 MB |
 | `orbita-cel.webm` | tela até 860 px, 740 px de largura | 0,7 MB |
-| `orbita.mp4` | reserva para quem não lê alfa em webm (Safari) | 0,8 MB |
+| `orbita.mp4` | reserva para quem não lê alfa em webm (Safari) | 1,1 MB |
 
 O webm vem primeiro porque tem fundo transparente de verdade: é ele que faz a
 órbita parecer desenhada na página e não colada num quadro. O `orbita()` no
 `main.js` troca pelo arquivo de celular quando a tela é pequena, onde a cena
 tem menos da metade da largura e o download pesa mais.
 
-O tamanho na tela é 739 px no desktop e a largura da tela inteira no celular,
-por isso os arquivos têm o dobro disso: em tela retina o vídeo na medida exata
-fica mole.
+Os três saem cortados no conteúdo (`crop=1204:1120:188:94` sobre o render de
+1480). O arquivo cru tinha 12,8% de sobra à esquerda contra 6,1% à direita, o
+que deixava a cena maior do que precisava e visivelmente torta para a
+esquerda. Cortado, ele fica centrado e a mesma caixa mostra a órbita 23%
+maior.
+
+O tamanho na tela é 595 px no desktop (coluna `.88fr` da grade) e quase a
+largura da tela no celular. Os arquivos têm cerca do dobro disso porque em
+tela retina o vídeo na medida exata fica mole.
 
 **Como gerar de novo.** A fonte é o `motion-studio` em `~/Downloads`, e o
 tamanho sai do próprio render, não de ampliação depois:
