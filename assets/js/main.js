@@ -398,6 +398,19 @@
       '<span class="card__go">' + ARROW + "</span></div></a>";
   }
 
+  /* Um vídeo pode ser um arquivo do próprio site ("assets/.../x.mp4") ou um
+     ID de 11 caracteres do YouTube. O código reconhece qual é dos dois. */
+  function ehYoutube(v) { return /^[A-Za-z0-9_-]{11}$/.test(v); }
+
+  function playerDe(v, cartaz, titulo) {
+    if (ehYoutube(v)) {
+      return '<iframe src="https://www.youtube-nocookie.com/embed/' + v + '?rel=0" title="' + esc(titulo || "Vídeo") +
+        '" loading="lazy" allow="accelerometer; encrypted-media; picture-in-picture" allowfullscreen></iframe>';
+    }
+    return '<video controls playsinline preload="none"' + (cartaz ? ' poster="' + cartaz + '"' : "") +
+      '><source src="' + v + '" type="video/mp4"></video>';
+  }
+
   // Ver. Ouvir. Sentir.: usado na home e em Quem Somos
   // Cada serviço tem um espaço de vídeo (veja o comentário em data.js).
   function espacoDeVideo(s, i) {
@@ -405,7 +418,7 @@
     if (!s.video) {
       return '<div class="video-espaco video-espaco--vazio"><span>Vídeo em breve</span></div>';
     }
-    if (/^[A-Za-z0-9_-]{11}$/.test(s.video)) {
+    if (ehYoutube(s.video)) {
       return '<div class="video-espaco"><iframe src="https://www.youtube-nocookie.com/embed/' + s.video +
         '?rel=0" title="' + esc(s.verbo) + '" loading="lazy" allow="accelerometer; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>';
     }
@@ -721,7 +734,7 @@
             (c.resultado ? bloco("O resultado", [c.resultado]) : "") + "</div>" : "") +
         "</div></section>" +
         (c.citacao ? '<section class="section--tight"><div class="wrap"><figure class="case-quote" data-reveal><blockquote>“' + esc(c.citacao.texto) + '”</blockquote><figcaption>' + esc(c.citacao.autor) + "</figcaption></figure></div></section>" : "") +
-        (c.video ? '<section class="section--tight"><div class="wrap"><div class="video-block" data-reveal><video controls playsinline preload="none" poster="' + (fotos[0] || "") + '"><source src="' + c.video + '" type="video/mp4"></video></div></div></section>' : "") +
+        (c.video ? '<section class="section--tight"><div class="wrap"><div class="video-block" data-reveal>' + playerDe(c.video, fotos[0] || "", c.nome) + "</div></div></section>" : "") +
         (fotos.length > 1 ? '<section class="section--tight" style="padding-top:0"><div class="wrap"><div class="mosaic">' +
           fotos.slice(1).map(function (f, k) { return '<figure data-reveal data-idx="' + (k + 1) + '"><img src="' + f + '" alt="' + esc(c.nome) + ", foto " + (k + 2) + '" loading="lazy"></figure>'; }).join("") +
         "</div></div></section>" : "") +
