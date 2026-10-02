@@ -534,7 +534,11 @@
 
   // Ver. Ouvir. Sentir.: usado na home e em Quem Somos
   // Cada serviço tem um espaço de vídeo (veja o comentário em data.js).
-  function espacoDeVideo(s, i) {
+  function espacoDeMidia(s) {
+    // Foto tem prioridade: tem tópico que a imagem conta melhor que o movimento.
+    if (s.imagem) {
+      return '<div class="video-espaco"><img src="' + s.imagem + '" alt="' + esc(s.imagemAlt || "") + '" loading="lazy"></div>';
+    }
     var cartaz = s.videoPoster || "";
     if (!s.video) {
       return '<div class="video-espaco video-espaco--vazio"><span>Vídeo em breve</span></div>';
@@ -552,7 +556,7 @@
     if (!el) return;
     el.innerHTML = D.servicos.map(function (s, i) {
       return '<article class="servico" id="servico-' + i + '" data-reveal>' +
-        espacoDeVideo(s, i) +
+        espacoDeMidia(s) +
         '<div class="servico__texto">' +
           '<span class="servico__verbo">' + s.verbo + "</span>" +
           "<h3>" + s.titulo + "</h3>" +

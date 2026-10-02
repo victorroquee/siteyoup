@@ -41,7 +41,9 @@ window.YOUP = {
   ],
 
   /*
-   * Cada serviço tem um espaço de vídeo. Para preencher, use UMA das formas:
+   * Cada serviço tem um espaço de mídia. Pode ser uma foto:
+   *   imagem: "assets/media/servicos/x.jpg"   (com imagemAlt descrevendo)
+   * ou um vídeo, de UMA destas formas:
    *   video: "assets/media/servicos/ver.mp4"   (arquivo no próprio site)
    *   video: "dQw4w9WgXcQ"                     (ID de 11 caracteres do YouTube)
    * videoPoster é a imagem que aparece antes de tocar (opcional).
@@ -63,6 +65,10 @@ window.YOUP = {
       chamada: "Onde marca e público se encontram.",
       texto: "Eventos e festivais são as ferramentas mais poderosas para conectar marcas e pessoas. Produzimos experiências ao vivo onde a marca não só se manifesta: ela escuta. Atmosferas projetadas para compartilhar emoções, criar conversa e construir memória coletiva.",
       nota: "É a essência da YOUP desde o Dia D, em 2006.",
+      // Este tópico mostra uma foto em vez de vídeo. "imagem" tem prioridade
+      // sobre "video" e serve para quando a foto conta melhor que o movimento.
+      imagem: "assets/media/servicos/live-marketing.jpg",
+      imagemAlt: "Ativação de marca da YOUP: palco, público e painéis de patrocinadores",
       video: "",
       videoPoster: ""
     },
