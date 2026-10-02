@@ -511,19 +511,30 @@ p { margin: 0 0 1em; }
 .field.invalid input, .field.invalid textarea { border-color: #ffb3a8; }
 .form-status { grid-column: 1 / -1; font-size: 1rem; }
 
-/* --- Footer ------------------------------------------------------------- */
-.site-footer { padding: clamp(5rem, 10vw, 9rem) 0 calc(2rem + env(safe-area-inset-bottom, 0px)); overflow: hidden; }
-.site-footer .top { display: flex; justify-content: space-between; gap: 3rem; flex-wrap: wrap; align-items: flex-end; }
-.site-footer .slogan { font-family: var(--font-display); font-weight: var(--peso-titulo); text-transform: uppercase; font-size: clamp(2.2rem, 6vw, 5.5rem); line-height: .92; }
-.site-footer .cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2rem; margin-top: clamp(3.5rem, 7vw, 6rem); padding-top: 2rem; border-top: 1px solid rgba(255,255,255,.25); }
-.site-footer .cols h4 { margin: 0 0 1rem; font-family: var(--font-display); font-size: .78rem; text-transform: uppercase; }
+/* --- Footer ------------------------------------------------------------
+   Minimalista: uma régua, três colunas de links e a base com o logotipo.
+   Sem degradê, sem slogan repetido, sem logotipo gigante.
+   ----------------------------------------------------------------------- */
+.site-footer { background: var(--vinho); padding: clamp(4rem, 8vw, 7rem) 0 calc(2.5rem + env(safe-area-inset-bottom, 0px)); }
+.site-footer .cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(2rem, 4vw, 4rem); padding-top: clamp(2.5rem, 5vw, 4rem); border-top: 1px solid var(--linha); }
+.site-footer .cols h4 { margin: 0 0 1.2rem; font-family: var(--font-display); font-weight: var(--peso-cabecalho); font-size: .78rem; text-transform: uppercase; color: rgba(255, 255, 255, .45); }
 .site-footer .cols ul { list-style: none; margin: 0; padding: 0; }
-.site-footer .cols li { margin-bottom: .45rem; }
-.site-footer .cols a:hover { opacity: .7; }
-.site-footer .big { margin-top: clamp(3rem, 6vw, 5rem); display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem; }
-.site-footer .big .wordmark { font-size: clamp(6rem, 24vw, 22rem); line-height: .72; }
-.site-footer small { font-size: .8rem; color: rgba(255,255,255,.7); }
-@media (max-width: 700px) { .site-footer .cols { grid-template-columns: 1fr 1fr; } }
+.site-footer .cols li { margin-bottom: .62rem; font-size: .98rem; color: rgba(255, 255, 255, .78); }
+.site-footer .cols li.endereco { line-height: 1.55; margin-top: 1rem; color: rgba(255, 255, 255, .55); }
+.site-footer .cols a { transition: color .3s var(--ease); }
+.site-footer .cols a:hover { color: var(--branco); }
+.site-footer .base {
+  margin-top: clamp(3rem, 6vw, 5rem); padding-top: 1.75rem;
+  border-top: 1px solid var(--linha);
+  display: flex; align-items: baseline; justify-content: space-between; gap: 1rem 2rem; flex-wrap: wrap;
+}
+.site-footer .base .wordmark { font-size: 1.9rem; }
+.site-footer .base__nota { font-family: var(--font-display); font-weight: var(--peso-cabecalho); font-size: .78rem; text-transform: uppercase; color: rgba(255, 255, 255, .45); }
+.site-footer small { font-size: .82rem; color: rgba(255, 255, 255, .45); }
+@media (max-width: 760px) {
+  .site-footer .cols { grid-template-columns: 1fr 1fr; }
+  .site-footer .base { flex-direction: column; align-items: flex-start; }
+}
 
 /* --- Animações de entrada ---------------------------------------------- */
 .js [data-reveal] { opacity: 0; transform: translateY(40px); transition: opacity 1.1s var(--ease), transform 1.1s var(--ease); }

@@ -104,18 +104,19 @@
   function footer() {
     var c = D.contato;
     var f = document.createElement("footer");
-    f.className = "site-footer grad";
+    f.className = "site-footer";
     f.innerHTML =
       '<div class="wrap">' +
-        '<div class="top"><p class="slogan">You imagine.<br>We create.</p>' +
-        '<a class="btn" href="contato.html">Vamos criar juntos ' + ARROW + "</a></div>" +
         '<div class="cols">' +
           "<div><h4>Navegue</h4><ul>" + MENU.map(function (m) { return '<li><a href="' + m[0] + '">' + m[1] + "</a></li>"; }).join("") + "</ul></div>" +
-          '<div><h4>Contato</h4><ul><li><a href="mailto:' + c.email + '">' + c.email + "</a></li><li>" + c.endereco + "</li></ul></div>" +
+          '<div><h4>Contato</h4><ul><li><a href="mailto:' + c.email + '">' + c.email + "</a></li><li class=\"endereco\">" + c.endereco + "</li></ul></div>" +
           "<div><h4>Redes</h4><ul>" + c.redes.map(function (r) { return '<li><a href="' + r.url + '" target="_blank" rel="noopener">' + r.nome + "</a></li>"; }).join("") + "</ul></div>" +
         "</div>" +
-        '<div class="big"><div class="signature" style="align-items:flex-start"><span class="eyebrow">Making a difference since 2000</span><span class="wordmark">youp</span></div>' +
-        "<small>© " + new Date().getFullYear() + " YOUP. Todos os direitos reservados.</small></div>" +
+        '<div class="base">' +
+          '<span class="wordmark">youp</span>' +
+          '<span class="base__nota">Making a difference since 2000</span>' +
+          "<small>© " + new Date().getFullYear() + " YOUP. Todos os direitos reservados.</small>" +
+        "</div>" +
       "</div>";
     document.body.appendChild(f);
   }
