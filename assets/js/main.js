@@ -11,7 +11,7 @@
   var MENU = [
     ["index.html", "Home", "home"],
     ["quem-somos.html", "Quem Somos", "quem-somos"],
-    ["ordem-cronologica.html", "Ordem Cronológica", "cronologia"],
+    ["nossa-historia.html", "Nossa História", "cronologia"],
     ["cases.html", "Nossos Cases", "cases"],
     ["atletas.html#atletas", "Atletas", "atletas"],
     ["contato.html", "Contato", "contato"]
@@ -386,7 +386,7 @@
   }
 
   /* Marcos, cases e projetos da história em ordem de ano, com o mesmo id
-     usado na página de Ordem Cronológica (serve de âncora para a home). */
+     usado na página de Nossa História (serve de âncora para a home). */
   function cronoItens() {
     var items = D.marcos.map(function (m) { return { ano: m.ano, marco: m }; })
       .concat(D.cases.filter(function (c) { return c.ano; }).map(function (c) { return { ano: c.ano, c: c }; }))
@@ -421,7 +421,7 @@
         '<img class="logo-ev" src="' + dest.logo + '" alt="Red Bull Building Drop, Sandro Dias" loading="lazy" data-reveal></div>';
       $("#rail").innerHTML = D.cases.map(function (c) { return card(c); }).join("");
       $("#anos").innerHTML = cronoItens().map(function (it) {
-        var href = "ordem-cronologica.html#" + it.id;
+        var href = "nossa-historia.html#" + it.id;
         if (it.marco) {
           return '<li><a class="tlh__item tlh__item--marco" href="' + href + '">' +
             '<span class="tlh__body"><span class="tlh__nota">' + esc(it.marco.destaques[0]) + "</span>" +
