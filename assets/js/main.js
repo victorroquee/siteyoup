@@ -436,6 +436,24 @@
   // Rótulo de ano do case: usa o período (ex.: "2015-2024") quando houver
   function anoDe(c) { return c.periodo || c.ano || ""; }
 
+  /* Ícones de selo: mesmo viewBox, mesmo traço de 1.5, sem preenchimento.
+     É o mesmo desenho das setas do site, para não parecer biblioteca de fora. */
+  var SELOS = {
+    medalha: '<circle cx="12" cy="14.5" r="6"/><path d="M12 11.6l1 2 2.2.3-1.6 1.5.4 2.2-2-1-2 1 .4-2.2L8.8 14l2.2-.3z"/><path d="M8.5 9L6 2.5h12L15.5 9"/>',
+    rampa: '<path d="M3 4v16h18"/><path d="M21 20c-9 0-14-5-14-13"/><path d="M4 8.5l3-4 3 4"/>',
+    velocimetro: '<path d="M3.5 18a9 9 0 1 1 17 0"/><path d="M12 18l4.5-6"/><circle cx="12" cy="18" r="1.4"/>',
+    publico: '<circle cx="9" cy="8" r="3"/><circle cx="17" cy="9.5" r="2.3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M15.5 20c0-2.4 1.3-4.4 3-4.6 2.3 0 3.5 2 3.5 4.6"/>',
+    tv: '<rect x="2.5" y="6" width="19" height="13" rx="2"/><path d="M8 3l4 3 4-3"/><path d="M10 10.5v4l4-2z"/>',
+    relogio: '<circle cx="12" cy="12" r="9"/><path d="M12 6.5V12l3.5 2"/>'
+  };
+
+  function selo(s) {
+    var d = SELOS[s.icone] || SELOS.medalha;
+    return '<li><svg class="selo__icone" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">' + d + "</svg>" +
+      '<span class="selo__texto"><span class="selo__valor">' + esc(s.valor) + '</span>' +
+      '<span class="selo__rotulo">' + esc(s.rotulo) + "</span></span></li>";
+  }
+
   // Prévia em vídeo do card: montada a partir das fotos do próprio case.
   function previaDe(c) { return c.fotos ? "assets/media/previa/" + c.slug + ".mp4" : ""; }
 
@@ -760,11 +778,12 @@
       $("#destaque").innerHTML =
         '<div class="feature__media"><img src="' + YOUP.capa(dest) + '" alt="' + esc(dest.nome) + '" loading="lazy"' + (dest.pos ? ' style="object-position:' + dest.pos + '"' : "") + "></div>" +
         '<div class="wrap feature__body">' +
+          '<p class="feature__etiqueta" data-reveal><span></span>Case em destaque</p>' +
           '<img class="feature__logo" src="' + dest.logo + '" alt="Red Bull Building Drop" loading="lazy" data-reveal>' +
           '<h2 class="display-l feature__titulo" data-reveal data-reveal-delay="1">' + esc(dest.nome) + "</h2>" +
           '<p class="feature__sub" data-reveal data-reveal-delay="1">' + esc(dest.chamada) + "</p>" +
-          '<ul class="feature__marcas" data-reveal data-reveal-delay="2">' +
-            dest.destaques.map(function (d) { return "<li>" + esc(d) + "</li>"; }).join("") +
+          '<ul class="feature__selos" data-reveal data-reveal-delay="2">' +
+            (dest.selos || []).map(selo).join("") +
           "</ul>" +
           '<a class="btn" href="' + caseUrl(dest) + '" data-reveal data-reveal-delay="3">Ver o case ' + ARROW + "</a>" +
         "</div>";
