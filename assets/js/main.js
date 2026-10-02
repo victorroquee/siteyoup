@@ -69,7 +69,7 @@
       var botao = e.target.closest && e.target.closest(".yt-espera .btn");
       if (!botao) return;
       var caixa = botao.closest(".yt-espera");
-      caixa.outerHTML = iframeYoutube(caixa.getAttribute("data-yt"), caixa.getAttribute("data-titulo"));
+      caixa.outerHTML = iframeYoutube(caixa.getAttribute("data-yt"), caixa.getAttribute("data-titulo"), true);
     });
 
     var refazer = document.getElementById("refazer-cookies");
@@ -474,14 +474,16 @@
     try { return localStorage.getItem("youp-cookies") === "tudo"; } catch (e) { return false; }
   }
 
-  function iframeYoutube(v, titulo) {
-    return '<iframe src="https://www.youtube-nocookie.com/embed/' + v + '?rel=0&autoplay=1" title="' + esc(titulo || "Vídeo") +
-      '" loading="lazy" allow="autoplay; accelerometer; encrypted-media; picture-in-picture" allowfullscreen></iframe>';
+  function iframeYoutube(v, titulo, auto) {
+    return '<iframe src="https://www.youtube-nocookie.com/embed/' + v + '?rel=0&playsinline=1&autoplay=' + (auto ? "1" : "0") +
+      '" title="' + esc(titulo || "Vídeo") + '" loading="lazy"' +
+      ' allow="autoplay; fullscreen; accelerometer; encrypted-media; picture-in-picture"' +
+      ' referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>';
   }
 
   function playerDe(v, cartaz, titulo) {
     if (ehYoutube(v)) {
-      if (consentiuVideo()) return iframeYoutube(v, titulo);
+      if (consentiuVideo()) return iframeYoutube(v, titulo, false);
       // Sem autorização o vídeo não carrega: fica a capa e um botão.
       return '<div class="yt-espera" data-yt="' + v + '" data-titulo="' + esc(titulo || "Vídeo") + '">' +
         (cartaz ? '<img src="' + cartaz + '" alt="" loading="lazy">' : "") +
@@ -544,8 +546,7 @@
       return '<div class="video-espaco video-espaco--vazio"><span>Vídeo em breve</span></div>';
     }
     if (ehYoutube(s.video)) {
-      return '<div class="video-espaco"><iframe src="https://www.youtube-nocookie.com/embed/' + s.video +
-        '?rel=0" title="' + esc(s.verbo) + '" loading="lazy" allow="accelerometer; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>';
+      return '<div class="video-espaco">' + iframeYoutube(s.video, s.verbo, false) + "</div>";
     }
     return '<div class="video-espaco"><video muted loop playsinline preload="none"' +
       (cartaz ? ' poster="' + cartaz + '"' : "") + '><source src="' + s.video + '" type="video/mp4"></video></div>';
