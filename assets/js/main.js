@@ -96,6 +96,24 @@
     if (!lido()) setTimeout(mostra, 1400);
   }
 
+  /* --- Órbita das marcas ------------------------------------------------
+     Roda sozinha, em loop, do jeito que foi pedido. O webm tem fundo
+     transparente de verdade, então o logotipo de reserva que fica atrás
+     precisa sair de cena assim que o vídeo começa, senão ele aparece através
+     da órbita. Quem não conseguir tocar o vídeo continua vendo o logotipo. */
+  function orbita() {
+    var cena = $(".orbita");
+    if (!cena) return;
+    var filme = $(".orbita__video", cena);
+    if (!filme) return;
+    function vivo() { cena.classList.add("is-vivo"); }
+    filme.addEventListener("loadeddata", vivo);
+    filme.addEventListener("playing", vivo);
+    if (filme.readyState > 2) vivo();
+    var tocar = filme.play();
+    if (tocar && tocar.catch) tocar.catch(function () {});
+  }
+
   /* --- Header e menu --------------------------------------------------- */
   function header() {
     var cur = page === "case" ? "cases" : page;
@@ -263,30 +281,12 @@
 
     sec.classList.add("manifesto--pinned");
 
-    /* A órbita deixa de ser um loop solto e passa a andar com a rolagem,
-       igual à frase: o avanço da seção vira o tempo do vídeo, e subir de
-       volta roda ao contrário. O arquivo é gravado com chave a cada quatro
-       quadros justamente para aguentar ser arrastado assim. */
-    var filme = $(".orbita__video", sec);
-    if (filme) {
-      filme.removeAttribute("loop");
-      filme.removeAttribute("autoplay");
-      filme.preload = "auto";
-      filme.pause();
-      filme.addEventListener("loadedmetadata", function () { filme.pause(); pintar(); });
-      filme.addEventListener("play", function () { filme.pause(); });
-    }
-
     var pedindo = false;
 
     function pintar() {
       var total = track.offsetHeight - stage.offsetHeight;
       if (total <= 0) return;
       var p = Math.min(Math.max(-track.getBoundingClientRect().top / total, 0), 1);
-      if (filme && filme.readyState > 0 && filme.duration) {
-        var t = p * (filme.duration - 0.05);
-        if (Math.abs(filme.currentTime - t) > 0.02) filme.currentTime = t;
-      }
       // Folga no começo e no fim: a frase termina de acender antes de soltar.
       var cursor = p * (luzes.length + 5) - 1.5;
       for (var i = 0; i < luzes.length; i++) {
@@ -898,6 +898,7 @@
     home: function () {
       heroSlideshow();
       manifesto();
+      orbita();
       servicos();
       $("#numeros").classList.toggle("numbers--5", D.numeros.length === 5);
       $("#numeros").innerHTML = D.numeros.map(function (n, i) {

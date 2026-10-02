@@ -10,10 +10,9 @@ node servidor.js
 # abre http://127.0.0.1:8787
 ```
 
-O `servidor.js` existe por um motivo só: o `python3 -m http.server` não
-responde a pedido de faixa (Range), e sem isso o vídeo da órbita não pode ser
-arrastado pelo scroll, fica parado no primeiro quadro. Na Netlify funciona
-sozinho.
+O `python3 -m http.server 8787` também serve, mas ele não responde a pedido de
+faixa (Range), então vídeo nenhum pode ser adiantado no meio. O `servidor.js`
+responde. Na Netlify isso funciona sozinho.
 
 Repositório: https://github.com/victorroquee/siteyoup
 
@@ -95,20 +94,29 @@ abaixo de "O resultado". O logo oficial do Guinness é marca registrada e não
 veio no kit da YOUP, então a placa usa o desenho de medalha do próprio site:
 o que vale ali é o nome escrito e os dois recordes, não uma imitação do selo.
 
-**Vídeo da órbita.** `assets/media/marca/orbita.mp4`, 24 fps, gerado a partir
-do `youp-orbita-2x.mp4` do motion-studio. Ele não fica em loop solto: o avanço
-da seção presa na tela vira o tempo do vídeo, igual às palavras que acendem,
-e subir de volta roda ao contrário. Por isso o arquivo é gravado com chave a
-cada quatro quadros (`-g 4`), que é o que aguenta ser arrastado sem travar, e
-por isso ele precisa de servidor que responda Range. Três cuidados na hora de
-trocar o arquivo: o fundo precisa ser exatamente o `--vinho` da página
-(senão aparece um retângulo no meio da seção) e o arquivo precisa ser gravado
-em faixa de cor limitada (`-color_range tv`, com os flags bt709). Em faixa
-cheia o Chrome escurece tudo e o retângulo volta. O comando que gerou o atual
-levanta o preto do arquivo até o vinho da página com `blend=all_mode=lighten`
-em RGB, nunca em YUV, que torce as cores. E o vídeo cresce um pouco além da
-coluna (`scale(1.12)`), menos no celular, onde o scale empurrava a página para
-o lado.
+**Vídeo da órbita.** `assets/media/marca/orbita.webm` com `orbita.mp4` de
+reserva, os dois em 24 fps e 11 segundos, em loop solto, sem depender de
+rolagem. O webm vem primeiro porque tem fundo transparente de verdade: é ele
+que faz a órbita parecer desenhada na página e não colada num quadro. O mp4 é
+para quem não lê alfa em webm (Safari), e o fundo dele é o mesmo `--vinho` da
+página, então na tela dá no mesmo.
+
+Três cuidados na hora de trocar o arquivo. O mp4 precisa do fundo exatamente
+no `--vinho` (senão aparece um retângulo no meio da seção) e precisa ser
+gravado em faixa de cor limitada (`-color_range tv`, com os flags bt709), pois
+em faixa cheia o Chrome escurece tudo e o retângulo volta. O comando que gerou
+o atual levanta o preto do arquivo até o vinho da página com
+`blend=all_mode=lighten` em RGB, nunca em YUV, que torce as cores. O webm sai
+com `libvpx-vp9 -pix_fmt yuva420p -auto-alt-ref 0`, que é o que preserva o
+alfa.
+
+Com o vídeo tocando, o logotipo de reserva que fica atrás sai de cena
+(`.orbita.is-vivo`): o webm é transparente e deixaria o logo aparecer por trás
+das marcas. Quem não conseguir tocar vídeo continua vendo o logotipo.
+
+O arquivo hoje tem 430 pixels de largura e aparece com 739 na tela, ou seja,
+está ampliado. O `youp-orbita-2x-alpha.webm` do motion-studio resolveria, mas
+chegou truncado. Vale reexportar.
 
 **Faixa em duotone.** As seis fotos de bastidores vêm de eventos diferentes,
 cada uma com uma luz. O preto e branco apaga a cor de origem e o roxo entra
