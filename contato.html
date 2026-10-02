@@ -23,28 +23,37 @@
 
 <main id="conteudo">
 
-  <section class="grad historia" style="padding: calc(var(--header-h) + clamp(4rem, 10vw, 8rem)) 0 clamp(5rem, 10vw, 9rem)">
-    <img class="historia__y" src="assets/media/marca/youp-pincel-branco.png" alt="" aria-hidden="true">
+  <section class="section contato-sec">
     <div class="wrap">
-      <span class="eyebrow" data-reveal>Contato</span>
-      <h1 class="display-xl" style="margin-bottom:clamp(3rem,7vw,6rem)"><span class="split-line"><span>You imagine.</span></span><span class="split-line"><span>We create.</span></span></h1>
+      <h1 class="display-l" data-reveal><span class="split-line"><span>Conte o que</span></span><span class="split-line"><span>a marca imagina.</span></span></h1>
 
       <div class="contact">
-        <div data-reveal>
-          <p class="lead">Conte pra gente o que a sua marca imagina. A gente cria junto.</p>
-          <dl class="contact-info" id="contato-info"></dl>
-        </div>
+        <!-- Para receber as mensagens por um serviço (ex.: Formspree), preencha data-endpoint com a URL. -->
+        <form class="carta" id="form-contato" data-endpoint="" novalidate data-reveal>
+          <p class="carta__texto">
+            Olá YOUP, meu nome é
+            <span class="lacuna"><input id="f-nome" name="nome" type="text" required autocomplete="name" aria-label="Seu nome" placeholder="seu nome" size="12"></span>
+            e eu falo pela
+            <span class="lacuna"><input id="f-empresa" name="empresa" type="text" autocomplete="organization" aria-label="Sua empresa" placeholder="sua empresa" size="13"></span>.
+            Vocês podem me responder em
+            <span class="lacuna"><input id="f-email" name="email" type="email" required autocomplete="email" aria-label="Seu e-mail" placeholder="seu@email.com" size="15"></span>
+            ou no
+            <span class="lacuna"><input id="f-tel" name="telefone" type="tel" inputmode="tel" autocomplete="tel" aria-label="Seu telefone" placeholder="seu telefone" size="14"></span>.
+          </p>
 
-        <!-- Para receber as mensagens por um serviço (ex.: Formspree), preencha data-endpoint com a URL. Veja o README. -->
-        <form class="form" id="form-contato" data-endpoint="" novalidate data-reveal data-reveal-delay="1">
-          <div class="field"><label for="f-nome">Nome *</label><input id="f-nome" name="nome" autocomplete="name" required><span class="err"></span></div>
-          <div class="field"><label for="f-empresa">Empresa</label><input id="f-empresa" name="empresa" autocomplete="organization"><span class="err"></span></div>
-          <div class="field"><label for="f-email">E-mail *</label><input id="f-email" name="email" type="email" autocomplete="email" required><span class="err"></span></div>
-          <div class="field"><label for="f-tel">Telefone</label><input id="f-tel" name="telefone" type="tel" autocomplete="tel"><span class="err"></span></div>
-          <div class="field full"><label for="f-msg">Mensagem *</label><textarea id="f-msg" name="mensagem" required></textarea><span class="err"></span></div>
-          <div class="full"><button class="btn btn--solid" type="submit">Enviar mensagem <svg class="arrow" width="18" height="12" viewBox="0 0 18 12"><path d="M0 6h16M11 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button></div>
+          <label class="carta__rotulo" for="f-msg">O que a gente vai criar junto</label>
+          <textarea id="f-msg" name="mensagem" required rows="5" placeholder="O projeto, o prazo, o que já existe e o que ainda é só ideia."></textarea>
+
+          <p class="carta__nota">Empresa e telefone são opcionais. O resto a gente combina por e-mail.</p>
+          <p class="carta__erro" id="carta-erro" role="alert"></p>
+
+          <button class="btn btn--solid" type="submit">Enviar mensagem <svg class="arrow" width="18" height="12" viewBox="0 0 18 12" aria-hidden="true"><path d="M0 6h16M11 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button>
           <p class="form-status" role="status" aria-live="polite"></p>
         </form>
+
+        <aside class="contact-info-bloco" data-reveal data-reveal-delay="1">
+          <dl class="contact-info" id="contato-info"></dl>
+        </aside>
       </div>
     </div>
   </section>

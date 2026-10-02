@@ -484,26 +484,60 @@ p { margin: 0 0 1em; }
   .services article, .services article + article { padding: 2rem 0; border-left: 0; border-bottom: 1px solid var(--linha-clara); }
 }
 
-/* --- Contato ------------------------------------------------------------ */
-.contact { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(3rem, 7vw, 8rem); }
+/* --- Contato -----------------------------------------------------------
+   O formulário é uma frase. As lacunas são campos de verdade, sublinhados,
+   que crescem conforme a pessoa escreve.
+   ----------------------------------------------------------------------- */
+.contato-sec { padding-top: calc(var(--header-h) + clamp(4rem, 10vw, 8rem)); }
+.contact { display: grid; grid-template-columns: 1.6fr 1fr; gap: clamp(3rem, 7vw, 7rem); margin-top: clamp(3rem, 7vw, 6rem); align-items: start; }
 @media (max-width: 900px) { .contact { grid-template-columns: 1fr; } }
-.contact-info dt { font-family: var(--font-display); font-weight: var(--peso-cabecalho); font-size: .78rem; text-transform: uppercase; color: rgba(255, 255, 255, .55); margin-top: 2rem; }
-.contact-info dd { margin: .5rem 0 0; font-size: 1.15rem; }
-.contact-info a:hover { color: var(--branco); text-decoration: underline; text-underline-offset: .25em; }
-.form { display: grid; grid-template-columns: 1fr 1fr; gap: 1.75rem 1.5rem; }
-.form .full { grid-column: 1 / -1; }
-@media (max-width: 600px) { .form { grid-template-columns: 1fr; } }
-.field label { display: block; font-family: var(--font-display); font-weight: var(--peso-cabecalho); font-size: .78rem; text-transform: uppercase; margin-bottom: .5rem; }
-.field input, .field textarea, .field select {
-  width: 100%; font: inherit; font-size: 1.05rem; color: var(--branco);
-  background: transparent; border: 0; border-bottom: 1px solid rgba(255,255,255,.35);
-  padding: .7rem 0; border-radius: 0; transition: border-color .3s;
+
+.carta__texto {
+  margin: 0;
+  font-family: var(--font-display); font-weight: var(--peso-texto);
+  font-size: clamp(1.25rem, 2vw, 1.9rem); line-height: 1.8;
+  max-width: 34ch;
 }
-.field textarea { min-height: 140px; resize: vertical; }
-.field input:focus, .field textarea:focus { outline: none; border-color: var(--branco); }
-.field .err { display: block; color: #ffb3a8; font-size: .85rem; min-height: 1.2em; margin-top: .35rem; }
-.field.invalid input, .field.invalid textarea { border-color: #ffb3a8; }
-.form-status { grid-column: 1 / -1; font-size: 1rem; }
+.lacuna { display: inline-block; position: relative; }
+.lacuna input {
+  font: inherit; color: var(--branco);
+  background: transparent; border: 0; border-bottom: 1px solid rgba(255, 255, 255, .45);
+  padding: 0 .15em .1em; border-radius: 0; min-width: 5ch; max-width: 100%;
+  transition: border-color .3s var(--ease);
+}
+.lacuna input::placeholder { color: rgba(255, 255, 255, .34); }
+.lacuna input:hover { border-bottom-color: rgba(255, 255, 255, .7); }
+.lacuna input:focus { outline: none; border-bottom-color: var(--branco); }
+.lacuna input:focus::placeholder { color: transparent; }
+.lacuna input[aria-invalid="true"] { border-bottom-color: #ffb3a8; }
+
+.carta__rotulo {
+  display: block; margin: clamp(2.5rem, 6vh, 4rem) 0 .9rem;
+  font-family: var(--font-display); font-weight: var(--peso-cabecalho);
+  font-size: .78rem; text-transform: uppercase; color: rgba(255, 255, 255, .55);
+}
+.carta textarea {
+  width: 100%; font: inherit; font-size: 1.05rem; line-height: 1.6; color: var(--branco);
+  background: transparent; border: 0; border-bottom: 1px solid rgba(255, 255, 255, .45);
+  padding: .3rem 0 .9rem; border-radius: 0; resize: vertical;
+  transition: border-color .3s var(--ease);
+}
+.carta textarea::placeholder { color: rgba(255, 255, 255, .34); }
+.carta textarea:focus { outline: none; border-bottom-color: var(--branco); }
+.carta textarea[aria-invalid="true"] { border-bottom-color: #ffb3a8; }
+
+.carta__nota { margin: 1.25rem 0 0; font-size: .9rem; color: rgba(255, 255, 255, .5); }
+.carta__erro { margin: 1rem 0 0; font-size: .95rem; color: #ffb3a8; }
+.carta__erro:empty { display: none; }
+.carta .btn { margin-top: clamp(2rem, 5vh, 3rem); }
+.form-status { margin: 1.25rem 0 0; font-size: 1rem; }
+.form-status:empty { display: none; }
+
+.contact-info-bloco { padding-top: .4rem; }
+.contact-info dt { font-family: var(--font-display); font-weight: var(--peso-cabecalho); font-size: .78rem; text-transform: uppercase; color: rgba(255, 255, 255, .55); margin-top: 2rem; }
+.contact-info dt:first-child { margin-top: 0; }
+.contact-info dd { margin: .5rem 0 0; font-size: 1.05rem; line-height: 1.55; }
+.contact-info a:hover { color: var(--branco); text-decoration: underline; text-underline-offset: .25em; }
 
 /* --- Footer ------------------------------------------------------------
    Minimalista: uma régua, três colunas de links e a base com o logotipo.

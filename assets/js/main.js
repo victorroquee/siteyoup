@@ -683,36 +683,76 @@
     contato: function () {
       var c = D.contato;
       $("#contato-info").innerHTML =
-        '<dt>E-mail</dt><dd><a href="mailto:' + c.email + '">' + c.email + "</a></dd>" +
-        "<dt>Telefone</dt><dd>" + c.telefone + "</dd>" +
+        "<dt>E-mail</dt><dd><a href=\"mailto:" + c.email + '">' + c.email + "</a></dd>" +
+        (c.telefone ? "<dt>Telefone</dt><dd>" + esc(c.telefone) + "</dd>" : "") +
         "<dt>Endereço</dt><dd>" + c.endereco + "</dd>" +
         "<dt>Redes</dt><dd>" + c.redes.map(function (r) { return '<a href="' + r.url + '" target="_blank" rel="noopener">' + r.nome + "</a>"; }).join(" · ") + "</dd>";
 
       var form = $("#form-contato");
       var status = $(".form-status", form);
+      var erro = $(".carta__erro", form);
+      var campos = $$("input, textarea", form);
+
+      // As lacunas crescem com o que a pessoa escreve, para a frase não quebrar.
+      function ajusta(inp) {
+        if (inp.tagName !== "INPUT") return;
+        // Vazia, a lacuna tem exatamente a largura da dica; cheia, cresce com o texto.
+        var minimo = (inp.placeholder || "").length || 10;
+        inp.style.width = Math.max(minimo, inp.value.length + 1) + "ch";
+      }
+      campos.forEach(function (inp) {
+        ajusta(inp);
+        inp.addEventListener("input", function () {
+          ajusta(inp);
+          if (inp.getAttribute("aria-invalid")) { inp.removeAttribute("aria-invalid"); erro.textContent = ""; }
+        });
+      });
+
+      var NOME = { nome: "seu nome", email: "seu e-mail", mensagem: "sua mensagem" };
+
       form.addEventListener("submit", function (e) {
         e.preventDefault();
-        var ok = true;
-        $$(".field", form).forEach(function (f) {
-          var inp = $("input, textarea", f), err = $(".err", f), msg = "";
-          if (inp.required && !inp.value.trim()) msg = "Campo obrigatório.";
-          else if (inp.type === "email" && inp.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inp.value)) msg = "E-mail inválido.";
-          f.classList.toggle("invalid", !!msg); err.textContent = msg;
-          if (msg && ok) { inp.focus(); ok = false; }
+        var faltando = [], primeiro = null;
+        campos.forEach(function (inp) { inp.removeAttribute("aria-invalid"); });
+        campos.forEach(function (inp) {
+          var ruim = "";
+          if (inp.required && !inp.value.trim()) ruim = NOME[inp.name] || inp.name;
+          else if (inp.type === "email" && inp.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inp.value)) ruim = "um e-mail válido";
+          if (!ruim) return;
+          inp.setAttribute("aria-invalid", "true");
+          inp.setAttribute("aria-describedby", "carta-erro");
+          faltando.push(ruim);
+          if (!primeiro) primeiro = inp;
         });
-        if (!ok) return;
+        if (faltando.length) {
+          erro.textContent = "Falta " + (faltando.length > 1
+            ? faltando.slice(0, -1).join(", ") + " e " + faltando[faltando.length - 1]
+            : faltando[0]) + ".";
+          primeiro.focus();
+          return;
+        }
+        erro.textContent = "";
+
+        var d = new FormData(form);
         var endpoint = form.getAttribute("data-endpoint");
         if (!endpoint) {
-          // Sem serviço de envio configurado: abre o e-mail com a mensagem preenchida.
-          var d = new FormData(form);
-          var body = "Nome: " + d.get("nome") + "\nEmpresa: " + d.get("empresa") + "\nE-mail: " + d.get("email") + "\nTelefone: " + d.get("telefone") + "\n\n" + d.get("mensagem");
-          location.href = "mailto:" + c.email + "?subject=" + encodeURIComponent("Contato pelo site: " + d.get("nome")) + "&body=" + encodeURIComponent(body);
-          status.textContent = "Abrimos seu programa de e-mail com a mensagem pronta. É só enviar.";
+          // Sem serviço de envio configurado: abre o e-mail com a mensagem pronta.
+          var linhas = [["Nome", d.get("nome")], ["Empresa", d.get("empresa")], ["E-mail", d.get("email")], ["Telefone", d.get("telefone")]]
+            .filter(function (l) { return String(l[1] || "").trim(); })
+            .map(function (l) { return l[0] + ": " + l[1]; }).join("\n");
+          location.href = "mailto:" + c.email + "?subject=" + encodeURIComponent("Contato pelo site: " + d.get("nome")) +
+            "&body=" + encodeURIComponent(linhas + "\n\n" + d.get("mensagem"));
+          status.textContent = "Se o seu programa de e-mail não abrir, escreva direto para " + c.email + ".";
           return;
         }
         status.textContent = "Enviando…";
-        fetch(endpoint, { method: "POST", body: new FormData(form), headers: { Accept: "application/json" } })
-          .then(function (r) { if (!r.ok) throw 0; form.reset(); status.textContent = "Mensagem enviada. Obrigado! Respondemos em breve."; })
+        fetch(endpoint, { method: "POST", body: d, headers: { Accept: "application/json" } })
+          .then(function (r) {
+            if (!r.ok) throw 0;
+            form.reset();
+            campos.forEach(ajusta);
+            status.textContent = "Mensagem enviada. Obrigado, respondemos em breve.";
+          })
           .catch(function () { status.textContent = "Não foi possível enviar agora. Escreva para " + c.email + "."; });
       });
     }
