@@ -868,30 +868,29 @@ body[data-tema="claro"] .intro__linha { background: rgba(20, 9, 28, .18); }
 .light .eyebrow { color: var(--roxo); }
 .light .page-hero .eyebrow { color: var(--roxo); }
 
-/* --- Colagem de bastidores ---------------------------------------------
-   Formatos diferentes de propósito: fecha a home com a cara de mural, não
-   de grade. Sem legenda, sem link: é só o trabalho.
+/* --- Faixa de bastidores -----------------------------------------------
+   Uma tira só, de ponta a ponta da tela, com as fotos encaixadas sem sobra.
+   Larguras diferentes para não virar uma régua de quadrados iguais.
    ----------------------------------------------------------------------- */
-.colagem { padding-top: 0; }
-.colagem__grade {
+.faixa { padding: 0; }
+.faixa__tira {
   list-style: none; margin: 0; padding: 0;
-  display: grid; grid-template-columns: repeat(12, 1fr);
-  gap: var(--e-2); align-items: end;
+  display: flex; gap: 2px;
+  height: clamp(104px, 15vh, 168px);
 }
-.colagem__grade li { margin: 0; overflow: hidden; border-radius: 4px; background: rgba(20, 9, 28, .06); }
-.colagem__grade img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--t-cena) var(--ease); }
-.colagem__grade li:hover img { transform: scale(1.04); }
-
-.colagem--alta  { grid-column: span 3; aspect-ratio: 3 / 4; }
-.colagem--larga { grid-column: span 6; aspect-ratio: 16 / 10; }
-.colagem--media { grid-column: span 3; aspect-ratio: 1; }
-/* Desalinha de leve o segundo e o quinto: é o que tira a cara de grade. */
-.colagem__grade li:nth-child(2) { transform: translateY(calc(var(--e-2) * -1)); }
-.colagem__grade li:nth-child(5) { transform: translateY(calc(var(--e-1) * 1.4)); }
-
-@media (max-width: 860px) {
-  .colagem--alta { grid-column: span 6; }
-  .colagem--larga { grid-column: span 12; }
-  .colagem--media { grid-column: span 6; }
-  .colagem__grade li:nth-child(2), .colagem__grade li:nth-child(5) { transform: none; }
+.faixa__tira li { flex: 1 1 0; min-width: 0; height: 100%; overflow: hidden; }
+.faixa__tira img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--t-cena) var(--ease); }
+.faixa__tira li:hover img { transform: scale(1.05); }
+/* Larguras desiguais, para a tira ter ritmo. */
+.faixa__tira li:nth-child(1) { flex-grow: 1.3; }
+.faixa__tira li:nth-child(2) { flex-grow: 1.9; }
+.faixa__tira li:nth-child(4) { flex-grow: 1.5; }
+.faixa__tira li:nth-child(5) { flex-grow: .75; }
+@media (max-width: 700px) {
+  .faixa__tira { height: 84px; }
+  .faixa__tira li:nth-child(5), .faixa__tira li:nth-child(6) { display: none; }
 }
+
+/* O CTA encurta o respiro de baixo quando a faixa vem logo depois: a tira
+   tem que fechar a página, não flutuar solta no meio do vazio. */
+.cta--com-faixa { padding-bottom: var(--e-5); }
