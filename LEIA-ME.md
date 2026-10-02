@@ -18,6 +18,33 @@ Repositório: https://github.com/victorroquee/siteyoup
 
 ---
 
+## Onde está publicado
+
+**https://testarea.loopconsult.com.br/youp/**, na Hostinger (conta
+`u986403640`, host `77.37.127.95`, porta 65002). O site mora numa pasta só
+dele dentro do domínio, ao lado de outros projetos que já estavam lá, então
+subir de novo não encosta em nada do vizinho.
+
+```
+cd ~/Desktop/youpreview.netlify.app
+umask 077; printf '%s' '<senha>' > /tmp/.youppw
+sshpass -f /tmp/.youppw rsync -az --delete \
+  --exclude .git --exclude .gitignore --exclude LEIA-ME.md \
+  --exclude servidor.js --exclude .DS_Store \
+  -e "ssh -p 65002 -o NumberOfPasswordPrompts=1 -o PubkeyAuthentication=no -o PreferredAuthentications=password" \
+  ./ u986403640@77.37.127.95:domains/testarea.loopconsult.com.br/public_html/youp/
+```
+
+Dois detalhes que fazem falta se forem esquecidos. O `--delete` existe para
+arquivo apagado aqui sumir de lá também, e por isso o `.htaccess` do site
+precisa estar no repositório, senão a próxima subida o apaga. E o Apache da
+Hostinger não conhece `.webm`: sem o `AddType video/webm` do `.htaccess` ele
+entrega o vídeo da órbita como `text/plain` e o navegador recusa a fonte.
+
+A senha do SSH tem `@!` no fim, o que quebra o `sshpass -e`. Por isso o
+arquivo com `-f`, e por isso os `-o` vêm na linha: sem eles o cliente tenta
+chave pública primeiro e leva Permission denied.
+
 ## Onde fica cada coisa
 
 | Arquivo | O que é |

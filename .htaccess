@@ -1,0 +1,26 @@
+# Apache da Hostinger não conhece .webm e entregava o vídeo da órbita como
+# text/plain, o que faz o navegador recusar a fonte. Sem isso, o celular e o
+# desktop caem no mp4 de reserva, ou ficam sem vídeo nenhum.
+AddType video/webm .webm
+AddType video/mp4 .mp4
+AddType image/webp .webp
+AddType application/javascript .js
+AddType image/svg+xml .svg
+
+# Pedido de faixa (Range) é o que deixa adiantar vídeo. Vem ligado no Apache,
+# mas só vale para tipo conhecido, por isso a lista acima vem antes.
+<IfModule mod_headers.c>
+  Header set Accept-Ranges bytes
+</IfModule>
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType video/webm "access plus 30 days"
+  ExpiresByType video/mp4 "access plus 30 days"
+  ExpiresByType image/jpeg "access plus 30 days"
+  ExpiresByType image/webp "access plus 30 days"
+  ExpiresByType image/png "access plus 30 days"
+  ExpiresByType text/css "access plus 2 days"
+  ExpiresByType application/javascript "access plus 2 days"
+  ExpiresByType text/html "access plus 10 minutes"
+</IfModule>
