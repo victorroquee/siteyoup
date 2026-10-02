@@ -386,9 +386,25 @@
   function heroSlideshow() {
     var media = $(".hero__media");
     if (!media) return;
+    // Vídeo de fundo: basta preencher heroVideo no data.js. No celular e com
+    // movimento reduzido fica a foto, que é mais leve e não gasta dados.
     if (D.heroVideo) {
-      media.innerHTML = '<video autoplay muted loop playsinline poster="' + YOUP.capa(YOUP.destaque()) + '"><source src="' + D.heroVideo + '" type="video/mp4"></video>';
-      if (reduce || window.innerWidth < 700) media.innerHTML = '<img src="' + YOUP.capa(YOUP.destaque()) + '" alt="">';
+      var cartaz = D.heroVideoPoster || YOUP.capa(YOUP.destaque());
+      if (reduce || window.innerWidth < 700) {
+        media.innerHTML = '<img src="' + cartaz + '" alt="">';
+        return;
+      }
+      media.innerHTML = '<video autoplay muted loop playsinline preload="metadata" poster="' + cartaz + '"><source src="' + D.heroVideo + '" type="video/mp4"></video>';
+      var vid = $("video", media);
+      // Fora da tela ou aba escondida, o vídeo para: não roda à toa.
+      document.addEventListener("visibilitychange", function () {
+        if (document.hidden) vid.pause(); else vid.play().catch(function () {});
+      });
+      if (window.IntersectionObserver) {
+        new IntersectionObserver(function (es) {
+          es.forEach(function (e) { if (e.isIntersecting) vid.play().catch(function () {}); else vid.pause(); });
+        }, { threshold: .05 }).observe(media);
+      }
       return;
     }
     // O case em destaque abre o slideshow; os demais seguem na ordem de data.js

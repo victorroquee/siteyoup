@@ -17,8 +17,14 @@ window.YOUP = {
     ]
   },
 
-  // Vídeo principal da HOME. Deixe vazio ("") para usar a sequência de fotos.
+  // Vídeo de fundo da HOME. Coloque o arquivo em assets/media/hero/ e escreva
+  // o caminho aqui, por exemplo "assets/media/hero/abertura.mp4". Vazio ("")
+  // mantém a sequência de fotos. Dicas: mp4 (H.264), sem áudio, 10 a 20
+  // segundos em loop, 1920x1080, até cerca de 8 MB. heroVideoPoster é a
+  // imagem que aparece enquanto o vídeo carrega e no celular; vazio usa a
+  // capa do case em destaque.
   heroVideo: "",
+  heroVideoPoster: "",
 
   numeros: [
     { valor: 26, sufixo: "", rotulo: "anos de história" },
