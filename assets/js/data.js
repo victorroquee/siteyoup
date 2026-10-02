@@ -56,7 +56,9 @@ window.YOUP = {
       chamada: "Construímos memórias.",
       texto: "Convergimos o universo físico e o digital para gerar conteúdo de alta relevância: legítimo ao conceito da marca e autêntico para o público de cada segmento. Da captação em locação à narrativa de plataforma, transformamos experiências reais em imagens que duram.",
       nota: "Documentários, branded content, campanhas e narrativas digitais.",
-      video: "",
+      // Exemplo, não material definitivo: enquanto a YOUP não manda o reel
+      // do tópico, o espaço mostra o filme de um case que é do assunto.
+      video: "vapq157W3AI",
       videoPoster: ""
     },
     {
@@ -78,7 +80,9 @@ window.YOUP = {
       chamada: "Cada marca, um projeto único.",
       texto: "Cada desafio nasce de uma realidade própria, e cada projeto YOUP é construído a partir dela. Concebemos, planejamos e executamos soluções sob medida, do conceito estratégico à operação em campo. Sentimos o que sua marca precisa transmitir antes de qualquer entrega, e construímos a partir daí, com a profundidade de 26 anos em ações de alta complexidade.",
       nota: "",
-      video: "",
+      // Exemplo, não material definitivo: a Conquista da Estaiada é o case
+      // que melhor mostra o sob medida. Trocar quando vier o reel do tópico.
+      video: "SWg0URFCP9E",
       videoPoster: ""
     }
   ],
@@ -180,7 +184,10 @@ window.YOUP = {
       meta: [["Cliente", "Red Bull"], ["Atleta", "Pedro Caldas"], ["Local", "Curitiba (PR)"], ["Ano", "2026"]],
       texto: "[A CONFIRMAR: texto completo do case]",
       fotos: 3,
-      video: "DZcZl-T7vDY",
+      // Short do YouTube: filma em pe. O videoVertical faz o site montar o
+      // quadro em 9:16, senao o player sobra tarja preta dos dois lados.
+      video: "vwTrx3YzOr8",
+      videoVertical: true,
       videoCredito: "Red Bull"
     },
     {

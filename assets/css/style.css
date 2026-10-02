@@ -787,7 +787,7 @@ p { margin: 0 0 1em; }
   font-size: .82rem; text-transform: uppercase; color: rgba(255, 255, 255, .5);
 }
 
-.manifesto__grade { display: grid; grid-template-columns: 1fr minmax(0, .85fr); gap: var(--e-5); align-items: center; }
+.manifesto__grade { display: grid; grid-template-columns: 1fr minmax(0, 1.08fr); gap: var(--e-4); align-items: center; }
 .manifesto__col { min-width: 0; }
 
 /* --- Órbita das marcas --------------------------------------------------
@@ -795,13 +795,19 @@ p { margin: 0 0 1em; }
    logotipo, giram e voltam a se fundir nele. Sem áudio, sem controles.
    ----------------------------------------------------------------------- */
 .orbita { position: relative; width: 100%; aspect-ratio: 1; }
+/* O vídeo passa um pouco da coluna: dentro dela ele ficava pequeno demais e
+   a cena virava um selo girando no canto. */
+.orbita__video { transform: scale(1.12); }
 .orbita__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
 /* Se o vídeo não tocar (JS desligado, autoplay bloqueado), fica o logotipo. */
 .orbita__reserva { position: absolute; left: 50%; top: 50%; width: 46%; transform: translate(-50%, -50%); z-index: -1; }
 
 @media (max-width: 860px) {
   .manifesto__grade { grid-template-columns: 1fr; }
-  .orbita { width: min(78vw, 420px); margin-inline: auto; }
+  /* No celular a coluna já é a tela inteira: o vídeo cresce pela largura e
+     não pelo scale, que empurrava a página 10px para o lado. */
+  .orbita { width: 100%; max-width: min(520px, 42svh); margin-inline: auto; }
+  .orbita__video { transform: none; }
 }
 
 /* Cada palavra tem uma cópia acesa por cima, revelada por clip-path. */
@@ -889,6 +895,20 @@ p { margin: 0 0 1em; }
   border: 0; opacity: 0; pointer-events: none;
   transition: opacity var(--t-estado) var(--ease);
 }
+/* Short do YouTube: o filme é em pé. Num quadro 9:16 o player encaixa o
+   vídeo inteiro, sem a tarja preta que sobra dos lados num quadro deitado. */
+.card__filme--pe { width: 100%; height: auto; aspect-ratio: 9 / 16; min-width: 0; }
+/* Filme em pé no hero: ele ocupa uma coluna no meio e a capa preenche o
+   resto. Para não virar três retângulos colados, a capa entra desfocada,
+   como ambiente, e as bordas do vídeo somem em degradê. */
+.hero-video--pe iframe {
+  width: auto; height: 100%; aspect-ratio: 9 / 16; min-width: 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
+}
+.hero-video--pe img { filter: blur(26px) saturate(1.2) brightness(.5); transform: scale(1.12); }
+.video-block--pe { aspect-ratio: 9 / 16; max-width: min(100%, 420px); margin-inline: auto; }
+
 /* O card largo da grade é mais deitado que 16:9: aí quem manda é a largura. */
 .cases-grid .card:first-child .card__filme { width: 100%; height: auto; min-height: 100%; min-width: 0; }
 .card.is-filme .card__filme { opacity: 1; }

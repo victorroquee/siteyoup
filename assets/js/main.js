@@ -263,12 +263,30 @@
 
     sec.classList.add("manifesto--pinned");
 
+    /* A órbita deixa de ser um loop solto e passa a andar com a rolagem,
+       igual à frase: o avanço da seção vira o tempo do vídeo, e subir de
+       volta roda ao contrário. O arquivo é gravado com chave a cada quatro
+       quadros justamente para aguentar ser arrastado assim. */
+    var filme = $(".orbita__video", sec);
+    if (filme) {
+      filme.removeAttribute("loop");
+      filme.removeAttribute("autoplay");
+      filme.preload = "auto";
+      filme.pause();
+      filme.addEventListener("loadedmetadata", function () { filme.pause(); pintar(); });
+      filme.addEventListener("play", function () { filme.pause(); });
+    }
+
     var pedindo = false;
 
     function pintar() {
       var total = track.offsetHeight - stage.offsetHeight;
       if (total <= 0) return;
       var p = Math.min(Math.max(-track.getBoundingClientRect().top / total, 0), 1);
+      if (filme && filme.readyState > 0 && filme.duration) {
+        var t = p * (filme.duration - 0.05);
+        if (Math.abs(filme.currentTime - t) > 0.02) filme.currentTime = t;
+      }
       // Folga no começo e no fim: a frase termina de acender antes de soltar.
       var cursor = p * (luzes.length + 5) - 1.5;
       for (var i = 0; i < luzes.length; i++) {
@@ -465,7 +483,7 @@
 
   function card(c, extra) {
     return '<a class="card ' + (extra || "") + (c.logoSombra ? " card--sombra-topo" : "") + '" href="' + caseUrl(c) + '"' +
-      (ehYoutube(c.video || "") ? ' data-filme="' + c.video + '"' : "") + ">" +
+      (ehYoutube(c.video || "") ? ' data-filme="' + c.video + '"' + (c.videoVertical ? ' data-vertical="1"' : "") : "") + ">" +
       (YOUP.capa(c) ? '<img class="card__img" src="' + YOUP.capa(c) + '" alt="' + esc(c.nome) + '" loading="lazy"' + (c.pos ? ' style="object-position:' + c.pos + '"' : "") + '>' : '<div class="card__img grad"></div>') +
       (previaDe(c) ? '<video class="card__previa" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true" data-previa="' + previaDe(c) + '"></video>' : "") +
       (c.logo ? '<img class="card__logo" src="' + c.logo + '" alt="" loading="lazy">' : "") +
@@ -518,7 +536,7 @@
           ' title="' + esc(c.nome) + ', vídeo de fundo" tabindex="-1"' +
           ' allow="autoplay; encrypted-media" referrerpolicy="strict-origin-when-cross-origin"></iframe>'
       : '<video autoplay muted loop playsinline preload="metadata"><source src="' + c.video + '" type="video/mp4"></video>';
-    return '<div class="page-hero__bg hero-video">' + capa + filme + "</div>" +
+    return '<div class="page-hero__bg hero-video' + (c.videoVertical ? " hero-video--pe" : "") + '">' + capa + filme + "</div>" +
       '<button class="hero-som" type="button" aria-pressed="false" aria-label="Ligar o som do vídeo">' + SOM + "</button>";
   }
 
@@ -591,7 +609,7 @@
       var quadro = $(".card__filme", card);
       if (quadro) { ordem(quadro, "playVideo"); card.classList.add("is-filme"); return; }
       quadro = document.createElement("iframe");
-      quadro.className = "card__filme";
+      quadro.className = "card__filme" + (card.getAttribute("data-vertical") ? " card__filme--pe" : "");
       quadro.tabIndex = -1;
       quadro.setAttribute("aria-hidden", "true");
       quadro.setAttribute("allow", "autoplay; encrypted-media");
@@ -1007,7 +1025,7 @@
             (c.resultado ? bloco("O resultado", [c.resultado]) : "") + seloDeRecorde(c) + "</div>" : "") +
         "</div></section>" +
         (c.citacao ? '<section class="section--tight"><div class="wrap"><figure class="case-quote" data-reveal><blockquote>“' + esc(c.citacao.texto) + '”</blockquote><figcaption>' + esc(c.citacao.autor) + "</figcaption></figure></div></section>" : "") +
-        (c.video ? '<section class="section--tight"><div class="wrap"><div class="video-block" data-reveal>' + playerDe(c.video, fotos[0] || "", c.nome, false) + "</div>" +
+        (c.video ? '<section class="section--tight"><div class="wrap"><div class="video-block' + (c.videoVertical ? " video-block--pe" : "") + '" data-reveal>' + playerDe(c.video, fotos[0] || "", c.nome, false) + "</div>" +
           (c.videoCredito ? '<p class="video-credito">Vídeo: ' + esc(c.videoCredito) + "</p>" : "") + "</div></section>" : "") +
         (fotos.length > 1 ? '<section class="section--tight" style="padding-top:0"><div class="wrap"><div class="mosaic">' +
           fotos.slice(1).map(function (f, k) { return '<figure data-reveal data-idx="' + (k + 1) + '"><img src="' + f + '" alt="' + esc(c.nome) + ", foto " + (k + 2) + '" loading="lazy"></figure>'; }).join("") +

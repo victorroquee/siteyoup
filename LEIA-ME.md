@@ -6,9 +6,14 @@ devolver "Erro 153").
 
 ```
 cd ~/Desktop/youpreview.netlify.app
-python3 -m http.server 8787
+node servidor.js
 # abre http://127.0.0.1:8787
 ```
+
+O `servidor.js` existe por um motivo só: o `python3 -m http.server` não
+responde a pedido de faixa (Range), e sem isso o vídeo da órbita não pode ser
+arrastado pelo scroll, fica parado no primeiro quadro. Na Netlify funciona
+sozinho.
 
 Repositório: https://github.com/victorroquee/siteyoup
 
@@ -79,18 +84,31 @@ no card e volta na hora. No máximo três embeds ficam vivos ao mesmo tempo, que
 é o que impede uma grade inteira de cases de virar dez players na memória. No
 toque não há hover, então o celular não baixa nada disso.
 
+**Filme em pé.** Case com `videoVertical: true` no `data.js` (hoje o Wake em
+Curitiba, que é um Short) monta todos os quadros em 9:16, senão o player do
+YouTube sobra tarja preta dos dois lados. No hero o filme fica numa coluna no
+meio, a capa entra desfocada atrás como ambiente e as bordas do vídeo somem em
+degradê, para não virar três retângulos colados.
+
 **Selo de recorde.** O case que declara `selo` no `data.js` ganha a placa logo
 abaixo de "O resultado". O logo oficial do Guinness é marca registrada e não
 veio no kit da YOUP, então a placa usa o desenho de medalha do próprio site:
 o que vale ali é o nome escrito e os dois recordes, não uma imitação do selo.
 
-**Vídeo da órbita.** `assets/media/marca/orbita.mp4`, 24 fps. Dois cuidados na
-hora de trocar o arquivo: o fundo precisa ser exatamente o `--vinho` da página
+**Vídeo da órbita.** `assets/media/marca/orbita.mp4`, 24 fps, gerado a partir
+do `youp-orbita-2x.mp4` do motion-studio. Ele não fica em loop solto: o avanço
+da seção presa na tela vira o tempo do vídeo, igual às palavras que acendem,
+e subir de volta roda ao contrário. Por isso o arquivo é gravado com chave a
+cada quatro quadros (`-g 4`), que é o que aguenta ser arrastado sem travar, e
+por isso ele precisa de servidor que responda Range. Três cuidados na hora de
+trocar o arquivo: o fundo precisa ser exatamente o `--vinho` da página
 (senão aparece um retângulo no meio da seção) e o arquivo precisa ser gravado
 em faixa de cor limitada (`-color_range tv`, com os flags bt709). Em faixa
 cheia o Chrome escurece tudo e o retângulo volta. O comando que gerou o atual
 levanta o preto do arquivo até o vinho da página com `blend=all_mode=lighten`
-em RGB, nunca em YUV, que torce as cores.
+em RGB, nunca em YUV, que torce as cores. E o vídeo cresce um pouco além da
+coluna (`scale(1.12)`), menos no celular, onde o scale empurrava a página para
+o lado.
 
 **Faixa em duotone.** As seis fotos de bastidores vêm de eventos diferentes,
 cada uma com uma luz. O preto e branco apaga a cor de origem e o roxo entra
@@ -107,13 +125,14 @@ quatro títulos e os quatro parágrafos da seção "O que a Youp entregou". A
 seção inteira está escondida até alguém escrever. Não inventei porque é
 afirmação factual sobre o que a agência entregou na MotoGP.
 
-**2. Três cases sem vídeo**: X Games 2008, Dia D 2006 e Wake em Curitiba
-2026. Não existe material oficial no YouTube. Vale pedir o link para a Red
-Bull ou para a produtora.
+**2. Dois cases sem vídeo**: X Games 2008 e Dia D 2006. Não existe material
+oficial no YouTube. Vale pedir o link para a Red Bull ou para a produtora.
 
-**3. Espaços de vídeo vazios**: os tópicos "Content & Digital" e "Tailor
-Made" em "Do briefing ao impossível", e o fundo do hero da home
-(`heroVideo` no `data.js`, pasta `assets/media/hero/` já criada).
+**3. Vídeo de exemplo em dois tópicos de "Do briefing ao impossível".**
+"Content & Digital" está com o filme do De Férias com o Wake e "Tailor Made"
+com o da Conquista da Estaiada. São cases do próprio assunto, mas não são o
+material do tópico: trocar quando a YOUP mandar os reels. Falta também o fundo
+do hero da home (`heroVideo` no `data.js`, pasta `assets/media/hero/` criada).
 
 **4. Logo em alta.** O máximo que existe em acesso público é a imagem de 150
 pixels do Instagram. O vetor tem que vir do kit de marca.
