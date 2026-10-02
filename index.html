@@ -43,13 +43,15 @@
     <span class="scroll-cue" aria-hidden="true"></span>
   </section>
 
-  <section class="section grad historia">
-    <img class="historia__y" src="assets/media/marca/youp-pincel-branco.png" alt="" aria-hidden="true">
-    <div class="wrap">
-      <h2 class="display-xl"><span class="split-line"><span>26 anos</span></span><span class="split-line"><span>de história</span></span></h2>
-      <p class="historia__q" data-reveal data-reveal-delay="1">Como resumir?</p>
-      <p class="lead" data-reveal data-reveal-delay="2" style="margin-top:1.5rem">Conectamos marcas e pessoas através da técnica, da arte e da ciência, explorando todos os sentidos para gerar ações inesquecíveis.</p>
-      <div class="numbers" id="numeros"></div>
+  <!-- Manifesto: um resumo do que é a YOUP, revelado palavra a palavra conforme a rolagem. -->
+  <section class="manifesto" data-manifesto aria-labelledby="manifesto-texto">
+    <div class="manifesto__track">
+      <div class="manifesto__stage">
+        <div class="wrap">
+          <p class="manifesto__texto" id="manifesto-texto">Há 26 anos a YOUP conecta marcas e pessoas através da técnica, da arte e da ciência, explorando todos os sentidos para gerar ações inesquecíveis.</p>
+          <p class="manifesto__assina"><span class="manifesto__risco" aria-hidden="true"></span>YOUP, desde 2000</p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -100,6 +102,14 @@
           <p class="tlh__conta"><span class="tlh__i">1</span>/<span class="tlh__n">1</span></p>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- Os dados vêm depois da história, como prova do que foi contado. -->
+  <section class="section numeros" aria-labelledby="numeros-titulo">
+    <div class="wrap">
+      <h2 class="display-m" id="numeros-titulo" data-reveal>Em números.</h2>
+      <div class="numbers" id="numeros"></div>
     </div>
   </section>
 

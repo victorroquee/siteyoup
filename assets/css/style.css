@@ -576,6 +576,33 @@ p { margin: 0 0 1em; }
 .card div.card__img { position: absolute; inset: 0; }
 .card div.card__img::after { content: "Fotos em breve"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-family: var(--font-display); font-weight: var(--peso-cabecalho); font-size: .78rem; text-transform: uppercase; border: 1px solid rgba(255,255,255,.5); border-radius: 999px; padding: .55rem 1rem; white-space: nowrap; }
 
+/* --- Manifesto ---------------------------------------------------------
+   O texto fica parado no centro enquanto a página rola e as palavras acendem
+   uma a uma, da esquerda para a direita. Sem JS o texto já nasce legível.
+   ----------------------------------------------------------------------- */
+.manifesto { background: var(--vinho); }
+.manifesto__track { position: relative; }
+.manifesto__stage { display: grid; align-content: center; min-height: 100svh; padding-block: clamp(5rem, 12vh, 9rem); }
+.manifesto--pinned .manifesto__track { height: 240svh; }
+.manifesto--pinned .manifesto__stage { position: sticky; top: 0; height: 100svh; min-height: 520px; }
+.manifesto__texto {
+  margin: 0;
+  font-family: var(--font-display); font-weight: var(--peso-texto);
+  font-size: clamp(1.75rem, 3.3vw, 3.4rem); line-height: 1.26;
+  max-width: 24ch; text-wrap: balance;
+}
+.manifesto__assina {
+  display: flex; align-items: center; gap: 1rem;
+  margin: clamp(2.5rem, 6vh, 4.5rem) 0 0;
+  font-family: var(--font-display); font-weight: var(--peso-cabecalho);
+  font-size: .82rem; text-transform: uppercase; color: rgba(255, 255, 255, .5);
+}
+.manifesto__risco { display: block; width: 40px; height: 1px; background: rgba(255, 255, 255, .5); }
+
+/* Cada palavra tem uma cópia acesa por cima, revelada por clip-path. */
+.pal { position: relative; display: inline-block; color: rgba(255, 255, 255, .22); }
+.pal > i { position: absolute; left: 0; top: 0; font-style: normal; color: var(--branco); clip-path: inset(0 100% 0 0); white-space: pre; }
+
 /* --- Intro de carregamento ---------------------------------------------
    Véu com o logotipo, uma linha que completa e some. Sem JS o <noscript>
    esconde o véu; com movimento reduzido, o JS tira na hora.

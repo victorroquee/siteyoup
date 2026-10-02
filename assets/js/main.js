@@ -182,6 +182,48 @@
     update();
   }
 
+  /* --- Manifesto: as palavras acendem com a rolagem ----------------------
+     A seção prende na tela e o avanço do scroll vira o quanto da frase já
+     acendeu. Com movimento reduzido ou sem JS, a frase fica acesa e parada. */
+  function manifesto() {
+    var sec = $("[data-manifesto]");
+    if (!sec) return;
+    var alvo = $(".manifesto__texto", sec);
+    var track = $(".manifesto__track", sec), stage = $(".manifesto__stage", sec);
+    if (!alvo || reduce) return;
+
+    // Quebra a frase em palavras, cada uma com uma cópia acesa por cima.
+    alvo.innerHTML = alvo.textContent.trim().split(/\s+/).map(function (p) {
+      var seguro = esc(p);
+      return '<span class="pal"><i>' + seguro + "</i>" + seguro + "</span>";
+    }).join(" ");
+    var luzes = $$(".pal > i", alvo);
+    if (!luzes.length) return;
+
+    sec.classList.add("manifesto--pinned");
+    var pedindo = false;
+
+    function pintar() {
+      var total = track.offsetHeight - stage.offsetHeight;
+      if (total <= 0) return;
+      var p = Math.min(Math.max(-track.getBoundingClientRect().top / total, 0), 1);
+      // Folga no começo e no fim: a frase termina de acender antes de soltar.
+      var cursor = p * (luzes.length + 5) - 1.5;
+      for (var i = 0; i < luzes.length; i++) {
+        var local = Math.min(Math.max(cursor - i, 0), 1);
+        luzes[i].style.clipPath = "inset(0 " + ((1 - local) * 100).toFixed(2) + "% 0 0)";
+      }
+    }
+
+    window.addEventListener("scroll", function () {
+      if (pedindo) return;
+      pedindo = true;
+      requestAnimationFrame(function () { pedindo = false; pintar(); });
+    }, { passive: true });
+    window.addEventListener("resize", pintar);
+    pintar();
+  }
+
   /* --- Linha do tempo horizontal (home) --------------------------------
      O scroll vertical vira avanço horizontal: a seção prende na tela, a fila
      de anos atravessa o viewport e só então a página segue para a próxima
@@ -406,6 +448,7 @@
   var pages = {
     home: function () {
       heroSlideshow();
+      manifesto();
       servicos();
       $("#numeros").classList.toggle("numbers--5", D.numeros.length === 5);
       if (D.numerosNota) $("#numeros").insertAdjacentHTML("afterend", '<p class="numbers__nota" data-reveal>' + esc(D.numerosNota) + "</p>");
