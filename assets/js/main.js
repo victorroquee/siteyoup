@@ -22,6 +22,40 @@
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
   function caseUrl(c) { return "case.html?c=" + encodeURIComponent(c.slug); }
 
+  /* --- Intro de carregamento --------------------------------------------
+     O véu já está no HTML, então não existe piscada de conteúdo. Fica no ar
+     até a página carregar (com um mínimo, para não ser um flash), completa a
+     linha e sai. Da segunda página em diante na mesma visita, só um véu curto. */
+  function intro() {
+    var el = document.getElementById("intro");
+    if (!el) return;
+    var visto = false;
+    try { visto = sessionStorage.getItem("youp-intro") === "1"; } catch (e) {}
+    var rapida = reduce || visto;
+    if (rapida) el.classList.add("intro--rapida");
+    document.documentElement.classList.add("intro-ativa");
+
+    function sair() {
+      el.classList.add("is-fim");
+      document.documentElement.classList.remove("intro-ativa");
+      setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 800);
+      try { sessionStorage.setItem("youp-intro", "1"); } catch (e) {}
+    }
+
+    if (rapida) { setTimeout(sair, reduce ? 0 : 260); return; }
+
+    var piso = 620, t0 = Date.now(), fechou = false;
+    function pronto() {
+      if (fechou) return;
+      fechou = true;
+      el.classList.add("is-carregado");
+      setTimeout(sair, Math.max(0, piso - (Date.now() - t0)) + 780);
+    }
+    if (document.readyState === "complete") pronto();
+    else window.addEventListener("load", pronto);
+    setTimeout(pronto, 2600);
+  }
+
   /* --- Header e menu --------------------------------------------------- */
   function header() {
     var cur = page === "case" ? "cases" : page;
@@ -554,6 +588,7 @@
     }
   };
 
+  intro();
   header();
   if (pages[page]) pages[page]();
   footer();
