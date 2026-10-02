@@ -70,6 +70,28 @@ sem recarregar, porque recarregar voltaria o filme para o começo. Com
 sim com controle e tela cheia, deixou de tocar sozinho para os dois não
 rodarem juntos.
 
+**Hover do card.** Passar o mouse no card toca o filme do case, não mais só
+a prévia. Os dois trabalham juntos: a prévia montada com as fotos
+(`assets/media/previa/<slug>.mp4`) entra na hora, porque é arquivo do próprio
+site, e cobre o segundo que o embed do YouTube leva para carregar; quando o
+filme aparece, ele fica por cima. Da segunda passada em diante o embed já está
+no card e volta na hora. No máximo três embeds ficam vivos ao mesmo tempo, que
+é o que impede uma grade inteira de cases de virar dez players na memória. No
+toque não há hover, então o celular não baixa nada disso.
+
+**Selo de recorde.** O case que declara `selo` no `data.js` ganha a placa logo
+abaixo de "O resultado". O logo oficial do Guinness é marca registrada e não
+veio no kit da YOUP, então a placa usa o desenho de medalha do próprio site:
+o que vale ali é o nome escrito e os dois recordes, não uma imitação do selo.
+
+**Vídeo da órbita.** `assets/media/marca/orbita.mp4`, 24 fps. Dois cuidados na
+hora de trocar o arquivo: o fundo precisa ser exatamente o `--vinho` da página
+(senão aparece um retângulo no meio da seção) e o arquivo precisa ser gravado
+em faixa de cor limitada (`-color_range tv`, com os flags bt709). Em faixa
+cheia o Chrome escurece tudo e o retângulo volta. O comando que gerou o atual
+levanta o preto do arquivo até o vinho da página com `blend=all_mode=lighten`
+em RGB, nunca em YUV, que torce as cores.
+
 **Faixa em duotone.** As seis fotos de bastidores vêm de eventos diferentes,
 cada uma com uma luz. O preto e branco apaga a cor de origem e o roxo entra
 por cima no modo `multiply`, que leva o escuro para o preto e o claro para o
@@ -80,33 +102,23 @@ fotos ficam coladas, sem respiro entre elas.
 
 ## Pendências
 
-**1. Hover do card ainda toca prévia, não o filme (ABERTO, à espera de
-material).** O portão do YouTube saiu e a página do case já abre com o filme
-rodando no hero, então o pedido principal está entregue. O que falta é o
-hover do card em "O impossível, entregue": ele toca uma **prévia gerada a
-partir das fotos do case** (`assets/media/previa/<slug>.mp4`), não o vídeo
-real. Não dá para baixar vídeo do YouTube, e o iframe demora mais de um
-segundo para carregar, o que não serve para hover. Se a YOUP entregar os
-brutos, é só trocar o arquivo de mesmo nome que o hover passa a usar o
-material real.
-
-**2. Oito campos de texto em branco em `atletas.html`**, linhas 134 a 150: os
+**1. Oito campos de texto em branco em `atletas.html`**, linhas 134 a 150: os
 quatro títulos e os quatro parágrafos da seção "O que a Youp entregou". A
 seção inteira está escondida até alguém escrever. Não inventei porque é
 afirmação factual sobre o que a agência entregou na MotoGP.
 
-**3. Três cases sem vídeo**: X Games 2008, Dia D 2006 e Wake em Curitiba
+**2. Três cases sem vídeo**: X Games 2008, Dia D 2006 e Wake em Curitiba
 2026. Não existe material oficial no YouTube. Vale pedir o link para a Red
 Bull ou para a produtora.
 
-**4. Espaços de vídeo vazios**: os tópicos "Content & Digital" e "Tailor
+**3. Espaços de vídeo vazios**: os tópicos "Content & Digital" e "Tailor
 Made" em "Do briefing ao impossível", e o fundo do hero da home
 (`heroVideo` no `data.js`, pasta `assets/media/hero/` já criada).
 
-**5. Logo em alta.** O máximo que existe em acesso público é a imagem de 150
+**4. Logo em alta.** O máximo que existe em acesso público é a imagem de 150
 pixels do Instagram. O vetor tem que vir do kit de marca.
 
-**6. Divergência na fonte.** O youp.com.br diz "Dia D, em 2000" na nota de
+**5. Divergência na fonte.** O youp.com.br diz "Dia D, em 2000" na nota de
 Live Marketing e "Dia D criado em 2006" na linha do tempo, na mesma página.
 Aqui está 2006, que é o que bate com a cronologia. Vale confirmar.
 

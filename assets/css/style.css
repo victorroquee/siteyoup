@@ -397,6 +397,23 @@ p { margin: 0 0 1em; }
   .cases-grid .card, .cases-grid .card:first-child { aspect-ratio: 4 / 5; }
 }
 
+/* Selo de recorde, logo abaixo do resultado do case. Fica numa caixa de
+   linha fina, sem cor cheia, porque é informação e não etiqueta de promoção. */
+.recorde {
+  display: flex; gap: var(--e-2); align-items: flex-start;
+  margin-top: var(--e-3); padding: var(--e-3);
+  border: 1px solid var(--linha); border-radius: 4px;
+}
+.recorde__icone { width: 34px; height: 34px; flex: 0 0 34px; color: var(--roxo-luz); }
+.recorde__titulo {
+  margin: 0; font-family: var(--font-display); font-weight: var(--peso-titulo);
+  text-transform: uppercase; font-size: clamp(1rem, 1.6vw, 1.25rem); line-height: 1.1;
+}
+.recorde__marcas { list-style: none; margin: .75rem 0 0; padding: 0; display: grid; gap: .4rem; }
+.recorde__marcas li { position: relative; padding-left: 1.1rem; font-size: .95rem; line-height: 1.45; color: rgba(255, 255, 255, .8); }
+.recorde__marcas li::before { content: ""; position: absolute; left: 0; top: .62em; width: 6px; height: 6px; border-radius: 50%; background: var(--roxo-luz); }
+.recorde__nota { margin: .75rem 0 0; font-size: .84rem; color: rgba(255, 255, 255, .55); }
+
 /* Faixa de anos (prévia da linha do tempo) */
 /* --- Linha do tempo da home --------------------------------------------
    Nao sao cards: e um eixo proporcional ao tempo. A secao prende na tela, o
@@ -861,6 +878,21 @@ p { margin: 0 0 1em; }
 .texto-legal__corpo ul { margin: 0 0 1em; padding-left: 1.2rem; color: rgba(255, 255, 255, .82); line-height: 1.7; }
 .texto-legal__corpo li { margin-bottom: .6rem; }
 .texto-legal__corpo a { color: var(--branco); text-decoration: underline; text-underline-offset: .25em; }
+
+/* O filme do case no card: 16:9 cortado para cobrir a caixa, que é retrato.
+   A altura manda e a largura sai do aspect-ratio, que é o que evita esticar
+   a imagem. O embed não recebe clique: o card inteiro continua sendo um
+   link para a página do case. */
+.card__filme {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(1.2);
+  height: 100%; width: auto; aspect-ratio: 16 / 9; min-width: 100%;
+  border: 0; opacity: 0; pointer-events: none;
+  transition: opacity var(--t-estado) var(--ease);
+}
+/* O card largo da grade é mais deitado que 16:9: aí quem manda é a largura. */
+.cases-grid .card:first-child .card__filme { width: 100%; height: auto; min-height: 100%; min-width: 0; }
+.card.is-filme .card__filme { opacity: 1; }
+.card.is-filme .card__previa { opacity: 0; }
 
 /* Prévia em vídeo do card, no hover e no foco de teclado. */
 .card__previa {

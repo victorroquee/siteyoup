@@ -439,6 +439,20 @@
     relogio: '<circle cx="12" cy="12" r="9"/><path d="M12 6.5V12l3.5 2"/>'
   };
 
+  /* Selo de recorde. Só aparece em case que declara `selo` no data.js, e o
+     desenho é o mesmo da medalha dos selos da home: o logo oficial do
+     Guinness é marca registrada e não está no kit que a YOUP mandou, então
+     aqui o que vale é o nome escrito e os recordes, não uma imitação. */
+  function seloDeRecorde(c) {
+    if (!c.selo) return "";
+    return '<aside class="recorde" data-reveal>' +
+      '<svg class="recorde__icone" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">' + SELOS.medalha + "</svg>" +
+      '<div><p class="recorde__titulo">' + esc(c.selo.titulo) + "</p>" +
+      '<ul class="recorde__marcas">' + c.selo.marcas.map(function (m) { return "<li>" + esc(m) + "</li>"; }).join("") + "</ul>" +
+      (c.selo.nota ? '<p class="recorde__nota">' + esc(c.selo.nota) + "</p>" : "") +
+      "</div></aside>";
+  }
+
   function selo(s) {
     var d = SELOS[s.icone] || SELOS.medalha;
     return '<li><svg class="selo__icone" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">' + d + "</svg>" +
@@ -450,7 +464,8 @@
   function previaDe(c) { return c.fotos ? "assets/media/previa/" + c.slug + ".mp4" : ""; }
 
   function card(c, extra) {
-    return '<a class="card ' + (extra || "") + (c.logoSombra ? " card--sombra-topo" : "") + '" href="' + caseUrl(c) + '">' +
+    return '<a class="card ' + (extra || "") + (c.logoSombra ? " card--sombra-topo" : "") + '" href="' + caseUrl(c) + '"' +
+      (ehYoutube(c.video || "") ? ' data-filme="' + c.video + '"' : "") + ">" +
       (YOUP.capa(c) ? '<img class="card__img" src="' + YOUP.capa(c) + '" alt="' + esc(c.nome) + '" loading="lazy"' + (c.pos ? ' style="object-position:' + c.pos + '"' : "") + '>' : '<div class="card__img grad"></div>') +
       (previaDe(c) ? '<video class="card__previa" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true" data-previa="' + previaDe(c) + '"></video>' : "") +
       (c.logo ? '<img class="card__logo" src="' + c.logo + '" alt="" loading="lazy">' : "") +
@@ -540,24 +555,72 @@
     });
   }
 
-  /* Ao passar o mouse (ou chegar pelo teclado) no card, a foto dá lugar à
-     prévia em vídeo daquele case. O arquivo só é baixado no primeiro hover,
-     então quem não passa o mouse não paga por ele. No toque não há hover,
-     então nada é baixado no celular. */
+  /* Ao passar o mouse (ou chegar pelo teclado) no card, a foto dá lugar ao
+     filme do case. Os dois vídeos trabalham juntos: a prévia montada com as
+     fotos entra na hora, porque é arquivo do próprio site, e cobre o segundo
+     que o embed do YouTube leva para carregar. Quando o filme aparece, ele
+     fica por cima. Da segunda passada em diante o embed já está no card e
+     volta na hora. Nada é baixado antes do primeiro hover, e no toque não há
+     hover, então o celular não paga por isso. */
   function previaDosCards() {
     if (reduce) return;
+
+    function ordem(quadro, func) {
+      if (!quadro || !quadro.contentWindow) return;
+      quadro.contentWindow.postMessage(JSON.stringify({ event: "command", func: func, args: [] }), "*");
+    }
+
+    // Três embeds de cada vez, no máximo: quem passa o mouse por uma grade
+    // inteira de cases não pode acabar com dez players vivos na página.
+    var vivos = [];
+    function guarda(card) {
+      vivos = vivos.filter(function (x) { return x !== card; });
+      vivos.push(card);
+      while (vivos.length > 3) {
+        var velho = vivos.shift();
+        var q = $(".card__filme", velho);
+        if (q) q.parentNode.removeChild(q);
+        velho.classList.remove("is-filme");
+      }
+    }
+
+    function filme(card) {
+      var id = card.getAttribute("data-filme");
+      if (!id) return;
+      guarda(card);
+      var quadro = $(".card__filme", card);
+      if (quadro) { ordem(quadro, "playVideo"); card.classList.add("is-filme"); return; }
+      quadro = document.createElement("iframe");
+      quadro.className = "card__filme";
+      quadro.tabIndex = -1;
+      quadro.setAttribute("aria-hidden", "true");
+      quadro.setAttribute("allow", "autoplay; encrypted-media");
+      quadro.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
+      quadro.src = "https://www.youtube-nocookie.com/embed/" + id + "?autoplay=1&mute=1&loop=1&playlist=" + id +
+        "&controls=0&modestbranding=1&rel=0&playsinline=1&disablekb=1&fs=0&iv_load_policy=3&cc_load_policy=0&enablejsapi=1";
+      // Se o mouse já saiu quando o filme carregou, ele não aparece sozinho.
+      quadro.addEventListener("load", function () {
+        if (card.classList.contains("is-previa")) card.classList.add("is-filme");
+      });
+      var capa = $(".card__img", card);
+      if (capa && capa.nextSibling) card.insertBefore(quadro, capa.nextSibling);
+      else card.insertBefore(quadro, card.firstChild);
+    }
+
     function liga(card) {
+      card.classList.add("is-previa");
+      filme(card);
       var v = $(".card__previa", card);
       if (!v) return;
       if (!v.getAttribute("src")) v.setAttribute("src", v.getAttribute("data-previa"));
-      card.classList.add("is-previa");
-      v.play().catch(function () { card.classList.remove("is-previa"); });
+      v.play().catch(function () { if (!card.classList.contains("is-filme")) card.classList.remove("is-previa"); });
     }
     function desliga(card) {
-      var v = $(".card__previa", card);
-      if (!v) return;
       card.classList.remove("is-previa");
-      v.pause();
+      card.classList.remove("is-filme");
+      ordem($(".card__filme", card), "pauseVideo");
+      var v = $(".card__previa", card);
+      if (v) v.pause();
     }
     document.addEventListener("mouseover", function (e) {
       var c = e.target.closest && e.target.closest(".card");
@@ -835,7 +898,10 @@
           "</ul>" +
           '<a class="btn" href="' + caseUrl(dest) + '" data-reveal data-reveal-delay="3">Ver o case ' + ARROW + "</a>" +
         "</div>";
-      $("#rail").innerHTML = D.cases.map(function (c) { return card(c); }).join("");
+      // A trilha abre pelo case em destaque, como a grade de Nossos Cases.
+      var primeiro = YOUP.destaque();
+      $("#rail").innerHTML = [primeiro].concat(D.cases.filter(function (c) { return c !== primeiro; }))
+        .map(function (c) { return card(c); }).join("");
       railControls();
       linhaDoTempo();
     },
@@ -938,7 +1004,7 @@
           (c.desafio ? '<div class="case-story">' +
             bloco("O desafio", [c.desafio]) +
             bloco(c.entregaTitulo || "A entrega da YOUP", c.entrega || []) +
-            (c.resultado ? bloco("O resultado", [c.resultado]) : "") + "</div>" : "") +
+            (c.resultado ? bloco("O resultado", [c.resultado]) : "") + seloDeRecorde(c) + "</div>" : "") +
         "</div></section>" +
         (c.citacao ? '<section class="section--tight"><div class="wrap"><figure class="case-quote" data-reveal><blockquote>“' + esc(c.citacao.texto) + '”</blockquote><figcaption>' + esc(c.citacao.autor) + "</figcaption></figure></div></section>" : "") +
         (c.video ? '<section class="section--tight"><div class="wrap"><div class="video-block" data-reveal>' + playerDe(c.video, fotos[0] || "", c.nome, false) + "</div>" +

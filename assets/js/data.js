@@ -206,6 +206,15 @@ window.YOUP = {
         "Assumimos a produção executiva do Red Bull Building Drop, coordenando uma das operações mais complexas já realizadas no skate mundial: dois meses de montagem da estrutura temporária revestindo a fachada curva do CAFF com painéis de madeira compensada; instalação de airbags de impacto (o mesmo utilizado no MotoGP™) na base da rampa; articulação com o governo do Rio Grande do Sul, a Prefeitura de Porto Alegre e órgãos responsáveis; coordenação de equipes técnicas, de segurança e de filmagem para registrar as descidas progressivas (55 m, 60 m, 65 m e 70 m); e gestão do plano de desmontagem sustentável, com cerca de 115 toneladas de materiais reaproveitados: sucata metálica reciclada e aproximadamente 800 tábuas de madeira doadas a ONGs locais ou destinadas a biomassa."
       ],
       resultado: "Sandro Dias entrou para a história ao quebrar dois Guinness World Records™ simultaneamente: maior drop-in em quarter pipe temporário (70 metros de plataforma) e maior velocidade em quarter pipe temporário (103,8 km/h). A descida durou 8 segundos e submeteu o atleta a um pico de 3,9 G, equivalente a quase quatro vezes seu próprio peso. O projeto repercutiu na imprensa internacional, foi celebrado por nomes como Tony Hawk e Ryan Sheckler, e consolidou um marco que, segundo o próprio Hawk, “saltou cinco vezes além do que todos os outros já fizeram”.",
+      // Selo de recorde, impresso logo abaixo de "O resultado".
+      selo: {
+        titulo: "Guinness World Records™",
+        marcas: [
+          "Maior drop-in em quarter pipe temporário: 70 m",
+          "Maior velocidade em quarter pipe temporário: 103,8 km/h"
+        ],
+        nota: "Sandro Dias, Porto Alegre, 2025"
+      },
       citacao: { texto: "Esse sonho estava sendo planejado havia 13 anos. Não importa o quão longe seus sonhos possam parecer, nunca desista deles.", autor: "Sandro Dias" },
       fotos: 3,
       video: "JqflfjrcKjo",
