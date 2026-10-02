@@ -201,6 +201,26 @@
     if (!luzes.length) return;
 
     sec.classList.add("manifesto--pinned");
+
+    // As marcas dos cases: anel de chips que converge para o logotipo.
+    var orbita = $("[data-orbita]", sec), anel = orbita && $(".orbita__anel", orbita);
+    if (anel) {
+      // raio em % do lado, diametro em % do lado, e um desvio de angulo por marca
+      var MARCAS = [
+        ["red-bull.png", 8, 33, 19], ["x-games.png", 47, 29, 16],
+        ["x-fighters.png", 86, 35, 17], ["vert-evolution.png", 124, 26, 15],
+        ["building-drop.png", 162, 36, 20], ["skate-run.png", 203, 30, 16],
+        ["dia-d.png", 241, 34, 16], ["ferias-de-wake.png", 281, 27, 18],
+        ["sonhos-concretos.png", 317, 37, 15], ["red-bull-media-house.png", 352, 24, 14]
+      ];
+      anel.innerHTML = MARCAS.map(function (m) {
+        var rad = m[1] * Math.PI / 180;
+        return '<span class="orbita__chip" style="--x:' + (Math.cos(rad) * m[2]).toFixed(2) + 'cqw;--y:' +
+          (Math.sin(rad) * m[2]).toFixed(2) + 'cqw;--d:' + m[3] + 'cqw">' +
+          '<img src="assets/media/logos/' + m[0] + '" alt="" loading="lazy"></span>';
+      }).join("");
+    }
+
     var pedindo = false;
 
     function pintar() {
@@ -212,6 +232,12 @@
       for (var i = 0; i < luzes.length; i++) {
         var local = Math.min(Math.max(cursor - i, 0), 1);
         luzes[i].style.clipPath = "inset(0 " + ((1 - local) * 100).toFixed(2) + "% 0 0)";
+      }
+      // As marcas fecham no logotipo um pouco depois da frase acender.
+      if (orbita) {
+        var k = 1 - Math.min(Math.max((p - .12) / .72, 0), 1);
+        orbita.style.setProperty("--k", k.toFixed(4));
+        orbita.style.setProperty("--fade", Math.min(1, k * 1.75).toFixed(4));
       }
     }
 
