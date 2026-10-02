@@ -454,6 +454,16 @@ p { margin: 0 0 1em; }
 
 /* --- Linha do tempo ----------------------------------------------------- */
 .tl { position: relative; }
+
+/* Régua do tempo: a linha corre a cronologia inteira e vai colorindo até o
+   ponto em que a leitura está. Sem rótulo, sem marca, só a linha. */
+.tl-regua {
+  position: absolute; z-index: 6; pointer-events: none;
+  left: calc(var(--gutter) / 2); top: 0; bottom: 0; width: 2px;
+  background: rgba(255, 255, 255, .16);
+}
+.tl-regua i { position: absolute; left: 0; top: 0; width: 100%; height: var(--p, 0%); background: var(--roxo-luz); }
+@media (max-width: 700px) { .tl-regua { left: calc(var(--gutter) / 2 - 1px); width: 2px; } }
 .tl-nav { position: fixed; right: var(--gutter); top: 50%; transform: translateY(-50%); z-index: 30; display: flex; flex-direction: column; gap: .35rem; opacity: 0; transition: opacity var(--t-camada); }
 .tl-nav.is-visible { opacity: 1; }
 .tl-nav a { font-family: var(--font-display); font-weight: var(--peso-cabecalho); font-size: .78rem; color: rgba(255,255,255,.4); text-align: right; transition: color var(--t-estado), transform var(--t-estado) var(--ease); }

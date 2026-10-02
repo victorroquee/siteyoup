@@ -823,10 +823,32 @@
       }, { rootMargin: "-45% 0px -45% 0px" });
       $$(".tl-item").forEach(function (s) { io.observe(s); });
       var tl = $("#timeline");
-      window.addEventListener("scroll", function () {
+
+      // Régua do tempo: uma linha vertical que corre a página inteira e vai
+      // colorindo até o ponto em que você está. Não carrega informação, só
+      // mostra onde no tempo a leitura está.
+      var regua = document.createElement("span");
+      regua.className = "tl-regua";
+      regua.setAttribute("aria-hidden", "true");
+      regua.innerHTML = "<i></i>";
+      tl.appendChild(regua);
+
+      var pedindo = false;
+      function marcar() {
         var r = tl.getBoundingClientRect();
         nav.classList.toggle("is-visible", r.top < window.innerHeight / 2 && r.bottom > window.innerHeight / 2);
+        // O preenchimento acompanha o meio da tela: é o ponto que a pessoa lê.
+        var p = (window.innerHeight / 2 - r.top) / tl.offsetHeight;
+        regua.style.setProperty("--p", (Math.min(Math.max(p, 0), 1) * 100).toFixed(2) + "%");
+        pedindo = false;
+      }
+      window.addEventListener("scroll", function () {
+        if (pedindo) return;
+        pedindo = true;
+        requestAnimationFrame(marcar);
       }, { passive: true });
+      window.addEventListener("resize", marcar);
+      marcar();
     },
 
     cases: function () {
