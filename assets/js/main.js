@@ -782,7 +782,7 @@
       $("#destaque").innerHTML =
         '<div class="feature__media"><img src="' + YOUP.capa(dest) + '" alt="' + esc(dest.nome) + '" loading="lazy"' + (dest.pos ? ' style="object-position:' + dest.pos + '"' : "") + "></div>" +
         '<div class="wrap feature__body">' +
-          '<p class="feature__etiqueta" data-reveal><span></span>Case em destaque</p>' +
+          '<p class="feature__etiqueta" data-reveal>Case em destaque</p>' +
           '<img class="feature__logo" src="' + dest.logo + '" alt="Red Bull Building Drop" loading="lazy" data-reveal>' +
           '<h2 class="display-l feature__titulo" data-reveal data-reveal-delay="1">' + esc(dest.nome) + "</h2>" +
           '<p class="feature__sub" data-reveal data-reveal-delay="1">' + esc(dest.chamada) + "</p>" +

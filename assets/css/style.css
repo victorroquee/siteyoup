@@ -304,11 +304,10 @@ p { margin: 0 0 1em; }
 .feature__sub { margin: 1.1rem 0 0; max-width: 46ch; font-size: clamp(1.05rem, 1.3vw, 1.25rem); color: rgba(255, 255, 255, .82); }
 /* Etiqueta discreta de case em destaque */
 .feature__etiqueta {
-  display: flex; align-items: center; gap: .7rem; margin: 0 0 var(--e-3);
+  margin: 0 0 var(--e-3);
   font-family: var(--font-display); font-weight: var(--peso-cabecalho);
   font-size: .78rem; text-transform: uppercase; color: rgba(255, 255, 255, .62);
 }
-.feature__etiqueta span { width: 26px; height: 1px; background: var(--roxo-luz); }
 
 /* Os três selos: ícone fino, número e rótulo curto. Sem caixa, sem cor cheia. */
 .feature__selos {
@@ -725,12 +724,10 @@ p { margin: 0 0 1em; }
   max-width: 24ch; text-wrap: balance;
 }
 .manifesto__assina {
-  display: flex; align-items: center; gap: 1rem;
   margin: var(--ev-3) 0 0;
   font-family: var(--font-display); font-weight: var(--peso-cabecalho);
   font-size: .82rem; text-transform: uppercase; color: rgba(255, 255, 255, .5);
 }
-.manifesto__risco { display: block; width: 40px; height: 1px; background: rgba(255, 255, 255, .5); }
 
 .manifesto__grade { display: grid; grid-template-columns: 1fr minmax(0, .85fr); gap: var(--e-5); align-items: center; }
 .manifesto__col { min-width: 0; }
