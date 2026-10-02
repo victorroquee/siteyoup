@@ -353,7 +353,6 @@ p { margin: 0 0 1em; }
 .card__body { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; padding: var(--e-3); display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; }
 .card__year { font-family: var(--font-display); font-weight: var(--peso-cabecalho); font-size: .85rem; }
 .card__name { font-family: var(--font-display); font-weight: var(--peso-titulo); text-transform: uppercase; font-size: clamp(1.35rem, 2.2vw, 2rem); line-height: 1; margin-top: .4rem; }
-.card__sub { font-size: .9rem; color: rgba(255,255,255,.7); margin-top: .35rem; }
 .card__go { flex: 0 0 auto; width: 46px; height: 46px; border-radius: 50%; border: 1px solid rgba(255,255,255,.5); display: grid; place-items: center; transition: background-color var(--t-estado), color var(--t-estado), transform var(--t-camada) var(--ease); }
 .card:hover .card__go { background: var(--branco); color: var(--vinho); transform: rotate(-45deg); }
 .card__logo { position: absolute; top: var(--e-2); left: var(--e-2); z-index: 2; width: 38%; max-width: 150px; height: auto; filter: drop-shadow(0 4px 18px rgba(0,0,0,.4)); }

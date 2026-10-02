@@ -462,7 +462,7 @@
       (YOUP.capa(c) ? '<img class="card__img" src="' + YOUP.capa(c) + '" alt="' + esc(c.nome) + '" loading="lazy"' + (c.pos ? ' style="object-position:' + c.pos + '"' : "") + '>' : '<div class="card__img grad"></div>') +
       (previaDe(c) ? '<video class="card__previa" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true" data-previa="' + previaDe(c) + '"></video>' : "") +
       (c.logo ? '<img class="card__logo" src="' + c.logo + '" alt="" loading="lazy">' : "") +
-      '<div class="card__body"><div><span class="card__year">' + anoDe(c) + '</span><h3 class="card__name">' + esc(c.nome) + '</h3><p class="card__sub">' + esc(c.chamada) + "</p></div>" +
+      '<div class="card__body"><div><span class="card__year">' + anoDe(c) + '</span><h3 class="card__name">' + esc(c.nome) + "</h3></div>" +
       '<span class="card__go">' + ARROW + "</span></div></a>";
   }
 
