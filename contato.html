@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+<!-- This site is hosted on Netlify. Anyone can build and deploy a site
+     like this one for free: https://netlify.new/?utm_campaign=loops&utm_source=ai-legible&utm_medium=owned&utm_content=comment&utm_id=5c3b72cb-42b6-45a0-8b35-8f3871ac0779
+     Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Contato — YOUP</title>
+  <meta name="description" content="Fale com a YOUP. You imagine. We create.">
+  <meta name="theme-color" content="#1a020a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="contato">
+<main id="conteudo">
+
+  <section class="grad historia" style="padding: calc(var(--header-h) + clamp(4rem, 10vw, 8rem)) 0 clamp(5rem, 10vw, 9rem)">
+    <img class="historia__y" src="assets/media/marca/youp-pincel-branco.png" alt="" aria-hidden="true">
+    <div class="wrap">
+      <span class="eyebrow" data-reveal>Contato</span>
+      <h1 class="display-xl" style="margin-bottom:clamp(3rem,7vw,6rem)"><span class="split-line"><span>You imagine.</span></span><span class="split-line"><span>We create.</span></span></h1>
+
+      <div class="contact">
+        <div data-reveal>
+          <p class="lead">Conte pra gente o que a sua marca imagina. A gente cria junto.</p>
+          <dl class="contact-info" id="contato-info"></dl>
+        </div>
+
+        <!-- Para receber as mensagens por um serviço (ex.: Formspree), preencha data-endpoint com a URL. Veja o README. -->
+        <form class="form" id="form-contato" data-endpoint="" novalidate data-reveal data-reveal-delay="1">
+          <div class="field"><label for="f-nome">Nome *</label><input id="f-nome" name="nome" autocomplete="name" required><span class="err"></span></div>
+          <div class="field"><label for="f-empresa">Empresa</label><input id="f-empresa" name="empresa" autocomplete="organization"><span class="err"></span></div>
+          <div class="field"><label for="f-email">E-mail *</label><input id="f-email" name="email" type="email" autocomplete="email" required><span class="err"></span></div>
+          <div class="field"><label for="f-tel">Telefone</label><input id="f-tel" name="telefone" type="tel" autocomplete="tel"><span class="err"></span></div>
+          <div class="field full"><label for="f-msg">Mensagem *</label><textarea id="f-msg" name="mensagem" required></textarea><span class="err"></span></div>
+          <div class="full"><button class="btn btn--solid" type="submit">Enviar mensagem <svg class="arrow" width="18" height="12" viewBox="0 0 18 12"><path d="M0 6h16M11 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button></div>
+          <p class="form-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</main>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
