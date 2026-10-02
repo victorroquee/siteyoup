@@ -20,19 +20,12 @@
 .at-hero__panels { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 3px; background: var(--vinho); }
 .at-hero__panel { position: relative; margin: 0; overflow: hidden; }
 .at-hero__panel img { position: absolute; left: 0; right: 0; top: -10%; width: 100%; height: 110%; object-fit: cover; object-position: var(--pos, 50% 30%); }
-.at-hero__panel figcaption {
-  position: absolute; z-index: 3; left: 0; right: 0; top: calc(var(--header-h) + env(safe-area-inset-top, 0px) + .5rem);
-  padding-inline: 1rem; font-family: var(--font-display); font-weight: var(--peso-cabecalho);
-  font-size: .78rem; text-transform: uppercase; text-shadow: 0 1px 12px rgba(0,0,0,.6);
-}
 @media (max-width: 759px) {
   .at-hero__panels { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
-  .at-hero__panel:nth-child(n+3) figcaption { top: .75rem; }
 }
 @media (min-width: 760px) {
   .at-hero__panels { display: flex; }
   .at-hero__panel { flex: 1 1 0; transition: flex-grow var(--t-camada) var(--ease); }
-  .at-hero__panel figcaption { padding-inline: 1.25rem; }
 }
 @media (min-width: 760px) and (hover: hover) {
   .at-hero__panels:hover .at-hero__panel { flex-grow: .85; }

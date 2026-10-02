@@ -342,7 +342,9 @@ p { margin: 0 0 1em; }
 .rail-controls button:hover { background: var(--branco); color: var(--vinho); border-color: var(--branco); }
 
 /* Card de case */
-.card { position: relative; display: block; overflow: hidden; border-radius: 4px; background: #0e0616; aspect-ratio: 3 / 4; isolation: isolate; }
+/* O card tem degradê escuro próprio sobre a foto: escreve sempre em branco,
+   mesmo quando a página em volta é clara. */
+.card { position: relative; display: block; overflow: hidden; border-radius: 4px; background: #0e0616; color: var(--branco); aspect-ratio: 3 / 4; isolation: isolate; }
 .card--wide { aspect-ratio: 16 / 10; }
 .card img.card__img, .card video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform var(--t-cena) var(--ease), filter var(--t-cena) var(--ease); }
 .card:hover img.card__img { transform: scale(1.06); }
