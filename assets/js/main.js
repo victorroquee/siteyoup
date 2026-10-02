@@ -83,11 +83,11 @@
       el.setAttribute("aria-label", "Aviso de cookies");
       el.innerHTML =
         '<div class="wrap cookies__caixa">' +
-          '<p class="cookies__texto">Este site guarda no seu aparelho só o essencial para funcionar. Os vídeos de case ficam no YouTube e, para tocar, ele guarda informações suas. ' +
+          '<p class="cookies__texto">Usamos cookies para o site funcionar e para carregar conteúdo de terceiros. Você decide o que aceitar. ' +
           '<a href="privacidade.html">Ler a política</a>.</p>' +
           '<div class="cookies__acoes">' +
             '<button class="btn" type="button" data-escolha="essencial">Só o essencial</button>' +
-            '<button class="btn btn--solid" type="button" data-escolha="tudo">Aceitar os vídeos</button>' +
+            '<button class="btn btn--solid" type="button" data-escolha="tudo">Aceitar todos</button>' +
           "</div>" +
         "</div>";
       document.body.appendChild(el);
@@ -149,6 +149,9 @@
     onScroll();
   }
 
+  // Logos das redes, desenhados, para o rodapé não ser só uma lista de palavras.
+  var LOGOS = {"Instagram": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M12 2.2c3.2 0 3.6 0 4.9.07 1.2.05 1.8.25 2.2.42.56.22.96.48 1.38.9.42.42.68.82.9 1.38.17.4.37 1 .42 2.2.06 1.3.07 1.7.07 4.9s0 3.6-.07 4.9c-.05 1.2-.25 1.8-.42 2.2-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.4.17-1 .37-2.2.42-1.3.06-1.7.07-4.9.07s-3.6 0-4.9-.07c-1.2-.05-1.8-.25-2.2-.42a3.8 3.8 0 0 1-1.38-.9 3.8 3.8 0 0 1-.9-1.38c-.17-.4-.37-1-.42-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.6.07-4.9c.05-1.2.25-1.8.42-2.2.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.4-.17 1-.37 2.2-.42C8.4 2.2 8.8 2.2 12 2.2Zm0 1.8c-3.14 0-3.5.01-4.74.07-.9.04-1.38.19-1.7.31-.43.17-.74.37-1.06.69-.32.32-.52.63-.69 1.06-.12.32-.27.8-.31 1.7C3.44 8.5 3.43 8.86 3.43 12s.01 3.5.07 4.74c.4.9.19 1.38.31 1.7.17.43.37.74.69 1.06.32.32.63.52 1.06.69.32.12.8.27 1.7.31 1.24.06 1.6.07 4.74.07s3.5-.01 4.74-.07c.9-.04 1.38-.19 1.7-.31.43-.17.74-.37 1.06-.69.32-.32.52-.63.69-1.06.12-.32.27-.8.31-1.7.06-1.24.07-1.6.07-4.74s-.01-3.5-.07-4.74c-.04-.9-.19-1.38-.31-1.7a2.9 2.9 0 0 0-.69-1.06 2.9 2.9 0 0 0-1.06-.69c-.32-.12-.8-.27-1.7-.31C15.5 4.01 15.14 4 12 4Zm0 3.03a4.97 4.97 0 1 1 0 9.94 4.97 4.97 0 0 1 0-9.94Zm0 1.8a3.17 3.17 0 1 0 0 6.34 3.17 3.17 0 0 0 0-6.34Zm5.17-3.2a1.16 1.16 0 1 1 0 2.32 1.16 1.16 0 0 1 0-2.32Z\"/></svg>", "Facebook": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.77-3.89 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.45 2.89h-2.33v6.99A10 10 0 0 0 22 12Z\"/></svg>", "YouTube": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M21.58 7.19a2.5 2.5 0 0 0-1.77-1.77C18.25 5 12 5 12 5s-6.25 0-7.81.42a2.5 2.5 0 0 0-1.77 1.77C2 8.75 2 12 2 12s0 3.25.42 4.81a2.5 2.5 0 0 0 1.77 1.77C5.75 19 12 19 12 19s6.25 0 7.81-.42a2.5 2.5 0 0 0 1.77-1.77C22 15.25 22 12 22 12s0-3.25-.42-4.81ZM10 15.27V8.73L15.5 12 10 15.27Z\"/></svg>"};
+
   function footer() {
     var c = D.contato;
     var destaques = D.cases.filter(function (x) { return x.ano; }).slice(0, 4);
@@ -172,8 +175,9 @@
             '<li><a href="mailto:' + c.email + '">' + c.email + "</a></li>" +
             '<li class="endereco">' + c.endereco + "</li>" +
             '<li class="redes">' + c.redes.map(function (r) {
-              return '<a href="' + r.url + '" target="_blank" rel="noopener">' + r.nome + "</a>";
-            }).join(" ") + "</li>" +
+              return '<a href="' + r.url + '" target="_blank" rel="noopener" aria-label="' + esc(r.nome) + ' da YOUP" title="' + esc(r.nome) + '">' +
+                (LOGOS[r.nome] || "") + "</a>";
+            }).join("") + "</li>" +
           "</ul></div>" +
         "</div>" +
         '<div class="base">' +

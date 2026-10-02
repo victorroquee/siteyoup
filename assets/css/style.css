@@ -781,3 +781,14 @@ p { margin: 0 0 1em; }
 }
 .card.is-previa .card__previa { opacity: 1; }
 .card.is-previa img.card__img { transform: scale(1.06); }
+
+/* Redes do rodapé: logos desenhados, mesma caixa e mesmo peso. */
+.site-footer .cols li.redes a {
+  display: inline-grid; place-items: center;
+  width: 40px; height: 40px; border-radius: 50%;
+  border: 1px solid var(--linha);
+  color: rgba(255, 255, 255, .78);
+  transition: color .3s var(--ease), border-color .3s var(--ease), background-color .3s var(--ease);
+}
+.site-footer .cols li.redes a:hover { color: var(--vinho); background: var(--branco); border-color: var(--branco); }
+.site-footer .cols li.redes svg { width: 19px; height: 19px; fill: currentColor; }
