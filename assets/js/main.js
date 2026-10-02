@@ -711,7 +711,8 @@
 
     function somePraCima(el) {
       if (!el || el === document.body || el.id === "conteudo") return;
-      if ($("img, video, svg", el)) return;
+      // Foto é conteúdo e segura o bloco. Ícone sozinho, sem rótulo, não diz nada.
+      if ($("img, video", el)) return;
       var sobrou = Array.prototype.some.call(el.children, function (f) { return !f.hidden; });
       if (!sobrou && el.textContent.replace(/\s+/g, "") === "") { el.hidden = true; somePraCima(el.parentElement); }
     }
@@ -721,6 +722,17 @@
     });
     $$(BLOCOS).forEach(function (el) {
       if (!el.hidden && pendente.test(el.textContent)) esconde(el);
+    });
+
+    // Se sobrou só o título de uma seção, sem nada embaixo, a seção sai.
+    $$("section").forEach(function (sec) {
+      if (sec.hidden) return;
+      var cabeca = $(".section-head", sec);
+      if (!cabeca) return;
+      var sobrou = $$("p, h3, h4, li, img, video, figure, .btn", sec).filter(function (e) {
+        return !e.hidden && !cabeca.contains(e);
+      });
+      if (!sobrou.length) sec.hidden = true;
     });
   }
 
