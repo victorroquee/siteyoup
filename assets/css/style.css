@@ -628,3 +628,6 @@ p { margin: 0 0 1em; }
 .intro--rapida .intro__marca { animation-duration: .35s; }
 @keyframes intro-marca { to { opacity: 1; transform: none; } }
 .intro-ativa { overflow: hidden; }
+
+/* Bloco escondido por não ter conteúdo real ainda: some de verdade. */
+[hidden] { display: none !important; }

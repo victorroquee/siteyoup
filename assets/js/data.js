@@ -71,6 +71,7 @@ window.YOUP = {
     },
     {
       nome: "Aaron Colton",
+      pos: "45% 40%",
       pais: "EUA",
       modalidade: "Street Freestyle",
       bio: "Piloto norte-americano da Red Bull e referência no street freestyle. Em 2026, veio ao Brasil para apresentações ao público de Goiânia e no MotoGP, além de uma ação nos Três Marcos.",

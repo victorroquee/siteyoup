@@ -444,6 +444,39 @@
     return items;
   }
 
+  /* --- Andaime de produção ------------------------------------------------
+     Nada de [PREENCHER], [A CONFIRMAR] ou [NOME DO FOTÓGRAFO] na tela do
+     visitante: o bloco inteiro some, junto com o rótulo que o acompanha. O
+     texto segue no arquivo, então basta preencher para ele voltar sozinho. */
+  function pendencias() {
+    var pendente = /\[[A-ZÀ-Ý][A-ZÀ-Ý\s]{2,}/;
+    var BLOCOS = "p, h1, h2, h3, h4, li, dd, dt, figcaption, .at-card__ig, .at-credit";
+
+    function esconde(el) {
+      if (!el || el === document.body || el.id === "conteudo") return;
+      el.hidden = true;
+      if (el.tagName === "DD" || el.tagName === "DT") {
+        var par = el.tagName === "DD" ? el.previousElementSibling : el.nextElementSibling;
+        if (par && (par.tagName === "DT" || par.tagName === "DD")) par.hidden = true;
+      }
+      somePraCima(el.parentElement);
+    }
+
+    function somePraCima(el) {
+      if (!el || el === document.body || el.id === "conteudo") return;
+      if ($("img, video, svg", el)) return;
+      var sobrou = Array.prototype.some.call(el.children, function (f) { return !f.hidden; });
+      if (!sobrou && el.textContent.replace(/\s+/g, "") === "") { el.hidden = true; somePraCima(el.parentElement); }
+    }
+
+    $$("[class*='fill']").forEach(function (el) {
+      if (pendente.test(el.textContent)) esconde(el.closest(BLOCOS) || el);
+    });
+    $$(BLOCOS).forEach(function (el) {
+      if (!el.hidden && pendente.test(el.textContent)) esconde(el);
+    });
+  }
+
   /* --- Páginas --------------------------------------------------------- */
   var pages = {
     home: function () {
@@ -635,6 +668,7 @@
   intro();
   header();
   if (pages[page]) pages[page]();
+  pendencias();
   footer();
   reveal();
   countUp();
