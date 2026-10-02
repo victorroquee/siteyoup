@@ -20,9 +20,11 @@ AddType image/svg+xml .svg
   ExpiresByType image/jpeg "access plus 30 days"
   ExpiresByType image/webp "access plus 30 days"
   ExpiresByType image/png "access plus 30 days"
-  ExpiresByType text/css "access plus 2 days"
-  ExpiresByType application/javascript "access plus 2 days"
-  ExpiresByType text/html "access plus 10 minutes"
+  # Folha e script mudam a cada publicacao: cache curto, senao o CDN da
+  # Hostinger segura a versao velha por dois dias e o site fica remendado.
+  ExpiresByType text/css "access plus 10 minutes"
+  ExpiresByType application/javascript "access plus 10 minutes"
+  ExpiresByType text/html "access plus 0 seconds"
 </IfModule>
 
 # O site no servidor é um clone deste repositório, então o .git e os arquivos

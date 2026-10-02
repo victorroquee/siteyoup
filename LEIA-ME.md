@@ -47,6 +47,13 @@ mídia e entrega como `text/plain`, o que faz o navegador recusar a fonte. O
 `.git` e o `LEIA-ME.md` ficam dentro da pasta publicada por causa do clone, e
 as regras bloqueiam os dois. E o `Accept-Ranges` é o que deixa adiantar vídeo.
 
+**Cache.** O CDN da Hostinger respeita o `Expires` do `.htaccess`, e com dois
+dias de validade o site ficava remendado depois de publicar: metade dos
+navegadores pegava a folha nova e metade a velha. Folha e script agora valem
+10 minutos e o HTML não é guardado. Os links deles levam `?v=AAAAMMDD`: ao
+mudar CSS ou JS de forma que não possa esperar, basta subir esse número em
+todas as páginas que o cache antigo deixa de ter o que entregar.
+
 A senha do SSH tem `@!` no fim, o que quebra o `sshpass -e`: usar arquivo com
 `-f`, e os `-o` na linha, senão o cliente tenta chave pública primeiro e leva
 Permission denied.
