@@ -1,4 +1,4 @@
-/* YOUP — comportamento do site (sem dependências). */
+/* YOUP, comportamento do site (sem dependências). */
 (function () {
   "use strict";
   document.documentElement.classList.add("js");
@@ -32,7 +32,7 @@
     h.className = "site-header";
     h.innerHTML =
       '<div class="wrap">' +
-        '<a href="index.html" class="wordmark" aria-label="YOUP — página inicial">youp</a>' +
+        '<a href="index.html" class="wordmark" aria-label="YOUP, página inicial">youp</a>' +
         '<nav class="nav" aria-label="Principal">' + links + "</nav>" +
         '<button class="burger" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-menu"><span></span><span></span></button>' +
       "</div>";
@@ -147,8 +147,97 @@
     update();
   }
 
+  /* --- Linha do tempo horizontal (home) --------------------------------
+     O scroll vertical vira avanço horizontal: a seção prende na tela, a fila
+     de anos atravessa o viewport e só então a página segue para a próxima
+     seção. Sem o pin (celular ou movimento reduzido) a fila fica um trilho
+     de arrastar, com os mesmos painéis. */
+  function linhaHorizontal() {
+    var sec = $("[data-tlh]");
+    if (!sec) return;
+    var track = $(".tlh__track", sec), stage = $(".tlh__stage", sec);
+    var vp = $(".tlh__viewport", sec), row = $(".tlh__row", sec);
+    var fill = $(".tlh__fill", sec), ghost = $(".tlh__ghost", sec), conta = $(".tlh__i", sec);
+    var itens = $$(".tlh__item", row);
+    if (!itens.length) return;
+    var anos = itens.map(function (el) { return $(".tlh__y", el).textContent.trim(); });
+    var centros = [], dist = 0, preso = false, ativo = -1, pedindo = false;
+
+    $(".tlh__n", sec).textContent = itens.length;
+
+    function medir() {
+      preso = !reduce && window.innerWidth >= 700 && itens.length > 1;
+      sec.classList.toggle("tlh--pinned", preso);
+      if (!preso) { track.style.height = ""; row.style.transform = ""; return; }
+      row.style.transform = "";
+      centros = itens.map(function (el) { var li = el.parentNode; return li.offsetLeft + li.offsetWidth / 2; });
+      // A fila começa e termina com o painel no centro da tela: a distância é
+      // a do centro do primeiro ao centro do último. (scrollWidth não serve:
+      // o Chrome descarta o padding final de um flex container que transborda.)
+      dist = Math.max(0, centros[centros.length - 1] - vp.clientWidth / 2);
+      track.style.height = stage.offsetHeight + dist + "px";
+      ativo = -1;
+      mover();
+    }
+
+    function mover() {
+      if (!preso) return;
+      var p = dist > 0 ? Math.min(Math.max(-track.getBoundingClientRect().top / dist, 0), 1) : 0;
+      row.style.transform = "translate3d(" + (-p * dist).toFixed(1) + "px,0,0)";
+      fill.style.transform = "scaleX(" + p.toFixed(4) + ")";
+      if (vp.scrollLeft) vp.scrollLeft = 0;
+      if (p > .01) sec.classList.add("is-andando");
+
+      var alvo = p * dist + vp.clientWidth / 2, i = 0, melhor = Infinity;
+      for (var k = 0; k < centros.length; k++) {
+        var d = Math.abs(centros[k] - alvo);
+        if (d < melhor) { melhor = d; i = k; }
+      }
+      if (i === ativo) return;
+      itens.forEach(function (el, k) {
+        el.classList.toggle("is-ativo", k === i);
+        el.classList.toggle("is-perto", Math.abs(k - i) === 1);
+      });
+      ghost.textContent = anos[i];
+      ghost.classList.remove("is-troca");
+      void ghost.offsetWidth;
+      ghost.classList.add("is-troca");
+      conta.textContent = i + 1;
+      ativo = i;
+    }
+
+    // Teclado: ao focar um painel fora da tela, a página rola até centralizá-lo.
+    row.addEventListener("focusin", function (e) {
+      if (!preso || !dist) return;
+      var alvo = e.target.closest && e.target.closest(".tlh__item");
+      var i = alvo ? itens.indexOf(alvo) : -1;
+      if (i < 0) return;
+      var p = Math.min(Math.max((centros[i] - vp.clientWidth / 2) / dist, 0), 1);
+      window.scrollTo({ top: track.getBoundingClientRect().top + window.pageYOffset + p * dist, behavior: "instant" });
+    });
+
+    window.addEventListener("scroll", function () {
+      if (pedindo) return;
+      pedindo = true;
+      requestAnimationFrame(function () { pedindo = false; mover(); });
+    }, { passive: true });
+
+    // Sem pin, quem move a barra é o arrasto da própria fila.
+    vp.addEventListener("scroll", function () {
+      if (preso) return;
+      var max = vp.scrollWidth - vp.clientWidth;
+      fill.style.transform = "scaleX(" + (max > 0 ? (vp.scrollLeft / max).toFixed(4) : 0) + ")";
+      if (vp.scrollLeft > 8) sec.classList.add("is-andando");
+    }, { passive: true });
+    window.addEventListener("resize", medir);
+    window.addEventListener("orientationchange", medir);
+    window.addEventListener("load", medir);
+    medir();
+    setTimeout(medir, 400);
+  }
+
   /* --- Componentes ----------------------------------------------------- */
-  // Rótulo de ano do case: usa o período (ex.: "2015–2024") quando houver
+  // Rótulo de ano do case: usa o período (ex.: "2015-2024") quando houver
   function anoDe(c) { return c.periodo || c.ano || ""; }
 
   function card(c, extra) {
@@ -159,7 +248,7 @@
       '<span class="card__go">' + ARROW + "</span></div></a>";
   }
 
-  // Ver. Ouvir. Sentir. — usado na home e em Quem Somos
+  // Ver. Ouvir. Sentir.: usado na home e em Quem Somos
   function servicos() {
     var el = $("#servicos");
     if (!el) return;
@@ -194,7 +283,7 @@
       idx = (n + s.length) % s.length;
       s[idx].classList.add("is-active"); void d[idx].offsetWidth; d[idx].classList.add("is-active");
       var c = slides[idx];
-      cap.innerHTML = '<strong>' + anoDe(c) + " — " + esc(c.nome) + "</strong>" + esc(c.chamada) + ' <a class="link-arrow" href="' + caseUrl(c) + '" style="margin-top:.6rem">Ver case ' + ARROW + "</a>";
+      cap.innerHTML = '<strong>' + anoDe(c) + " · " + esc(c.nome) + "</strong>" + esc(c.chamada) + ' <a class="link-arrow" href="' + caseUrl(c) + '" style="margin-top:.6rem">Ver case ' + ARROW + "</a>";
       clearTimeout(timer);
       if (!reduce) timer = setTimeout(function () { go(idx + 1); }, 6000);
     }
@@ -262,6 +351,22 @@
       "</div></article>";
   }
 
+  /* Marcos, cases e projetos da história em ordem de ano, com o mesmo id
+     usado na página de Ordem Cronológica (serve de âncora para a home). */
+  function cronoItens() {
+    var items = D.marcos.map(function (m) { return { ano: m.ano, marco: m }; })
+      .concat(D.cases.filter(function (c) { return c.ano; }).map(function (c) { return { ano: c.ano, c: c }; }))
+      // Projetos da história: mesma apresentação, sem link para página de case
+      .concat((D.historia || []).map(function (c) { return { ano: c.ano, c: c, semCase: true }; }))
+      .sort(function (a, b) { return a.ano - b.ano || (a.marco ? -1 : 1); });
+    var usados = {};
+    items.forEach(function (it) {
+      it.id = "ano-" + it.ano + (usados[it.ano] ? "-" + usados[it.ano] : "");
+      usados[it.ano] = (usados[it.ano] || 0) + 1;
+    });
+    return items;
+  }
+
   /* --- Páginas --------------------------------------------------------- */
   var pages = {
     home: function () {
@@ -279,25 +384,28 @@
         '<h2 class="display-m" style="margin-top:1.25rem">Building Drop<br>Sandro Dias.</h2>' +
         '<ul class="bullets">' + dest.destaques.map(function (d) { return "<li>" + esc(d) + "</li>"; }).join("") + "</ul>" +
         '<a class="btn" href="' + caseUrl(dest) + '">Ver o case ' + ARROW + "</a></div>" +
-        '<img class="logo-ev" src="' + dest.logo + '" alt="Red Bull Building Drop — Sandro Dias" loading="lazy" data-reveal></div>';
+        '<img class="logo-ev" src="' + dest.logo + '" alt="Red Bull Building Drop, Sandro Dias" loading="lazy" data-reveal></div>';
       $("#rail").innerHTML = D.cases.map(function (c) { return card(c); }).join("");
-      var anos = D.marcos.slice(0, 1).map(function (m) { return { ano: m.ano, t: m.titulo, href: "ordem-cronologica.html#ano-" + m.ano }; })
-        .concat(D.cases.concat(D.historia || []).filter(function (c) { return c.ano; }).sort(function (a, b) { return a.ano - b.ano; }).map(function (c) { return { ano: c.ano, t: c.nome, href: "ordem-cronologica.html#ano-" + c.ano }; }));
-      $("#anos").innerHTML = anos.map(function (a) { return '<a href="' + a.href + '"><span class="y">' + a.ano + '</span><span class="t">' + esc(a.t) + "</span></a>"; }).join("");
+      $("#anos").innerHTML = cronoItens().map(function (it) {
+        var href = "ordem-cronologica.html#" + it.id;
+        if (it.marco) {
+          return '<li><a class="tlh__item tlh__item--marco" href="' + href + '">' +
+            '<span class="tlh__body"><span class="tlh__nota">' + esc(it.marco.destaques[0]) + "</span>" +
+            '<span class="tlh__legenda"><span class="tlh__y">' + it.ano + '</span>' +
+            '<span class="tlh__t">' + esc(it.marco.titulo) + "</span></span></span></a></li>";
+        }
+        var c = it.c, capa = YOUP.capa(c);
+        return '<li><a class="tlh__item" href="' + href + '">' +
+          (capa ? '<span class="tlh__shot"><img src="' + capa + '" alt="' + esc(c.nome) + '" loading="lazy"' + (c.pos ? ' style="object-position:' + c.pos + '"' : "") + "></span>" : '<span class="tlh__shot grad"></span>') +
+          '<span class="tlh__body"><span class="tlh__y">' + anoDe(c) + '</span>' +
+          '<span class="tlh__t">' + esc(c.nome) + "</span></span></a></li>";
+      }).join("");
       railControls();
+      linhaHorizontal();
     },
 
     cronologia: function () {
-      var items = D.marcos.map(function (m) { return { ano: m.ano, marco: m }; })
-        .concat(D.cases.filter(function (c) { return c.ano; }).map(function (c) { return { ano: c.ano, c: c }; }))
-        // Projetos da história: mesma apresentação, sem link para página de case
-        .concat((D.historia || []).map(function (c) { return { ano: c.ano, c: c, semCase: true }; }))
-        .sort(function (a, b) { return a.ano - b.ano || (a.marco ? -1 : 1); });
-      var usados = {};
-      items.forEach(function (it) {
-        it.id = "ano-" + it.ano + (usados[it.ano] ? "-" + usados[it.ano] : "");
-        usados[it.ano] = (usados[it.ano] || 0) + 1;
-      });
+      var items = cronoItens();
       $("#timeline").innerHTML = items.map(function (it) {
         if (it.marco) {
           var m = it.marco;
@@ -348,7 +456,7 @@
       var prev = D.cases[(i - 1 + D.cases.length) % D.cases.length];
       var next = D.cases[(i + 1) % D.cases.length];
       var fotos = YOUP.fotosDo(c);
-      document.title = c.nome + (c.ano ? " (" + anoDe(c) + ")" : "") + " — YOUP";
+      document.title = c.nome + (c.ano ? " (" + anoDe(c) + ")" : "") + " · YOUP";
       var desc = document.querySelector('meta[name="description"]');
       if (desc) desc.setAttribute("content", c.chamada + " " + c.destaques.join(" · "));
       // Marca visualmente o que ainda precisa de revisão
@@ -374,10 +482,10 @@
             bloco(c.entregaTitulo || "A entrega da YOUP", c.entrega || []) +
             (c.resultado ? bloco("O resultado", [c.resultado]) : "") + "</div>" : "") +
         "</div></section>" +
-        (c.citacao ? '<section class="section--tight"><div class="wrap"><figure class="case-quote" data-reveal><blockquote>“' + esc(c.citacao.texto) + '”</blockquote><figcaption>— ' + esc(c.citacao.autor) + "</figcaption></figure></div></section>" : "") +
+        (c.citacao ? '<section class="section--tight"><div class="wrap"><figure class="case-quote" data-reveal><blockquote>“' + esc(c.citacao.texto) + '”</blockquote><figcaption>' + esc(c.citacao.autor) + "</figcaption></figure></div></section>" : "") +
         (c.video ? '<section class="section--tight"><div class="wrap"><div class="video-block" data-reveal><video controls playsinline preload="none" poster="' + (fotos[0] || "") + '"><source src="' + c.video + '" type="video/mp4"></video></div></div></section>' : "") +
         (fotos.length > 1 ? '<section class="section--tight" style="padding-top:0"><div class="wrap"><div class="mosaic">' +
-          fotos.slice(1).map(function (f, k) { return '<figure data-reveal data-idx="' + (k + 1) + '"><img src="' + f + '" alt="' + esc(c.nome) + " — foto " + (k + 2) + '" loading="lazy"></figure>'; }).join("") +
+          fotos.slice(1).map(function (f, k) { return '<figure data-reveal data-idx="' + (k + 1) + '"><img src="' + f + '" alt="' + esc(c.nome) + ", foto " + (k + 2) + '" loading="lazy"></figure>'; }).join("") +
         "</div></div></section>" : "") +
         (fotos.length ? "" : '<section class="section--tight" style="padding-top:0"><div class="wrap"><p class="muted" data-reveal>Fotos em breve.</p></div></section>') +
         '<section class="section--tight"><div class="wrap" style="display:flex;justify-content:flex-end"><div class="signature"><span class="eyebrow">Making a difference since 2000</span><span class="wordmark" style="font-size:3.2rem">youp</span></div></div></section>' +
@@ -434,7 +542,7 @@
           // Sem serviço de envio configurado: abre o e-mail com a mensagem preenchida.
           var d = new FormData(form);
           var body = "Nome: " + d.get("nome") + "\nEmpresa: " + d.get("empresa") + "\nE-mail: " + d.get("email") + "\nTelefone: " + d.get("telefone") + "\n\n" + d.get("mensagem");
-          location.href = "mailto:" + c.email + "?subject=" + encodeURIComponent("Contato pelo site — " + d.get("nome")) + "&body=" + encodeURIComponent(body);
+          location.href = "mailto:" + c.email + "?subject=" + encodeURIComponent("Contato pelo site: " + d.get("nome")) + "&body=" + encodeURIComponent(body);
           status.textContent = "Abrimos seu programa de e-mail com a mensagem pronta. É só enviar.";
           return;
         }
