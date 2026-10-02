@@ -53,15 +53,14 @@
             <p class="manifesto__assina">YOUP, desde 2000</p>
           </div>
           <!-- As marcas dos cases orbitam e se fundem no logotipo, em loop infinito.
-               O webm vem primeiro porque tem fundo transparente de verdade; o
-               mp4 é a reserva para quem não lê alfa em webm (Safari), e o fundo
-               dele é o mesmo vinho da página, então dá no mesmo na tela. Em
-               tela pequena o JS troca pelo arquivo leve (orbita-cel.webm). -->
+               Um mp4 só, com o fundo no mesmo vinho da página. Já foi webm com
+               alfa, mas o Safari toca o arquivo e pinta a transparência de
+               preto, o que dava um retângulo preto no iPhone. Em tela pequena
+               o JS troca pelo arquivo leve (orbita-cel.mp4). -->
           <div class="orbita">
             <video class="orbita__video" autoplay muted loop playsinline preload="metadata"
                    poster="assets/media/marca/orbita-cartaz.jpg"
                    aria-label="As marcas dos cases da YOUP se fundindo no logotipo">
-              <source src="assets/media/marca/orbita.webm" type="video/webm">
               <source src="assets/media/marca/orbita.mp4" type="video/mp4">
             </video>
             <img class="orbita__reserva" src="assets/media/marca/youp-pincel-branco.png" alt="" aria-hidden="true">
