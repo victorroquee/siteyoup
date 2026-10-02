@@ -867,3 +867,31 @@ body[data-tema="claro"] .intro { background: var(--papel); color: var(--vinho); 
 body[data-tema="claro"] .intro__linha { background: rgba(20, 9, 28, .18); }
 .light .eyebrow { color: var(--roxo); }
 .light .page-hero .eyebrow { color: var(--roxo); }
+
+/* --- Colagem de bastidores ---------------------------------------------
+   Formatos diferentes de propósito: fecha a home com a cara de mural, não
+   de grade. Sem legenda, sem link: é só o trabalho.
+   ----------------------------------------------------------------------- */
+.colagem { padding-top: 0; }
+.colagem__grade {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(12, 1fr);
+  gap: var(--e-2); align-items: end;
+}
+.colagem__grade li { margin: 0; overflow: hidden; border-radius: 4px; background: rgba(20, 9, 28, .06); }
+.colagem__grade img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--t-cena) var(--ease); }
+.colagem__grade li:hover img { transform: scale(1.04); }
+
+.colagem--alta  { grid-column: span 3; aspect-ratio: 3 / 4; }
+.colagem--larga { grid-column: span 6; aspect-ratio: 16 / 10; }
+.colagem--media { grid-column: span 3; aspect-ratio: 1; }
+/* Desalinha de leve o segundo e o quinto: é o que tira a cara de grade. */
+.colagem__grade li:nth-child(2) { transform: translateY(calc(var(--e-2) * -1)); }
+.colagem__grade li:nth-child(5) { transform: translateY(calc(var(--e-1) * 1.4)); }
+
+@media (max-width: 860px) {
+  .colagem--alta { grid-column: span 6; }
+  .colagem--larga { grid-column: span 12; }
+  .colagem--media { grid-column: span 6; }
+  .colagem__grade li:nth-child(2), .colagem__grade li:nth-child(5) { transform: none; }
+}
