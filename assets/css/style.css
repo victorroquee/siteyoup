@@ -250,17 +250,38 @@ p { margin: 0 0 1em; }
   .numbers > div:nth-child(even) { padding-left: 1rem; border-left: 1px solid var(--linha); }
 }
 
-/* Destaque (split) */
-.feature { display: grid; grid-template-columns: 1.35fr 1fr; min-height: 100vh; }
-.feature__media { position: relative; overflow: hidden; min-height: 60vh; }
-.feature__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.feature__body { display: flex; flex-direction: column; justify-content: space-between; gap: 3rem; padding: clamp(2.5rem, 6vw, 6rem) var(--gutter); }
-.feature__body .logo-ev { width: 180px; height: auto; }
-.bullets { list-style: none; padding: 0; margin: 2rem 0; }
-.bullets li { padding: .95rem 0; border-bottom: 1px solid var(--linha); font-size: 1.05rem; display: flex; gap: 1rem; }
-.bullets li::before { content: ""; flex: 0 0 6px; height: 6px; margin-top: .6em; border-radius: 50%; background: rgba(255, 255, 255, .4); }
-.light .bullets li { border-color: var(--linha-clara); }
-@media (max-width: 900px) { .feature { grid-template-columns: 1fr; min-height: 0; } }
+/* Case em destaque: faixa de tela cheia, texto sobre a foto, uma só ação. */
+.feature { position: relative; min-height: 88svh; display: flex; align-items: flex-end; overflow: hidden; }
+.feature__media { position: absolute; inset: 0; }
+.feature__media img { width: 100%; height: 100%; object-fit: cover; }
+/* Dois véus: um de cima para baixo e um da esquerda, porque o texto cai
+   sobre a fachada clara do prédio. Preto puro, como nas referências. */
+.feature::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(19,10,17,.88) 0%, rgba(19,10,17,.45) 42%, transparent 68%),
+    linear-gradient(180deg, rgba(19,10,17,.5) 0%, rgba(19,10,17,.12) 24%, rgba(19,10,17,.72) 70%, rgba(19,10,17,.96) 100%);
+}
+.feature__body { position: relative; z-index: 2; padding-block: clamp(3rem, 8vh, 6rem); }
+.feature__logo { width: clamp(110px, 12vw, 165px); height: auto; margin-bottom: clamp(1.5rem, 4vh, 2.5rem); }
+.feature__titulo { max-width: 14ch; }
+.feature__sub { margin: 1.1rem 0 0; max-width: 46ch; font-size: clamp(1.05rem, 1.3vw, 1.25rem); color: rgba(255, 255, 255, .82); }
+.feature__marcas {
+  list-style: none; margin: clamp(2rem, 5vh, 3rem) 0 clamp(2rem, 5vh, 3rem); padding: 0;
+  display: flex; flex-wrap: wrap; gap: 0;
+  border-top: 1px solid var(--linha); border-bottom: 1px solid var(--linha);
+}
+.feature__marcas li {
+  padding: 1.1rem clamp(1.25rem, 3vw, 2.5rem) 1.1rem 0;
+  font-family: var(--font-display); font-weight: var(--peso-cabecalho);
+  font-size: clamp(.98rem, 1.15vw, 1.1rem); line-height: 1.3;
+}
+.feature__marcas li + li { padding-left: clamp(1.25rem, 3vw, 2.5rem); border-left: 1px solid var(--linha); }
+@media (max-width: 760px) {
+  .feature__marcas { display: block; }
+  .feature__marcas li { padding: .9rem 0; }
+  .feature__marcas li + li { padding-left: 0; border-left: 0; border-top: 1px solid var(--linha); }
+}
 
 /* Trilho de cases */
 .rail { display: grid; grid-auto-flow: column; grid-auto-columns: clamp(270px, 30vw, 460px); gap: 1.25rem; overflow-x: auto; scroll-snap-type: x mandatory; padding-inline: var(--gutter); padding-bottom: 1.5rem; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.3) transparent; }

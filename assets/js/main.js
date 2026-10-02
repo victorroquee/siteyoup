@@ -553,12 +553,16 @@
       }).join("");
       var dest = YOUP.destaque();
       $("#destaque").innerHTML =
-        '<div class="feature__media"><img src="' + YOUP.fotosDo(dest)[1] + '" alt="' + esc(dest.nome) + '" loading="lazy" data-parallax style="inset:-60px 0"></div>' +
-        '<div class="feature__body grad--dark"><div data-reveal><span class="eyebrow">Case em destaque · ' + dest.ano + "</span>" +
-        '<h2 class="display-m" style="margin-top:1.25rem">Building Drop<br>Sandro Dias.</h2>' +
-        '<ul class="bullets">' + dest.destaques.map(function (d) { return "<li>" + esc(d) + "</li>"; }).join("") + "</ul>" +
-        '<a class="btn" href="' + caseUrl(dest) + '">Ver o case ' + ARROW + "</a></div>" +
-        '<img class="logo-ev" src="' + dest.logo + '" alt="Red Bull Building Drop, Sandro Dias" loading="lazy" data-reveal></div>';
+        '<div class="feature__media"><img src="' + YOUP.capa(dest) + '" alt="' + esc(dest.nome) + '" loading="lazy"' + (dest.pos ? ' style="object-position:' + dest.pos + '"' : "") + "></div>" +
+        '<div class="wrap feature__body">' +
+          '<img class="feature__logo" src="' + dest.logo + '" alt="Red Bull Building Drop" loading="lazy" data-reveal>' +
+          '<h2 class="display-l feature__titulo" data-reveal data-reveal-delay="1">' + esc(dest.nome) + "</h2>" +
+          '<p class="feature__sub" data-reveal data-reveal-delay="1">' + esc(dest.chamada) + "</p>" +
+          '<ul class="feature__marcas" data-reveal data-reveal-delay="2">' +
+            dest.destaques.map(function (d) { return "<li>" + esc(d) + "</li>"; }).join("") +
+          "</ul>" +
+          '<a class="btn" href="' + caseUrl(dest) + '" data-reveal data-reveal-delay="3">Ver o case ' + ARROW + "</a>" +
+        "</div>";
       $("#rail").innerHTML = D.cases.map(function (c) { return card(c); }).join("");
       railControls();
       linhaDoTempo();
