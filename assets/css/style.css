@@ -245,7 +245,39 @@ p { margin: 0 0 1em; }
 .page-hero--img { min-height: 100vh; min-height: 100svh; }
 .page-hero__bg { position: absolute; inset: 0; }
 .page-hero__bg img { width: 100%; height: 100%; object-fit: cover; }
-.page-hero--img::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,.4), transparent 35%, rgba(20,9,28,.94)); }
+.page-hero--img::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(0,0,0,.4), transparent 35%, rgba(20,9,28,.94)); }
+
+/* --- Vídeo de fundo do hero do case -----------------------------------
+   A capa continua no lugar e o vídeo entra por cima quando termina de
+   carregar, então nunca aparece um retângulo preto esperando. O embed não
+   recebe clique: quem manda no som é o botão, não o player do YouTube.
+   O 177.78vh é o 16:9 lido pela altura, que é o que faz o vídeo cobrir a
+   cena sem deixar tarja. O scale(1.2) joga para fora o título e a marca que
+   o YouTube desenha por cima do próprio vídeo: sobra só a imagem.
+   --------------------------------------------------------------------- */
+.hero-video { overflow: hidden; }
+.hero-video iframe, .hero-video video {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(1.2);
+  width: 100vw; height: 56.25vw; min-width: 177.78vh; min-height: 100%;
+  border: 0; pointer-events: none;
+  opacity: 0; transition: opacity var(--t-cena) var(--ease);
+}
+.hero-video.is-pronto iframe, .hero-video.is-pronto video { opacity: 1; }
+.hero-som {
+  position: absolute; z-index: 3; bottom: var(--ev-4);
+  right: max(var(--gutter), calc((100% - var(--max)) / 2 + var(--gutter)));
+  width: 46px; height: 46px; display: grid; place-items: center;
+  border: 1px solid rgba(255, 255, 255, .5); border-radius: 50%;
+  background: rgba(20, 9, 28, .45); color: var(--branco); cursor: pointer;
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  transition: background-color var(--t-estado) var(--ease), border-color var(--t-estado) var(--ease), transform var(--t-estado) var(--ease);
+}
+.hero-som:hover { background: var(--roxo); border-color: var(--roxo); transform: scale(1.06); }
+.hero-som svg { width: 19px; height: 19px; fill: currentColor; }
+.hero-som .som-on { display: none; }
+.hero-som.is-on .som-on { display: block; }
+.hero-som.is-on .som-off { display: none; }
+@media (max-width: 700px) { .hero-som { width: 42px; height: 42px; } }
 .page-hero .wrap { position: relative; z-index: 2; }
 .page-hero .eyebrow { display: block; margin-bottom: 1.25rem; }
 
@@ -820,12 +852,6 @@ p { margin: 0 0 1em; }
 }
 
 /* Vídeo do YouTube à espera de autorização */
-.yt-espera { position: absolute; inset: 0; display: grid; place-items: center; overflow: hidden; background: #0e0616; }
-.yt-espera img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .32; }
-.yt-espera__aviso { position: relative; z-index: 2; display: grid; justify-items: center; gap: 1rem; padding: 2rem; text-align: center; }
-.yt-espera__aviso p { margin: 0; max-width: 38ch; font-size: .95rem; color: rgba(255, 255, 255, .82); }
-.yt-espera__link { font-size: .85rem; color: rgba(255, 255, 255, .6); text-decoration: underline; text-underline-offset: .25em; }
-.yt-espera__link:hover { color: var(--branco); }
 
 /* --- Página de texto legal --------------------------------------------- */
 .texto-legal { padding-top: calc(var(--header-h) + var(--e-7)); }
@@ -869,18 +895,32 @@ body[data-tema="claro"] .intro__linha { background: rgba(20, 9, 28, .18); }
 .light .page-hero .eyebrow { color: var(--roxo); }
 
 /* --- Faixa de bastidores -----------------------------------------------
-   Uma tira só, de ponta a ponta da tela, com as fotos encaixadas sem sobra.
-   Larguras diferentes para não virar uma régua de quadrados iguais.
+   Uma tira só, de ponta a ponta da tela, as fotos coladas, sem respiro entre
+   elas. Larguras diferentes para não virar uma régua de quadrados iguais.
+
+   As seis fotos vêm de eventos diferentes, com luz e cor cada uma de um
+   jeito. Em duotone elas param de brigar e viram uma coisa só: o preto e
+   branco apaga a cor de origem e o roxo entra por cima no modo "multiply",
+   que leva o escuro da foto para o preto e o claro para o roxo. Daí os dois
+   tons, e só eles.
    ----------------------------------------------------------------------- */
 .faixa { padding: 0; }
 .faixa__tira {
   list-style: none; margin: 0; padding: 0;
-  display: flex; gap: 2px;
+  display: flex; gap: 0;
   height: clamp(104px, 15vh, 168px);
 }
-.faixa__tira li { flex: 1 1 0; min-width: 0; height: 100%; overflow: hidden; }
-.faixa__tira img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--t-cena) var(--ease); }
-.faixa__tira li:hover img { transform: scale(1.05); }
+.faixa__tira li { position: relative; flex: 1 1 0; min-width: 0; height: 100%; overflow: hidden; background: var(--vinho); }
+.faixa__tira img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.3) brightness(1.05); transition: transform var(--t-cena) var(--ease), filter var(--t-camada) var(--ease); }
+.faixa__tira li::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: var(--roxo-luz); mix-blend-mode: multiply; opacity: 1;
+  transition: opacity var(--t-camada) var(--ease);
+}
+/* No hover a foto sai um pouco do roxo: a cor de origem aparece e o toque
+   tem resposta, sem virar outra paleta. */
+.faixa__tira li:hover img { transform: scale(1.05); filter: grayscale(.3) contrast(1.02) brightness(1); }
+.faixa__tira li:hover::after { opacity: .35; }
 /* Larguras desiguais, para a tira ter ritmo. */
 .faixa__tira li:nth-child(1) { flex-grow: 1.3; }
 .faixa__tira li:nth-child(2) { flex-grow: 1.9; }

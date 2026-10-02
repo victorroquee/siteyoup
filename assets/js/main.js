@@ -57,20 +57,13 @@
   }
 
   /* --- Cookies -----------------------------------------------------------
-     O site em si só guarda duas coisas no aparelho (a abertura já vista e
-     esta escolha). O que de fato pede autorização é o vídeo do YouTube, que
-     só carrega depois do sim. Por isso o aviso tem consequência real. */
+     O aviso informa, não barra nada: o vídeo do case toca na hora, sem
+     portão, porque era isso que fazia a capa ficar parada e parecer quebrada.
+     O site guarda duas coisas no aparelho, a abertura já vista e o aviso já
+     lido, e nenhuma das duas vai para a YOUP. */
   function cookies() {
     function lembra(v) { try { localStorage.setItem("youp-cookies", v); } catch (e) {} }
     function lido() { try { return localStorage.getItem("youp-cookies"); } catch (e) { return null; } }
-
-    // Libera um vídeo específico ao clique, sem mudar a escolha guardada.
-    document.addEventListener("click", function (e) {
-      var botao = e.target.closest && e.target.closest(".yt-espera .btn");
-      if (!botao) return;
-      var caixa = botao.closest(".yt-espera");
-      caixa.outerHTML = iframeYoutube(caixa.getAttribute("data-yt"), caixa.getAttribute("data-titulo"), true);
-    });
 
     var refazer = document.getElementById("refazer-cookies");
     if (refazer) refazer.addEventListener("click", function () { lembra(""); mostra(); });
@@ -83,11 +76,10 @@
       el.setAttribute("aria-label", "Aviso de cookies");
       el.innerHTML =
         '<div class="wrap cookies__caixa">' +
-          '<p class="cookies__texto">Usamos cookies para o site funcionar e para carregar conteúdo de terceiros. Você decide o que aceitar. ' +
+          '<p class="cookies__texto">Este site usa cookies para funcionar e carrega os vídeos dos cases direto do YouTube. Nada é usado para anúncio ou para medir audiência. ' +
           '<a href="privacidade.html">Ler a política</a>.</p>' +
           '<div class="cookies__acoes">' +
-            '<button class="btn" type="button" data-escolha="essencial">Só o essencial</button>' +
-            '<button class="btn btn--solid" type="button" data-escolha="tudo">Aceitar todos</button>' +
+            '<button class="btn btn--solid" type="button" data-escolha="lido">Entendi</button>' +
           "</div>" +
         "</div>";
       document.body.appendChild(el);
@@ -470,31 +462,82 @@
      ID de 11 caracteres do YouTube. O código reconhece qual é dos dois. */
   function ehYoutube(v) { return /^[A-Za-z0-9_-]{11}$/.test(v); }
 
-  function consentiuVideo() {
-    try { return localStorage.getItem("youp-cookies") === "tudo"; } catch (e) { return false; }
-  }
-
+  /* O autoplay só passa no navegador se o vídeo entrar sem som, então os
+     dois andam juntos. Com loading="lazy" o embed só é baixado quando chega
+     perto da tela. */
   function iframeYoutube(v, titulo, auto) {
-    return '<iframe src="https://www.youtube-nocookie.com/embed/' + v + '?rel=0&playsinline=1&autoplay=' + (auto ? "1" : "0") +
+    return '<iframe src="https://www.youtube-nocookie.com/embed/' + v + '?rel=0&playsinline=1&autoplay=' + (auto ? "1&mute=1" : "0") +
       '" title="' + esc(titulo || "Vídeo") + '" loading="lazy"' +
       ' allow="autoplay; fullscreen; accelerometer; encrypted-media; picture-in-picture"' +
       ' referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>';
   }
 
-  function playerDe(v, cartaz, titulo) {
-    if (ehYoutube(v)) {
-      if (consentiuVideo()) return iframeYoutube(v, titulo, false);
-      // Sem autorização o vídeo não carrega: fica a capa e um botão.
-      return '<div class="yt-espera" data-yt="' + v + '" data-titulo="' + esc(titulo || "Vídeo") + '">' +
-        (cartaz ? '<img src="' + cartaz + '" alt="" loading="lazy">' : "") +
-        '<div class="yt-espera__aviso">' +
-          "<p>O vídeo está no YouTube, que guarda informações no seu navegador para tocar.</p>" +
-          '<button class="btn" type="button">Carregar o vídeo ' + ARROW + "</button>" +
-          '<a class="yt-espera__link" href="privacidade.html">Como tratamos isso</a>' +
-        "</div></div>";
-    }
+  function playerDe(v, cartaz, titulo, auto) {
+    if (ehYoutube(v)) return iframeYoutube(v, titulo, auto !== false);
     return '<video controls playsinline preload="none"' + (cartaz ? ' poster="' + cartaz + '"' : "") +
       '><source src="' + v + '" type="video/mp4"></video>';
+  }
+
+  /* --- Fundo do hero do case ---------------------------------------------
+     Quando o case tem filme, o hero para de ser foto parada: a capa fica por
+     baixo como cartaz e o vídeo entra por cima, mudo e em loop. Mudo porque
+     navegador nenhum deixa tocar com som sem alguém pedir, e quem pede é o
+     botão. O véu do hero continua, que é o que mantém o logo e o nome
+     legíveis por cima da imagem em movimento.
+     --------------------------------------------------------------------- */
+  var SOM =
+    '<svg class="som-off" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M11 5 6.5 9H3v6h3.5L11 19V5Z"/>' +
+      '<path d="M15.6 9.6 21 15m0-5.4L15.6 15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>' +
+    '<svg class="som-on" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M11 5 6.5 9H3v6h3.5L11 19V5Z"/>' +
+      '<path d="M15 9.2a4 4 0 0 1 0 5.6M17.7 6.6a7.6 7.6 0 0 1 0 10.8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
+
+  function fundoDoHero(c, cartaz) {
+    if (!cartaz && !c.video) return "";
+    var capa = cartaz ? '<img src="' + cartaz + '" alt="' + esc(c.nome) + '">' : "";
+    // Quem pediu menos movimento fica com a foto.
+    if (!c.video || reduce) return '<div class="page-hero__bg">' + capa + "</div>";
+    var filme = ehYoutube(c.video)
+      ? '<iframe src="https://www.youtube-nocookie.com/embed/' + c.video +
+          "?autoplay=1&mute=1&loop=1&playlist=" + c.video +
+          '&controls=0&modestbranding=1&rel=0&playsinline=1&disablekb=1&fs=0&iv_load_policy=3&cc_load_policy=0&enablejsapi=1"' +
+          ' title="' + esc(c.nome) + ', vídeo de fundo" tabindex="-1"' +
+          ' allow="autoplay; encrypted-media" referrerpolicy="strict-origin-when-cross-origin"></iframe>'
+      : '<video autoplay muted loop playsinline preload="metadata"><source src="' + c.video + '" type="video/mp4"></video>';
+    return '<div class="page-hero__bg hero-video">' + capa + filme + "</div>" +
+      '<button class="hero-som" type="button" aria-pressed="false" aria-label="Ligar o som do vídeo">' + SOM + "</button>";
+  }
+
+  /* O som do YouTube liga sem recarregar o embed: o player aceita ordem por
+     postMessage por causa do enablejsapi=1 na URL. Recarregar voltaria o
+     vídeo para o começo a cada clique. */
+  function somDoHero() {
+    var fundo = $(".hero-video");
+    if (!fundo) return;
+    var quadro = $("iframe", fundo), filme = $("video", fundo);
+    if (quadro) quadro.addEventListener("load", mostra);
+    else if (filme) filme.addEventListener("loadeddata", mostra);
+    function mostra() {
+      fundo.classList.add("is-pronto");
+      // Celular às vezes segura o autoplay mesmo mudo: um empurrão resolve,
+      // e não custa nada quando o vídeo já está rodando.
+      if (quadro) setTimeout(function () { manda("playVideo"); }, 600);
+    }
+
+    function manda(func) {
+      if (!quadro || !quadro.contentWindow) return;
+      quadro.contentWindow.postMessage(JSON.stringify({ event: "command", func: func, args: [] }), "*");
+    }
+
+    var btn = $(".hero-som");
+    if (!btn) return;
+    btn.addEventListener("click", function () {
+      var ligar = btn.getAttribute("aria-pressed") !== "true";
+      btn.setAttribute("aria-pressed", ligar ? "true" : "false");
+      btn.setAttribute("aria-label", (ligar ? "Desligar" : "Ligar") + " o som do vídeo");
+      btn.classList.toggle("is-on", ligar);
+      if (filme) { filme.muted = !ligar; if (ligar) filme.play().catch(function () {}); }
+      else manda(ligar ? "unMute" : "mute");
+    });
   }
 
   /* Ao passar o mouse (ou chegar pelo teclado) no card, a foto dá lugar à
@@ -884,7 +927,7 @@
 
       $("#case").innerHTML =
         '<section class="page-hero page-hero--img' + (fotos.length ? "" : " grad") + '">' +
-          (fotos.length ? '<div class="page-hero__bg"><img src="' + fotos[0] + '" alt="' + esc(c.nome) + '"></div>' : "") + '<div class="wrap">' +
+          fundoDoHero(c, fotos[0] || "") + '<div class="wrap">' +
           (c.logo ? '<img src="' + c.logo + '" alt="" style="max-width:190px;max-height:130px;width:auto;margin-bottom:2rem" data-reveal>' : "") +
           '<span class="eyebrow" data-reveal>' + (c.ano ? anoDe(c) + " · " : "") + esc(c.subtitulo) + '</span><h1 class="display-l"><span class="split-line"><span>' + esc(c.nome) + "</span></span></h1></div></section>" +
         '<section class="section"><div class="wrap">' +
@@ -898,7 +941,7 @@
             (c.resultado ? bloco("O resultado", [c.resultado]) : "") + "</div>" : "") +
         "</div></section>" +
         (c.citacao ? '<section class="section--tight"><div class="wrap"><figure class="case-quote" data-reveal><blockquote>“' + esc(c.citacao.texto) + '”</blockquote><figcaption>' + esc(c.citacao.autor) + "</figcaption></figure></div></section>" : "") +
-        (c.video ? '<section class="section--tight"><div class="wrap"><div class="video-block" data-reveal>' + playerDe(c.video, fotos[0] || "", c.nome) + "</div>" +
+        (c.video ? '<section class="section--tight"><div class="wrap"><div class="video-block" data-reveal>' + playerDe(c.video, fotos[0] || "", c.nome, false) + "</div>" +
           (c.videoCredito ? '<p class="video-credito">Vídeo: ' + esc(c.videoCredito) + "</p>" : "") + "</div></section>" : "") +
         (fotos.length > 1 ? '<section class="section--tight" style="padding-top:0"><div class="wrap"><div class="mosaic">' +
           fotos.slice(1).map(function (f, k) { return '<figure data-reveal data-idx="' + (k + 1) + '"><img src="' + f + '" alt="' + esc(c.nome) + ", foto " + (k + 2) + '" loading="lazy"></figure>'; }).join("") +
@@ -909,6 +952,7 @@
           '<a href="' + caseUrl(prev) + '">' + pagerImg(prev) + '<span class="eyebrow">← Case anterior</span><span class="display-s" style="margin-top:.6rem">' + esc(prev.nome) + "</span></a>" +
           '<a href="' + caseUrl(next) + '">' + pagerImg(next) + '<span class="eyebrow">Próximo case →</span><span class="display-s" style="margin-top:.6rem">' + esc(next.nome) + "</span></a>" +
         "</nav>";
+      somDoHero();
       var open = lightbox(fotos);
       $$(".mosaic figure").forEach(function (f) {
         f.setAttribute("tabindex", "0");

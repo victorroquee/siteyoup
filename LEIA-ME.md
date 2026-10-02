@@ -55,29 +55,40 @@ acompanham. O texto continua no arquivo: preencheu, volta a aparecer sozinho.
 
 **Vídeo.** `playerDe()` é o único lugar que monta a URL do embed. Aceita
 arquivo mp4 do próprio site ou ID de 11 caracteres do YouTube, e reconhece
-qual é dos dois.
+qual é dos dois. Nada mais barra o vídeo: o aviso de cookies só informa, e o
+embed já entra com `autoplay=1&mute=1`, que é a única forma de um navegador
+deixar um vídeo começar sozinho.
+
+**Hero do case com filme.** `fundoDoHero()` troca a foto parada pelo vídeo do
+case quando ele existe. A capa continua por baixo como cartaz e o embed entra
+por cima quando carrega, então nunca aparece retângulo preto. O embed não
+recebe clique e leva um `scale(1.2)`, que joga para fora o título e a marca
+que o YouTube desenha por cima do vídeo. Quem manda no som é o botão do canto,
+que fala com o player por `postMessage` (daí o `enablejsapi=1`): ligar o som
+sem recarregar, porque recarregar voltaria o filme para o começo. Com
+`prefers-reduced-motion` o hero continua sendo a foto. O player de baixo, esse
+sim com controle e tela cheia, deixou de tocar sozinho para os dois não
+rodarem juntos.
+
+**Faixa em duotone.** As seis fotos de bastidores vêm de eventos diferentes,
+cada uma com uma luz. O preto e branco apaga a cor de origem e o roxo entra
+por cima no modo `multiply`, que leva o escuro para o preto e o claro para o
+roxo: duas cores, nenhuma briga. No hover a foto sai um pouco do roxo. As
+fotos ficam coladas, sem respiro entre elas.
 
 ---
 
 ## Pendências
 
-**1. O vídeo do case não abre (ABERTO, era o que estava sendo resolvido).**
-O diagnóstico: o aviso de cookies bloqueia o iframe do YouTube até alguém
-clicar em "Aceitar todos". Quem não clica vê a capa do case parada e acha
-que o vídeo quebrou. O cliente quer o vídeo **tocando já**, sem portão.
-
-O caminho acordado: tirar o portão do YouTube (mantendo o aviso de cookies,
-que ele já pediu para ser genérico), carregar o embed com
-`autoplay=1&mute=1&playsinline=1` e `loading="lazy"` no iframe, para só
-baixar quando chega perto da tela. `playsinline` já foi corrigido; falta
-tirar o portão.
-
-Ele também pediu que o vídeo toque no hover do card em "O impossível,
-entregue". Hoje o hover toca uma **prévia gerada a partir das fotos do
-case** (`assets/media/previa/<slug>.mp4`), não o vídeo real: não dá para
-baixar vídeo do YouTube, e o iframe demora mais de um segundo para carregar,
-o que não serve para hover. Se a YOUP entregar os brutos, é só trocar o
-arquivo de mesmo nome que o hover passa a usar o material real.
+**1. Hover do card ainda toca prévia, não o filme (ABERTO, à espera de
+material).** O portão do YouTube saiu e a página do case já abre com o filme
+rodando no hero, então o pedido principal está entregue. O que falta é o
+hover do card em "O impossível, entregue": ele toca uma **prévia gerada a
+partir das fotos do case** (`assets/media/previa/<slug>.mp4`), não o vídeo
+real. Não dá para baixar vídeo do YouTube, e o iframe demora mais de um
+segundo para carregar, o que não serve para hover. Se a YOUP entregar os
+brutos, é só trocar o arquivo de mesmo nome que o hover passa a usar o
+material real.
 
 **2. Oito campos de texto em branco em `atletas.html`**, linhas 134 a 150: os
 quatro títulos e os quatro parágrafos da seção "O que a Youp entregou". A
@@ -106,5 +117,5 @@ Aqui está 2006, que é o que bate com a cronologia. Vale confirmar.
 Com o servidor no ar, os scripts de verificação ficam em
 `/private/tmp/claude-501/-Users-victorroque/<sessão>/scratchpad/`. O que
 importa checar: nenhum `[PREENCHER]` visível, nenhum overflow horizontal em
-1440, 768 e 390, e nenhum erro de console. Tudo isso estava limpo no commit
-`83d1cb5`.
+1440, 768 e 390, e nenhum erro de console. Tudo isso estava limpo na última verificação, nas três larguras e em
+todas as páginas.
