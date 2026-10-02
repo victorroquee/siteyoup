@@ -107,6 +107,19 @@ sem recarregar, porque recarregar voltaria o filme para o começo. Com
 sim com controle e tela cheia, deixou de tocar sozinho para os dois não
 rodarem juntos.
 
+**Ver, Ouvir, Sentir no celular.** O índice dos serviços deixa de ser três
+links soltos e vira uma barra de etapas presa no topo, com a parte que está
+sendo lida acesa numa pílula roxa. Antes ele rolava para fora da tela antes de
+alguém ver que havia uma seleção. Tocar numa etapa acende na hora, sem esperar
+a rolagem chegar lá.
+
+**Selos do case em destaque no celular.** Os três viram três colunas, não uma
+lista empilhada: são três números para ler de relance, e empilhados tomavam
+meia tela.
+
+**Abertura.** A tela de entrada mostra só o logotipo. A faixa roxa que corria
+embaixo dele saiu a pedido.
+
 **Hero no celular.** A descrição do case (o "2020 · Sonhos Concretos" e a
 linha abaixo dele) sai da tela, e a régua de slides encolhe de 28 para 16 px
 por traço. No celular o título já ocupa a cena inteira e esses dois elementos

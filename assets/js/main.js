@@ -708,12 +708,17 @@
       return '<a href="#servico-' + i + '" data-i="' + i + '">' + s.verbo + "</a>";
     }).join("");
     var links = $$("a", indice), blocos = $$(".servico", el);
+
+    function acende(k) { links.forEach(function (a, n) { a.classList.toggle("is-ativo", n === k); }); }
+    acende(0);
+    // Tocar numa etapa acende na hora, sem esperar a rolagem chegar lá.
+    links.forEach(function (a, n) { a.addEventListener("click", function () { acende(n); }); });
+
     if (window.IntersectionObserver) {
       var io = new IntersectionObserver(function (entradas) {
         entradas.forEach(function (e) {
           if (!e.isIntersecting) return;
-          var k = blocos.indexOf(e.target);
-          links.forEach(function (a, n) { a.classList.toggle("is-ativo", n === k); });
+          acende(blocos.indexOf(e.target));
         });
       }, { rootMargin: "-45% 0px -45% 0px" });
       blocos.forEach(function (b) { io.observe(b); });
