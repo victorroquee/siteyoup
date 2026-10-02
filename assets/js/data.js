@@ -38,27 +38,40 @@ window.YOUP = {
   ],
   numerosNota: "Presenças: público acumulado em projetos do portfólio da YOUP. A soma não representa pessoas únicas, e os resultados foram construídos junto às marcas, atletas e demais parceiros. Visualizações: Instagram e YouTube, considerando apenas a Red Bull Brasil; recorte parcial, não representa o total do projeto.",
 
+  /*
+   * Cada serviço tem um espaço de vídeo. Para preencher, use UMA das formas:
+   *   video: "assets/media/servicos/ver.mp4"   (arquivo no próprio site)
+   *   video: "dQw4w9WgXcQ"                     (ID de 11 caracteres do YouTube)
+   * videoPoster é a imagem que aparece antes de tocar (opcional).
+   * Enquanto estiver vazio, o espaço mostra "Vídeo em breve" no lugar.
+   */
   servicos: [
     {
       verbo: "VER",
       titulo: "Content<br>& Digital",
       chamada: "Construímos memórias.",
       texto: "Convergimos o universo físico e o digital para gerar conteúdo de alta relevância: legítimo ao conceito da marca e autêntico para o público de cada segmento. Da captação em locação à narrativa de plataforma, transformamos experiências reais em imagens que duram.",
-      nota: "Documentários, branded content, campanhas e narrativas digitais."
+      nota: "Documentários, branded content, campanhas e narrativas digitais.",
+      video: "",
+      videoPoster: ""
     },
     {
       verbo: "OUVIR",
       titulo: "Live Marketing<br>& Brand Experience",
       chamada: "Onde marca e público se encontram.",
       texto: "Eventos e festivais são as ferramentas mais poderosas para conectar marcas e pessoas. Produzimos experiências ao vivo onde a marca não só se manifesta: ela escuta. Atmosferas projetadas para compartilhar emoções, criar conversa e construir memória coletiva.",
-      nota: "É a essência da YOUP desde o Dia D, em 2006."
+      nota: "É a essência da YOUP desde o Dia D, em 2006.",
+      video: "",
+      videoPoster: ""
     },
     {
       verbo: "SENTIR",
       titulo: "Tailor<br>Made",
       chamada: "Cada marca, um projeto único.",
       texto: "Cada desafio nasce de uma realidade própria, e cada projeto YOUP é construído a partir dela. Concebemos, planejamos e executamos soluções sob medida, do conceito estratégico à operação em campo. Sentimos o que sua marca precisa transmitir antes de qualquer entrega, e construímos a partir daí, com a profundidade de 26 anos em ações de alta complexidade.",
-      nota: ""
+      nota: "",
+      video: "",
+      videoPoster: ""
     }
   ],
 

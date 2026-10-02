@@ -399,14 +399,62 @@
   }
 
   // Ver. Ouvir. Sentir.: usado na home e em Quem Somos
+  // Cada serviço tem um espaço de vídeo (veja o comentário em data.js).
+  function espacoDeVideo(s, i) {
+    var cartaz = s.videoPoster || "";
+    if (!s.video) {
+      return '<div class="video-espaco video-espaco--vazio"><span>Vídeo em breve</span></div>';
+    }
+    if (/^[A-Za-z0-9_-]{11}$/.test(s.video)) {
+      return '<div class="video-espaco"><iframe src="https://www.youtube-nocookie.com/embed/' + s.video +
+        '?rel=0" title="' + esc(s.verbo) + '" loading="lazy" allow="accelerometer; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>';
+    }
+    return '<div class="video-espaco"><video muted loop playsinline preload="none"' +
+      (cartaz ? ' poster="' + cartaz + '"' : "") + '><source src="' + s.video + '" type="video/mp4"></video></div>';
+  }
+
   function servicos() {
     var el = $("#servicos");
     if (!el) return;
     el.innerHTML = D.servicos.map(function (s, i) {
-      return '<article data-reveal data-reveal-delay="' + i + '"><span class="verbo">' + s.verbo + "</span><h3>" + s.titulo + "</h3>" +
-        '<p class="chamada">' + s.chamada + '</p><p class="muted">' + s.texto + "</p>" +
-        (s.nota ? '<p class="nota">' + s.nota + "</p>" : "") + "</article>";
+      return '<article class="servico" id="servico-' + i + '" data-reveal>' +
+        espacoDeVideo(s, i) +
+        '<div class="servico__texto">' +
+          '<span class="servico__verbo">' + s.verbo + "</span>" +
+          "<h3>" + s.titulo + "</h3>" +
+          '<p class="chamada">' + s.chamada + "</p>" +
+          '<p class="muted">' + s.texto + "</p>" +
+          (s.nota ? '<p class="nota">' + s.nota + "</p>" : "") +
+        "</div></article>";
     }).join("");
+
+    // Índice fixo: acompanha qual serviço está na tela e leva até ele.
+    var indice = $("#servicos-indice");
+    if (!indice) return;
+    indice.innerHTML = D.servicos.map(function (s, i) {
+      return '<a href="#servico-' + i + '" data-i="' + i + '">' + s.verbo + "</a>";
+    }).join("");
+    var links = $$("a", indice), blocos = $$(".servico", el);
+    if (window.IntersectionObserver) {
+      var io = new IntersectionObserver(function (entradas) {
+        entradas.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          var k = blocos.indexOf(e.target);
+          links.forEach(function (a, n) { a.classList.toggle("is-ativo", n === k); });
+        });
+      }, { rootMargin: "-45% 0px -45% 0px" });
+      blocos.forEach(function (b) { io.observe(b); });
+    }
+    // O vídeo só toca quando aparece, e para quando sai.
+    if (window.IntersectionObserver) {
+      var iov = new IntersectionObserver(function (entradas) {
+        entradas.forEach(function (e) {
+          var v = e.target;
+          if (e.isIntersecting) v.play().catch(function () {}); else v.pause();
+        });
+      }, { threshold: .3 });
+      $$("video", el).forEach(function (v) { iov.observe(v); });
+    }
   }
 
   function heroSlideshow() {
