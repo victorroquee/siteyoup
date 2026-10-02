@@ -4,7 +4,7 @@
    ========================================================================== */
 
 /* Texto a preencher: visível de propósito */
-.at-fill { background: rgba(170, 140, 186, .22); outline: 1px dashed var(--roxo-claro); outline-offset: 2px; padding-inline: .2em; }
+.at-fill { background: rgba(255, 255, 255, .12); outline: 1px dashed rgba(255, 255, 255, .5); outline-offset: 2px; padding-inline: .2em; }
 .light .at-fill { background: rgba(98, 68, 159, .1); outline-color: var(--roxo); }
 
 /* Reveal desta seção: fade + 24px, 500 ms, ease-out */
@@ -61,11 +61,11 @@
 .at-card__placeholder span { font-family: var(--font-display); font-weight: var(--peso-cabecalho); font-size: .82rem; text-transform: uppercase; border: 1px solid rgba(255,255,255,.5); border-radius: 999px; padding: .6rem 1.1rem; }
 .at-card::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, transparent 35%, rgba(10,0,4,.92) 100%); }
 .at-card__body { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; padding: clamp(1.25rem, 3vw, 2.25rem); }
-.at-card__meta { font-family: var(--font-display); font-weight: var(--peso-cabecalho); font-size: .82rem; text-transform: uppercase; color: var(--roxo-claro); }
+.at-card__meta { font-family: var(--font-display); font-weight: var(--peso-cabecalho); font-size: .82rem; text-transform: uppercase; color: rgba(255, 255, 255, .55); }
 .at-card__name { font-size: clamp(2rem, 4.4vw, 3.6rem); line-height: 1; margin: .5rem 0 0; transition: transform .6s var(--ease); }
 .at-card__bio { margin: .9rem 0 0; color: rgba(255,255,255,.85); max-width: 42ch; }
 .at-card__ig { display: inline-flex; gap: .5rem; align-items: center; margin-top: 1rem; font-family: var(--font-display); font-weight: var(--peso-cabecalho); font-size: .85rem; position: relative; z-index: 3; }
-.at-card__ig:hover { color: var(--roxo-claro); }
+.at-card__ig:hover { color: rgba(255, 255, 255, .55); }
 .at-card__ig svg { width: 18px; height: 18px; }
 
 /* Hover (só em dispositivos com mouse): zoom, nome sobe, bio aparece */
@@ -78,7 +78,7 @@
 }
 
 /* 4. NO AUTÓDROMO ------------------------------------------------------- */
-.at-autodromo .section-head .eyebrow { color: var(--roxo-claro); }
+.at-autodromo .section-head .eyebrow { color: rgba(255, 255, 255, .55); }
 .at-autodromo__photo { margin: 0; border-radius: 4px; overflow: hidden; background: #0d0105; }
 .at-autodromo__photo img { width: 100%; height: auto; display: block; }   /* foto inteira, sem corte */
 

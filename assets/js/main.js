@@ -491,7 +491,7 @@
       var dest = YOUP.destaque();
       $("#destaque").innerHTML =
         '<div class="feature__media"><img src="' + YOUP.fotosDo(dest)[1] + '" alt="' + esc(dest.nome) + '" loading="lazy" data-parallax style="inset:-60px 0"></div>' +
-        '<div class="feature__body grad--dark"><div data-reveal><span class="eyebrow" style="color:var(--roxo-claro)">Case em destaque · ' + dest.ano + "</span>" +
+        '<div class="feature__body grad--dark"><div data-reveal><span class="eyebrow">Case em destaque · ' + dest.ano + "</span>" +
         '<h2 class="display-m" style="margin-top:1.25rem">Building Drop<br>Sandro Dias.</h2>' +
         '<ul class="bullets">' + dest.destaques.map(function (d) { return "<li>" + esc(d) + "</li>"; }).join("") + "</ul>" +
         '<a class="btn" href="' + caseUrl(dest) + '">Ver o case ' + ARROW + "</a></div>" +
