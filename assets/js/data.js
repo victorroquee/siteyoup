@@ -39,7 +39,6 @@ window.YOUP = {
     { valor: 2, sufixo: "", rotulo: "Guinness World Records™" },
     { valor: 4, sufixo: "", rotulo: "eventos com transmissão ao vivo na TV" }
   ],
-  numerosNota: "Presenças: público acumulado em projetos do portfólio da YOUP. A soma não representa pessoas únicas, e os resultados foram construídos junto às marcas, atletas e demais parceiros. Visualizações: Instagram e YouTube, considerando apenas a Red Bull Brasil; recorte parcial, não representa o total do projeto.",
 
   /*
    * Cada serviço tem um espaço de vídeo. Para preencher, use UMA das formas:

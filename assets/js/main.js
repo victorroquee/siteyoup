@@ -103,19 +103,36 @@
 
   function footer() {
     var c = D.contato;
+    var destaques = D.cases.filter(function (x) { return x.ano; }).slice(0, 4);
     var f = document.createElement("footer");
     f.className = "site-footer";
     f.innerHTML =
       '<div class="wrap">' +
+        '<div class="site-footer__topo">' +
+          '<p class="site-footer__slogan">You imagine.<br>We create.</p>' +
+          '<a class="btn" href="contato.html">Vamos criar juntos ' + ARROW + "</a>" +
+        "</div>" +
         '<div class="cols">' +
           "<div><h4>Navegue</h4><ul>" + MENU.map(function (m) { return '<li><a href="' + m[0] + '">' + m[1] + "</a></li>"; }).join("") + "</ul></div>" +
-          '<div><h4>Contato</h4><ul><li><a href="mailto:' + c.email + '">' + c.email + "</a></li><li class=\"endereco\">" + c.endereco + "</li></ul></div>" +
-          "<div><h4>Redes</h4><ul>" + c.redes.map(function (r) { return '<li><a href="' + r.url + '" target="_blank" rel="noopener">' + r.nome + "</a></li>"; }).join("") + "</ul></div>" +
+          "<div><h4>O que fazemos</h4><ul>" + D.servicos.map(function (s) {
+            return '<li><a href="index.html#servicos-sec">' + s.titulo.replace(/<br>/g, " ") + "</a></li>";
+          }).join("") + "</ul></div>" +
+          "<div><h4>Cases</h4><ul>" + destaques.map(function (x) {
+            return '<li><a href="' + caseUrl(x) + '">' + esc(x.nome) + "</a></li>";
+          }).join("") + '<li><a href="cases.html">Todos os cases</a></li></ul></div>' +
+          '<div><h4>Contato</h4><ul>' +
+            '<li><a href="mailto:' + c.email + '">' + c.email + "</a></li>" +
+            '<li class="endereco">' + c.endereco + "</li>" +
+            '<li class="redes">' + c.redes.map(function (r) {
+              return '<a href="' + r.url + '" target="_blank" rel="noopener">' + r.nome + "</a>";
+            }).join(" ") + "</li>" +
+          "</ul></div>" +
         "</div>" +
         '<div class="base">' +
           '<span class="wordmark">youp</span>' +
           '<span class="base__nota">Making a difference since 2000</span>' +
-          "<small>© " + new Date().getFullYear() + " YOUP. Todos os direitos reservados.</small>" +
+          '<span class="base__legal"><a href="privacidade.html">Privacidade e cookies</a>' +
+            "<small>© " + new Date().getFullYear() + " YOUP. Todos os direitos reservados.</small></span>" +
         "</div>" +
       "</div>";
     document.body.appendChild(f);
@@ -634,7 +651,6 @@
       manifesto();
       servicos();
       $("#numeros").classList.toggle("numbers--5", D.numeros.length === 5);
-      if (D.numerosNota) $("#numeros").insertAdjacentHTML("afterend", '<p class="numbers__nota" data-reveal>' + esc(D.numerosNota) + "</p>");
       $("#numeros").innerHTML = D.numeros.map(function (n, i) {
         return '<div data-reveal data-reveal-delay="' + i + '"><span class="n" data-count="' + n.valor + '" data-prefix="' + (n.prefixo || "") + '" data-suffix="' + n.sufixo + '">' + (n.prefixo || "") + n.valor + n.sufixo + '</span><span class="l">' + n.rotulo + "</span></div>";
       }).join("");

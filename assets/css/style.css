@@ -575,27 +575,34 @@ p { margin: 0 0 1em; }
 .contact-info a:hover { color: var(--branco); text-decoration: underline; text-underline-offset: .25em; }
 
 /* --- Footer ------------------------------------------------------------
-   Minimalista: uma régua, três colunas de links e a base com o logotipo.
-   Sem degradê, sem slogan repetido, sem logotipo gigante.
+   Fecha a página: a frase da marca com a chamada, quatro colunas de
+   navegação real e a base com o logotipo, a assinatura e o legal.
    ----------------------------------------------------------------------- */
 .site-footer { background: var(--vinho); padding: clamp(4rem, 8vw, 7rem) 0 calc(2.5rem + env(safe-area-inset-bottom, 0px)); }
-.site-footer .cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(2rem, 4vw, 4rem); padding-top: clamp(2.5rem, 5vw, 4rem); border-top: 1px solid var(--linha); }
+.site-footer__topo { display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem 3rem; flex-wrap: wrap; }
+.site-footer__slogan { margin: 0; font-family: var(--font-display); font-weight: var(--peso-titulo); text-transform: uppercase; font-size: clamp(1.8rem, 3.4vw, 3.2rem); line-height: 1.02; }
+.site-footer .cols { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(2rem, 3vw, 3rem); margin-top: clamp(3rem, 6vw, 5rem); padding-top: clamp(2.5rem, 5vw, 3.5rem); border-top: 1px solid var(--linha); }
 .site-footer .cols h4 { margin: 0 0 1.2rem; font-family: var(--font-display); font-weight: var(--peso-cabecalho); font-size: .78rem; text-transform: uppercase; color: rgba(255, 255, 255, .45); }
 .site-footer .cols ul { list-style: none; margin: 0; padding: 0; }
-.site-footer .cols li { margin-bottom: .62rem; font-size: .98rem; color: rgba(255, 255, 255, .78); }
-.site-footer .cols li.endereco { line-height: 1.55; margin-top: 1rem; color: rgba(255, 255, 255, .55); }
+.site-footer .cols li { margin-bottom: .62rem; font-size: .96rem; color: rgba(255, 255, 255, .78); }
+.site-footer .cols li.endereco { line-height: 1.55; margin-top: 1rem; color: rgba(255, 255, 255, .5); }
+.site-footer .cols li.redes { margin-top: 1.1rem; display: flex; flex-wrap: wrap; gap: .4rem 1rem; }
 .site-footer .cols a { transition: color .3s var(--ease); }
 .site-footer .cols a:hover { color: var(--branco); }
 .site-footer .base {
-  margin-top: clamp(3rem, 6vw, 5rem); padding-top: 1.75rem;
+  margin-top: clamp(3rem, 6vw, 4.5rem); padding-top: 1.75rem;
   border-top: 1px solid var(--linha);
   display: flex; align-items: baseline; justify-content: space-between; gap: 1rem 2rem; flex-wrap: wrap;
 }
 .site-footer .base .wordmark { font-size: 1.9rem; }
 .site-footer .base__nota { font-family: var(--font-display); font-weight: var(--peso-cabecalho); font-size: .78rem; text-transform: uppercase; color: rgba(255, 255, 255, .45); }
+.site-footer .base__legal { display: flex; align-items: baseline; gap: 1.5rem; flex-wrap: wrap; }
+.site-footer .base__legal a { font-size: .82rem; color: rgba(255, 255, 255, .6); text-decoration: underline; text-underline-offset: .25em; }
+.site-footer .base__legal a:hover { color: var(--branco); }
 .site-footer small { font-size: .82rem; color: rgba(255, 255, 255, .45); }
-@media (max-width: 760px) {
-  .site-footer .cols { grid-template-columns: 1fr 1fr; }
+@media (max-width: 900px) { .site-footer .cols { grid-template-columns: 1fr 1fr; row-gap: 2.5rem; } }
+@media (max-width: 560px) {
+  .site-footer .cols { grid-template-columns: 1fr; }
   .site-footer .base { flex-direction: column; align-items: flex-start; }
 }
 
