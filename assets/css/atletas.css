@@ -8,11 +8,11 @@
 .light .at-fill { background: rgba(98, 68, 159, .1); outline-color: var(--roxo); }
 
 /* Reveal desta seção: fade + 24px, 500 ms, ease-out */
-.js #atletas [data-reveal] { transform: translateY(24px); transition: opacity .5s ease-out, transform .5s ease-out; }
+.js #atletas [data-reveal] { transform: translateY(24px); transition: opacity var(--t-camada) var(--ease), transform var(--t-camada) var(--ease); }
 .js #atletas [data-reveal].is-in { transform: none; }
-.js #atletas [data-reveal-delay="1"] { transition-delay: .08s; }
-.js #atletas [data-reveal-delay="2"] { transition-delay: .16s; }
-.js #atletas [data-reveal-delay="3"] { transition-delay: .24s; }
+.js #atletas [data-reveal-delay="1"] { transition-delay: var(--d-passo); }
+.js #atletas [data-reveal-delay="2"] { transition-delay: calc(var(--d-passo) * 2); }
+.js #atletas [data-reveal-delay="3"] { transition-delay: calc(var(--d-passo) * 2); }
 
 /* 1. HERO ---------------------------------------------------------------- */
 .at-hero { position: relative; height: 90vh; height: 90svh; min-height: 520px; overflow: hidden; display: flex; align-items: flex-end; background: var(--preto); }
@@ -31,7 +31,7 @@
 }
 @media (min-width: 760px) {
   .at-hero__panels { display: flex; }
-  .at-hero__panel { flex: 1 1 0; transition: flex-grow .7s var(--ease); }
+  .at-hero__panel { flex: 1 1 0; transition: flex-grow var(--t-camada) var(--ease); }
   .at-hero__panel figcaption { padding-inline: 1.25rem; }
 }
 @media (min-width: 760px) and (hover: hover) {
@@ -56,13 +56,13 @@
 /* 3. CARDS --------------------------------------------------------------- */
 .at-cards { display: grid; grid-template-columns: 1fr; gap: clamp(1rem, 2vw, 1.75rem); }
 .at-card { position: relative; overflow: hidden; border-radius: 4px; aspect-ratio: 4 / 5; background: #0d0105; isolation: isolate; }
-.at-card__photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .8s var(--ease); }
+.at-card__photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform var(--t-camada) var(--ease); }
 .at-card__placeholder { position: absolute; inset: 0; display: grid; place-items: center; }
 .at-card__placeholder span { font-family: var(--font-display); font-weight: var(--peso-cabecalho); font-size: .82rem; text-transform: uppercase; border: 1px solid rgba(255,255,255,.5); border-radius: 999px; padding: .6rem 1.1rem; }
 .at-card::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, transparent 35%, rgba(10,0,4,.92) 100%); }
 .at-card__body { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; padding: clamp(1.25rem, 3vw, 2.25rem); }
 .at-card__meta { font-family: var(--font-display); font-weight: var(--peso-cabecalho); font-size: .82rem; text-transform: uppercase; color: rgba(255, 255, 255, .55); }
-.at-card__name { font-size: clamp(2rem, 4.4vw, 3.6rem); line-height: 1; margin: .5rem 0 0; transition: transform .6s var(--ease); }
+.at-card__name { font-size: clamp(2rem, 4.4vw, 3.6rem); line-height: 1; margin: .5rem 0 0; transition: transform var(--t-camada) var(--ease); }
 .at-card__bio { margin: .9rem 0 0; color: rgba(255,255,255,.85); max-width: 42ch; }
 .at-card__ig { display: inline-flex; gap: .5rem; align-items: center; margin-top: 1rem; font-family: var(--font-display); font-weight: var(--peso-cabecalho); font-size: .85rem; position: relative; z-index: 3; }
 .at-card__ig:hover { color: rgba(255, 255, 255, .55); }
@@ -70,7 +70,7 @@
 
 /* Hover (só em dispositivos com mouse): zoom, nome sobe, bio aparece */
 @media (hover: hover) {
-  .at-card__reveal { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows .6s var(--ease), opacity .5s ease-out; }
+  .at-card__reveal { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows var(--t-camada) var(--ease), opacity var(--t-camada) var(--ease); }
   .at-card__reveal > div { overflow: hidden; }
   .at-card:hover .at-card__photo, .at-card:focus-within .at-card__photo { transform: scale(1.05); }
   .at-card:hover .at-card__reveal, .at-card:focus-within .at-card__reveal { grid-template-rows: 1fr; opacity: 1; }
@@ -100,7 +100,7 @@
 }
 .at-galeria__grid::-webkit-scrollbar { display: none; }
 .at-galeria__grid figure { margin: 0; scroll-snap-align: center; border-radius: 4px; overflow: hidden; aspect-ratio: 4 / 5; cursor: zoom-in; background: #0d0105; }
-.at-galeria__grid img { width: 100%; height: 100%; object-fit: cover; transition: transform 1s var(--ease); }
+.at-galeria__grid img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--t-cena) var(--ease); }
 .at-galeria__grid figure:hover img { transform: scale(1.04); }
 .at-credit { margin-top: 1.25rem; font-size: .85rem; color: var(--cinza); }
 

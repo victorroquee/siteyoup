@@ -573,6 +573,10 @@
     }
   }
 
+  // O tempo de cada foto do hero vive no CSS (--t-slide), para a barrinha de
+  // paginação e o relógio do slideshow nunca saírem de sincronia.
+  var TEMPO_SLIDE = (parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--t-slide")) || 6) * 1000;
+
   function heroSlideshow() {
     var media = $(".hero__media");
     if (!media) return;
@@ -615,7 +619,7 @@
       var c = slides[idx];
       cap.innerHTML = '<strong>' + anoDe(c) + " · " + esc(c.nome) + "</strong>" + esc(c.chamada) + ' <a class="link-arrow" href="' + caseUrl(c) + '" style="margin-top:.6rem">Ver case ' + ARROW + "</a>";
       clearTimeout(timer);
-      if (!reduce) timer = setTimeout(function () { go(idx + 1); }, 6000);
+      if (!reduce) timer = setTimeout(function () { go(idx + 1); }, TEMPO_SLIDE);
     }
     $$("button", dots).forEach(function (b, i) { b.addEventListener("click", function () { go(i); }); });
     idx = 0; go(0);
