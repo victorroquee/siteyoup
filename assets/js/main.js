@@ -380,7 +380,9 @@
     }
 
     function medir() {
-      preso = !reduce && window.innerWidth >= 700;
+      // O eixo prende em qualquer tamanho de tela: no celular o scroll
+      // vertical tambem e o que faz os anos passarem.
+      preso = !reduce;
       sec.classList.toggle("tl2--pinned", preso);
       var px = parseFloat(getComputedStyle(sec).getPropertyValue("--px-ano")) || 120;
       larguraFita = vao * px;

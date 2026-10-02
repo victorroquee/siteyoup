@@ -387,8 +387,14 @@ p { margin: 0 0 1em; }
 .tl2:not(.tl2--pinned) .tl2__marcador { display: none; }
 .tl2:not(.tl2--pinned) .tl2__texto { margin-block: clamp(2rem, 6vh, 4rem); }
 
-@media (max-width: 700px) {
+@media (max-width: 760px) {
+  /* Passo menor por ano: o trecho preso fica mais curto no celular. */
+  .tl2 { --px-ano: 74px; }
   .tl2__nome, .tl2__chamada { max-width: none; }
+  .tl2__stage { gap: 1.25rem; padding-top: calc(var(--header-h) + 1.5rem); }
+  .tl2__topo .link-arrow { display: none; }
+  .tl2__eixo { height: 76px; }
+  .tl2__ano { font-size: clamp(3.6rem, 19vw, 6rem); }
 }
 
 /* CTA */
