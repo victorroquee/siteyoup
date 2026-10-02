@@ -119,8 +119,8 @@ que deixava a cena maior do que precisava e visivelmente torta para a
 esquerda. Cortado, ele fica centrado e a mesma caixa mostra a órbita 23%
 maior.
 
-O tamanho na tela é 595 px no desktop (coluna `.88fr` da grade) e quase a
-largura da tela no celular. Os arquivos têm cerca do dobro disso porque em
+O tamanho na tela é 595 px no desktop (coluna `.88fr` da grade) e 94% da
+coluna no celular, o que dá 329 px numa tela de 390. Os arquivos têm cerca do dobro disso porque em
 tela retina o vídeo na medida exata fica mole.
 
 **Como gerar de novo.** A fonte é o `motion-studio` em `~/Downloads`, e o

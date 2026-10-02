@@ -824,8 +824,8 @@ p { margin: 0 0 1em; }
      sobrar altura para o vídeo. */
   .manifesto__stage { padding-block: var(--ev-2); }
   .orbita {
-    width: auto; max-width: none; max-height: 58svh;
-    margin-inline: calc(var(--gutter) * -.45);
+    width: 94%; max-width: none; max-height: 58svh;
+    margin-inline: auto;
   }
   .orbita__video { transform: none; }
 }
