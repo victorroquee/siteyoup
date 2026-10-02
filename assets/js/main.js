@@ -224,72 +224,127 @@
     pintar();
   }
 
-  /* --- Linha do tempo horizontal (home) --------------------------------
-     O scroll vertical vira avanço horizontal: a seção prende na tela, a fila
-     de anos atravessa o viewport e só então a página segue para a próxima
-     seção. Sem o pin (celular ou movimento reduzido) a fila fica um trilho
-     de arrastar, com os mesmos painéis. */
-  function linhaHorizontal() {
-    var sec = $("[data-tlh]");
+  /* --- Linha do tempo da home -------------------------------------------
+     O eixo e proporcional ao tempo: 2000 e 2026 ficam a mesma distancia em
+     pixels de qualquer outro par de anos com a mesma diferenca. O scroll
+     vertical corre o eixo por um marcador fixo no centro; o momento mais
+     proximo do marcador manda na foto de fundo, no ano gigante e no texto. */
+  function linhaDoTempo() {
+    var sec = $("[data-tl]");
     if (!sec) return;
-    var track = $(".tlh__track", sec), stage = $(".tlh__stage", sec);
-    var vp = $(".tlh__viewport", sec), row = $(".tlh__row", sec);
-    var fill = $(".tlh__fill", sec), ghost = $(".tlh__ghost", sec), conta = $(".tlh__i", sec);
-    var itens = $$(".tlh__item", row);
-    if (!itens.length) return;
-    var anos = itens.map(function (el) { return $(".tlh__y", el).textContent.trim(); });
-    var centros = [], dist = 0, preso = false, ativo = -1, pedindo = false;
+    var track = $(".tl2__track", sec), stage = $(".tl2__stage", sec);
+    var eixo = $(".tl2__eixo", sec), fita = $(".tl2__fita", sec), fundo = $(".tl2__fundo", sec);
+    var elAno = $(".tl2__ano", sec), elNome = $(".tl2__nome", sec), elChamada = $(".tl2__chamada", sec);
 
-    $(".tlh__n", sec).textContent = itens.length;
+    var itens = cronoItens().map(function (it) {
+      var c = it.c;
+      return {
+        ano: it.ano,
+        rotulo: it.marco ? it.ano : anoDe(c),
+        nome: it.marco ? it.marco.titulo : c.nome,
+        chamada: it.marco ? it.marco.destaques[0] : (c.chamada || (c.destaques || [])[0] || ""),
+        foto: it.marco ? "" : YOUP.capa(c),
+        href: "nossa-historia.html#" + it.id
+      };
+    });
+    if (itens.length < 2) return;
+
+    var anoMin = itens[0].ano, anoMax = itens[itens.length - 1].ano;
+    var vao = Math.max(1, anoMax - anoMin);
+
+    // Fundo: uma foto por momento, trocando por fade. Marco herda a foto anterior.
+    var ultimaFoto = "";
+    itens.forEach(function (m) {
+      if (!m.foto) m.foto = ultimaFoto; else ultimaFoto = m.foto;
+    });
+    for (var k = itens.length - 2; k >= 0; k--) if (!itens[k].foto) itens[k].foto = itens[k + 1].foto;
+    var fotos = [];
+    itens.forEach(function (m, i) {
+      if (!m.foto) { fotos.push(null); return; }
+      var img = document.createElement("img");
+      img.src = m.foto; img.alt = ""; img.setAttribute("aria-hidden", "true");
+      if (i) img.loading = "lazy";
+      fundo.appendChild(img);
+      fotos.push(img);
+    });
+
+    // Fita: um risco por ano, risco alto e rotulo nos anos que tem momento.
+    var porAno = {};
+    itens.forEach(function (m, i) { if (porAno[m.ano] === undefined) porAno[m.ano] = i; });
+    var html = "", paradaDe = {};
+    for (var a = anoMin; a <= anoMax; a++) {
+      var pos = ((a - anoMin) / vao * 100).toFixed(4);
+      if (porAno[a] !== undefined) {
+        var m = itens[porAno[a]];
+        paradaDe[a] = porAno[a];
+        html += '<li style="left:' + pos + '%"><a class="tl2__parada" href="' + m.href + '" data-i="' + porAno[a] + '">' +
+          '<span class="tl2__tick"></span><span class="tl2__rotulo">' + esc(m.rotulo) + "</span></a></li>";
+      } else {
+        html += '<li style="left:' + pos + '%"><span class="tl2__tick"></span></li>';
+      }
+    }
+    fita.innerHTML = html;
+    var paradas = $$(".tl2__parada", fita);
+
+    var larguraFita = 0, dist = 0, preso = false, ativo = -1, pedindo = false, troca = 0;
+
+    function pinta(i) {
+      if (i === ativo) return;
+      ativo = i;
+      var m = itens[i];
+      sec.classList.add("is-trocando");
+      clearTimeout(troca);
+      troca = setTimeout(function () {
+        elAno.textContent = m.rotulo;
+        elNome.textContent = m.nome;
+        elChamada.textContent = m.chamada;
+        sec.classList.remove("is-trocando");
+      }, reduce ? 0 : 230);
+      fotos.forEach(function (img, k) { if (img) img.classList.toggle("is-ativa", k === i); });
+      paradas.forEach(function (p) { p.classList.toggle("is-ativa", +p.getAttribute("data-i") === i); });
+    }
+
+    function maisPerto(anoFlutuante) {
+      var i = 0, melhor = Infinity;
+      itens.forEach(function (m, k) {
+        var d = Math.abs(m.ano - anoFlutuante);
+        if (d < melhor) { melhor = d; i = k; }
+      });
+      return i;
+    }
 
     function medir() {
-      preso = !reduce && window.innerWidth >= 700 && itens.length > 1;
-      sec.classList.toggle("tlh--pinned", preso);
-      if (!preso) { track.style.height = ""; row.style.transform = ""; return; }
-      row.style.transform = "";
-      centros = itens.map(function (el) { var li = el.parentNode; return li.offsetLeft + li.offsetWidth / 2; });
-      // A fila começa e termina com o painel no centro da tela: a distância é
-      // a do centro do primeiro ao centro do último. (scrollWidth não serve:
-      // o Chrome descarta o padding final de um flex container que transborda.)
-      dist = Math.max(0, centros[centros.length - 1] - vp.clientWidth / 2);
+      preso = !reduce && window.innerWidth >= 700;
+      sec.classList.toggle("tl2--pinned", preso);
+      var px = parseFloat(getComputedStyle(sec).getPropertyValue("--px-ano")) || 120;
+      larguraFita = vao * px;
+      fita.style.width = larguraFita + "px";
+      if (!preso) {
+        track.style.height = "";
+        fita.style.transform = "";
+        fita.style.left = "0";
+        pinta(0);
+        return;
+      }
+      fita.style.left = "50%";
+      dist = larguraFita;
       track.style.height = stage.offsetHeight + dist + "px";
-      ativo = -1;
       mover();
     }
 
     function mover() {
-      if (!preso) return;
-      var p = dist > 0 ? Math.min(Math.max(-track.getBoundingClientRect().top / dist, 0), 1) : 0;
-      row.style.transform = "translate3d(" + (-p * dist).toFixed(1) + "px,0,0)";
-      fill.style.transform = "scaleX(" + p.toFixed(4) + ")";
-      if (vp.scrollLeft) vp.scrollLeft = 0;
-      if (p > .01) sec.classList.add("is-andando");
-
-      var alvo = p * dist + vp.clientWidth / 2, i = 0, melhor = Infinity;
-      for (var k = 0; k < centros.length; k++) {
-        var d = Math.abs(centros[k] - alvo);
-        if (d < melhor) { melhor = d; i = k; }
-      }
-      if (i === ativo) return;
-      itens.forEach(function (el, k) {
-        el.classList.toggle("is-ativo", k === i);
-        el.classList.toggle("is-perto", Math.abs(k - i) === 1);
-      });
-      ghost.textContent = anos[i];
-      ghost.classList.remove("is-troca");
-      void ghost.offsetWidth;
-      ghost.classList.add("is-troca");
-      conta.textContent = i + 1;
-      ativo = i;
+      if (!preso || !dist) return;
+      var p = Math.min(Math.max(-track.getBoundingClientRect().top / dist, 0), 1);
+      fita.style.transform = "translate3d(" + (-p * dist).toFixed(1) + "px,0,0)";
+      pinta(maisPerto(anoMin + p * vao));
     }
 
-    // Teclado: ao focar um painel fora da tela, a página rola até centralizá-lo.
-    row.addEventListener("focusin", function (e) {
+    // Teclado: focar uma parada fora da tela rola a pagina ate centraliza-la.
+    fita.addEventListener("focusin", function (e) {
       if (!preso || !dist) return;
-      var alvo = e.target.closest && e.target.closest(".tlh__item");
-      var i = alvo ? itens.indexOf(alvo) : -1;
-      if (i < 0) return;
-      var p = Math.min(Math.max((centros[i] - vp.clientWidth / 2) / dist, 0), 1);
+      var alvo = e.target.closest && e.target.closest(".tl2__parada");
+      if (!alvo) return;
+      var p = Math.min(Math.max((itens[+alvo.getAttribute("data-i")].ano - anoMin) / vao, 0), 1);
       window.scrollTo({ top: track.getBoundingClientRect().top + window.pageYOffset + p * dist, behavior: "instant" });
     });
 
@@ -297,14 +352,6 @@
       if (pedindo) return;
       pedindo = true;
       requestAnimationFrame(function () { pedindo = false; mover(); });
-    }, { passive: true });
-
-    // Sem pin, quem move a barra é o arrasto da própria fila.
-    vp.addEventListener("scroll", function () {
-      if (preso) return;
-      var max = vp.scrollWidth - vp.clientWidth;
-      fill.style.transform = "scaleX(" + (max > 0 ? (vp.scrollLeft / max).toFixed(4) : 0) + ")";
-      if (vp.scrollLeft > 8) sec.classList.add("is-andando");
     }, { passive: true });
     window.addEventListener("resize", medir);
     window.addEventListener("orientationchange", medir);
@@ -497,22 +544,8 @@
         '<a class="btn" href="' + caseUrl(dest) + '">Ver o case ' + ARROW + "</a></div>" +
         '<img class="logo-ev" src="' + dest.logo + '" alt="Red Bull Building Drop, Sandro Dias" loading="lazy" data-reveal></div>';
       $("#rail").innerHTML = D.cases.map(function (c) { return card(c); }).join("");
-      $("#anos").innerHTML = cronoItens().map(function (it) {
-        var href = "nossa-historia.html#" + it.id;
-        if (it.marco) {
-          return '<li><a class="tlh__item tlh__item--marco" href="' + href + '">' +
-            '<span class="tlh__body"><span class="tlh__nota">' + esc(it.marco.destaques[0]) + "</span>" +
-            '<span class="tlh__legenda"><span class="tlh__y">' + it.ano + '</span>' +
-            '<span class="tlh__t">' + esc(it.marco.titulo) + "</span></span></span></a></li>";
-        }
-        var c = it.c, capa = YOUP.capa(c);
-        return '<li><a class="tlh__item" href="' + href + '">' +
-          (capa ? '<span class="tlh__shot"><img src="' + capa + '" alt="' + esc(c.nome) + '" loading="lazy"' + (c.pos ? ' style="object-position:' + c.pos + '"' : "") + "></span>" : '<span class="tlh__shot grad"></span>') +
-          '<span class="tlh__body"><span class="tlh__y">' + anoDe(c) + '</span>' +
-          '<span class="tlh__t">' + esc(c.nome) + "</span></span></a></li>";
-      }).join("");
       railControls();
-      linhaHorizontal();
+      linhaDoTempo();
     },
 
     cronologia: function () {

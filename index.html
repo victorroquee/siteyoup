@@ -85,21 +85,24 @@
     </div>
   </section>
 
-  <section class="tlh" id="linha" data-tlh aria-labelledby="tlh-titulo">
-    <div class="tlh__track">
-      <div class="tlh__stage grad--dark">
-        <span class="tlh__ghost" aria-hidden="true">2000</span>
-        <div class="wrap tlh__head">
-          <h2 class="display-m" id="tlh-titulo">Desde 2000<br>fazendo história.</h2>
+  <!-- Linha do tempo: a secao prende na tela e o scroll vertical faz os anos
+       passarem pelo marcador central. O eixo e proporcional ao tempo. -->
+  <section class="tl2" id="linha" data-tl aria-labelledby="tl2-titulo">
+    <div class="tl2__track">
+      <div class="tl2__stage">
+        <div class="tl2__fundo" aria-hidden="true"></div>
+        <div class="wrap tl2__topo">
+          <h2 class="display-m" id="tl2-titulo">Desde 2000<br>fazendo história.</h2>
           <a class="link-arrow" href="nossa-historia.html">Ver a história completa <svg class="arrow" width="18" height="12" viewBox="0 0 18 12" aria-hidden="true"><path d="M0 6h16M11 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></a>
         </div>
-        <div class="tlh__viewport" tabindex="-1">
-          <ol class="tlh__row" id="anos"></ol>
+        <div class="wrap tl2__texto">
+          <p class="tl2__ano" aria-hidden="true"></p>
+          <h3 class="tl2__nome"></h3>
+          <p class="tl2__chamada"></p>
         </div>
-        <div class="wrap tlh__foot">
-          <p class="tlh__hint">Role para percorrer os 26 anos</p>
-          <div class="tlh__rail" aria-hidden="true"><span class="tlh__fill"></span></div>
-          <p class="tlh__conta"><span class="tlh__i">1</span>/<span class="tlh__n">1</span></p>
+        <div class="tl2__eixo">
+          <span class="tl2__marcador" aria-hidden="true"></span>
+          <ol class="tl2__fita"></ol>
         </div>
       </div>
     </div>
