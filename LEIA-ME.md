@@ -156,6 +156,15 @@ O tamanho na tela é 595 px no desktop (coluna `.88fr` da grade) e 94% da
 coluna no celular, o que dá 329 px numa tela de 390. Os arquivos têm cerca do dobro disso porque em
 tela retina o vídeo na medida exata fica mole.
 
+**O retângulo mais escuro.** O fundo do arquivo é a cor exata da página, mas
+cada navegador converte vídeo de um jeito: o Chrome pinta `#14091b` e o Safari
+`#14071d`, contra o `#14091c` do CSS. Um ou dois níveis bastam para desenhar
+um retângulo numa área chapada, e não existe cor de fundo que acerte os dois
+ao mesmo tempo. Por isso a borda do vídeo sai em degradê (`mask-image` nos
+dois eixos, 6,5% de cada lado): o encontro com a página acontece em alfa zero,
+e aí não há diferença para aparecer. O corte do arquivo deixa justamente essa
+margem vazia em volta das marcas, então o degradê não come nada do desenho.
+
 **Como gerar de novo.** A fonte é o `motion-studio` em `~/Downloads`, e o
 tamanho sai do próprio render, não de ampliação depois:
 
