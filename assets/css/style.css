@@ -766,3 +766,12 @@ p { margin: 0 0 1em; }
 .texto-legal__corpo ul { margin: 0 0 1em; padding-left: 1.2rem; color: rgba(255, 255, 255, .82); line-height: 1.7; }
 .texto-legal__corpo li { margin-bottom: .6rem; }
 .texto-legal__corpo a { color: var(--branco); text-decoration: underline; text-underline-offset: .25em; }
+
+/* Prévia em vídeo do card, no hover e no foco de teclado. */
+.card__previa {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; opacity: 0; pointer-events: none;
+  transition: opacity .55s var(--ease);
+}
+.card.is-previa .card__previa { opacity: 1; }
+.card.is-previa img.card__img { transform: scale(1.06); }

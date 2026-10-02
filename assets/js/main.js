@@ -430,9 +430,13 @@
   // Rótulo de ano do case: usa o período (ex.: "2015-2024") quando houver
   function anoDe(c) { return c.periodo || c.ano || ""; }
 
+  // Prévia em vídeo do card: montada a partir das fotos do próprio case.
+  function previaDe(c) { return c.fotos ? "assets/media/previa/" + c.slug + ".mp4" : ""; }
+
   function card(c, extra) {
     return '<a class="card ' + (extra || "") + (c.logoSombra ? " card--sombra-topo" : "") + '" href="' + caseUrl(c) + '">' +
       (YOUP.capa(c) ? '<img class="card__img" src="' + YOUP.capa(c) + '" alt="' + esc(c.nome) + '" loading="lazy"' + (c.pos ? ' style="object-position:' + c.pos + '"' : "") + '>' : '<div class="card__img grad"></div>') +
+      (previaDe(c) ? '<video class="card__previa" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true" data-previa="' + previaDe(c) + '"></video>' : "") +
       (c.logo ? '<img class="card__logo" src="' + c.logo + '" alt="" loading="lazy">' : "") +
       '<div class="card__body"><div><span class="card__year">' + anoDe(c) + '</span><h3 class="card__name">' + esc(c.nome) + '</h3><p class="card__sub">' + esc(c.chamada) + "</p></div>" +
       '<span class="card__go">' + ARROW + "</span></div></a>";
@@ -465,6 +469,43 @@
     }
     return '<video controls playsinline preload="none"' + (cartaz ? ' poster="' + cartaz + '"' : "") +
       '><source src="' + v + '" type="video/mp4"></video>';
+  }
+
+  /* Ao passar o mouse (ou chegar pelo teclado) no card, a foto dá lugar à
+     prévia em vídeo daquele case. O arquivo só é baixado no primeiro hover,
+     então quem não passa o mouse não paga por ele. No toque não há hover,
+     então nada é baixado no celular. */
+  function previaDosCards() {
+    if (reduce) return;
+    function liga(card) {
+      var v = $(".card__previa", card);
+      if (!v) return;
+      if (!v.getAttribute("src")) v.setAttribute("src", v.getAttribute("data-previa"));
+      card.classList.add("is-previa");
+      v.play().catch(function () { card.classList.remove("is-previa"); });
+    }
+    function desliga(card) {
+      var v = $(".card__previa", card);
+      if (!v) return;
+      card.classList.remove("is-previa");
+      v.pause();
+    }
+    document.addEventListener("mouseover", function (e) {
+      var c = e.target.closest && e.target.closest(".card");
+      if (c && !c.contains(e.relatedTarget)) liga(c);
+    });
+    document.addEventListener("mouseout", function (e) {
+      var c = e.target.closest && e.target.closest(".card");
+      if (c && !c.contains(e.relatedTarget)) desliga(c);
+    });
+    document.addEventListener("focusin", function (e) {
+      var c = e.target.closest && e.target.closest(".card");
+      if (c) liga(c);
+    });
+    document.addEventListener("focusout", function (e) {
+      var c = e.target.closest && e.target.closest(".card");
+      if (c) desliga(c);
+    });
   }
 
   // Ver. Ouvir. Sentir.: usado na home e em Quem Somos
@@ -907,6 +948,7 @@
   pendencias();
   footer();
   cookies();
+  previaDosCards();
   reveal();
   countUp();
   parallax();
