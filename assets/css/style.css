@@ -792,3 +792,15 @@ p { margin: 0 0 1em; }
 }
 .site-footer .cols li.redes a:hover { color: var(--vinho); background: var(--branco); border-color: var(--branco); }
 .site-footer .cols li.redes svg { width: 19px; height: 19px; fill: currentColor; }
+
+/* --- Página de fundo claro ----------------------------------------------
+   O header é fixo e transparente até rolar. Numa página clara ele precisa
+   escrever em tinta, não em branco.
+   ----------------------------------------------------------------------- */
+body[data-tema="claro"] { background: var(--papel); }
+body[data-tema="claro"] .site-header { color: var(--vinho); }
+body[data-tema="claro"] .site-header.is-solid { background: rgba(243, 241, 243, .82); }
+body[data-tema="claro"] .intro { background: var(--papel); color: var(--vinho); }
+body[data-tema="claro"] .intro__linha { background: rgba(20, 9, 28, .18); }
+.light .eyebrow { color: var(--roxo); }
+.light .page-hero .eyebrow { color: var(--roxo); }
