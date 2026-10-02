@@ -807,9 +807,15 @@ p { margin: 0 0 1em; }
 
 @media (max-width: 860px) {
   .manifesto__grade { grid-template-columns: 1fr; }
-  /* No celular a coluna já é a tela inteira: o vídeo cresce pela largura e
-     não pelo scale, que empurrava a página 10px para o lado. */
-  .orbita { width: 100%; max-width: min(520px, 42svh); margin-inline: auto; }
+  /* No celular a órbita passa da coluna e ocupa a tela toda: é o único jeito
+     de ela não virar um selo no meio do texto. O teto em svh existe para a
+     cena não espremer a frase em tela curta, e a seção respira menos para
+     sobrar altura para o vídeo. */
+  .manifesto__stage { padding-block: var(--ev-2); }
+  .orbita {
+    width: auto; max-width: none; max-height: 54svh;
+    margin-inline: calc(var(--gutter) * -1);
+  }
   .orbita__video { transform: none; }
 }
 

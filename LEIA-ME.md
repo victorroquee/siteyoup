@@ -94,29 +94,44 @@ abaixo de "O resultado". O logo oficial do Guinness é marca registrada e não
 veio no kit da YOUP, então a placa usa o desenho de medalha do próprio site:
 o que vale ali é o nome escrito e os dois recordes, não uma imitação do selo.
 
-**Vídeo da órbita.** `assets/media/marca/orbita.webm` com `orbita.mp4` de
-reserva, os dois em 24 fps e 11 segundos, em loop solto, sem depender de
-rolagem. O webm vem primeiro porque tem fundo transparente de verdade: é ele
-que faz a órbita parecer desenhada na página e não colada num quadro. O mp4 é
-para quem não lê alfa em webm (Safari), e o fundo dele é o mesmo `--vinho` da
-página, então na tela dá no mesmo.
+**Vídeo da órbita.** Três arquivos em `assets/media/marca/`, todos 24 fps e
+11 segundos, em loop solto, sem depender de rolagem:
 
-Três cuidados na hora de trocar o arquivo. O mp4 precisa do fundo exatamente
-no `--vinho` (senão aparece um retângulo no meio da seção) e precisa ser
-gravado em faixa de cor limitada (`-color_range tv`, com os flags bt709), pois
-em faixa cheia o Chrome escurece tudo e o retângulo volta. O comando que gerou
-o atual levanta o preto do arquivo até o vinho da página com
-`blend=all_mode=lighten` em RGB, nunca em YUV, que torce as cores. O webm sai
-com `libvpx-vp9 -pix_fmt yuva420p -auto-alt-ref 0`, que é o que preserva o
-alfa.
+| Arquivo | Para quem | Tamanho |
+|---|---|---|
+| `orbita.webm` | padrão, 1480 px, fundo transparente | 1,9 MB |
+| `orbita-cel.webm` | tela até 860 px, 740 px de largura | 0,7 MB |
+| `orbita.mp4` | reserva para quem não lê alfa em webm (Safari) | 0,8 MB |
+
+O webm vem primeiro porque tem fundo transparente de verdade: é ele que faz a
+órbita parecer desenhada na página e não colada num quadro. O `orbita()` no
+`main.js` troca pelo arquivo de celular quando a tela é pequena, onde a cena
+tem menos da metade da largura e o download pesa mais.
+
+O tamanho na tela é 739 px no desktop e a largura da tela inteira no celular,
+por isso os arquivos têm o dobro disso: em tela retina o vídeo na medida exata
+fica mole.
+
+**Como gerar de novo.** A fonte é o `motion-studio` em `~/Downloads`, e o
+tamanho sai do próprio render, não de ampliação depois:
+
+```
+cd ~/Downloads/motion-studio
+node render.mjs --fps 24 --dur 11 --sub 4 --w 1480 --h 1336 --alpha \
+  --out out/youp-orbita-alta-alpha.webm
+```
+
+Desse arquivo saem os três: o `orbita.webm` é ele reencodado em `crf 33`, o
+`orbita-cel.webm` é a mesma coisa em 740 px, e o `orbita.mp4` é ele achatado
+sobre o `--vinho` da página com `overlay`. O mp4 precisa do fundo exatamente
+no `--vinho` (senão aparece um retângulo no meio da seção) e precisa de faixa
+de cor limitada (`-color_range tv`, flags bt709), pois em faixa cheia o Chrome
+escurece tudo e o retângulo volta. O webm sai com
+`libvpx-vp9 -pix_fmt yuva420p -auto-alt-ref 0`, que é o que preserva o alfa.
 
 Com o vídeo tocando, o logotipo de reserva que fica atrás sai de cena
 (`.orbita.is-vivo`): o webm é transparente e deixaria o logo aparecer por trás
 das marcas. Quem não conseguir tocar vídeo continua vendo o logotipo.
-
-O arquivo hoje tem 430 pixels de largura e aparece com 739 na tela, ou seja,
-está ampliado. O `youp-orbita-2x-alpha.webm` do motion-studio resolveria, mas
-chegou truncado. Vale reexportar.
 
 **Faixa em duotone.** As seis fotos de bastidores vêm de eventos diferentes,
 cada uma com uma luz. O preto e branco apaga a cor de origem e o roxo entra

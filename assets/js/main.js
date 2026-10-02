@@ -106,6 +106,16 @@
     if (!cena) return;
     var filme = $(".orbita__video", cena);
     if (!filme) return;
+
+    // Em tela pequena o arquivo grande não serve para nada: a cena tem menos
+    // da metade da largura e o celular é quem mais paga pelo download.
+    if (window.innerWidth <= 860) {
+      var fonte = $('source[type="video/webm"]', filme);
+      if (fonte && fonte.src.indexOf("orbita.webm") > -1) {
+        fonte.src = fonte.src.replace("orbita.webm", "orbita-cel.webm");
+        filme.load();
+      }
+    }
     function vivo() { cena.classList.add("is-vivo"); }
     filme.addEventListener("loadeddata", vivo);
     filme.addEventListener("playing", vivo);
