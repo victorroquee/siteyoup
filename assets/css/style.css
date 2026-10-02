@@ -442,7 +442,7 @@ p { margin: 0 0 1em; }
 .mosaic figure:last-child:nth-child(6n+4) { grid-column: span 12; aspect-ratio: 21/9; }
 @media (max-width: 700px) { .mosaic figure { grid-column: span 12 !important; aspect-ratio: 4/3 !important; } }
 
-.video-block { position: relative; aspect-ratio: 16/9; background: #000; border-radius: 3px; overflow: hidden; }
+.video-block { position: relative; aspect-ratio: 16/9; background: #0e0616; border-radius: 3px; overflow: hidden; }
 .video-block video, .video-block iframe { width: 100%; height: 100%; border: 0; object-fit: cover; }
 
 .pager { display: grid; grid-template-columns: 1fr 1fr; }
@@ -747,3 +747,44 @@ p { margin: 0 0 1em; }
   font-family: var(--font-display); font-weight: var(--peso-cabecalho);
   font-size: .78rem; text-transform: uppercase; color: rgba(255, 255, 255, .45);
 }
+
+/* --- Aviso de cookies ---------------------------------------------------
+   Não é enfeite: enquanto a pessoa não decide, o vídeo do YouTube não
+   carrega. Por isso o aviso fica no rodapé da tela, sem cobrir o conteúdo.
+   ----------------------------------------------------------------------- */
+.cookies {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 150;
+  background: rgba(14, 6, 20, .94);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid var(--linha);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  transform: translateY(100%);
+  transition: transform .6s var(--ease-entrada);
+}
+.cookies.is-in { transform: none; }
+.cookies__caixa { display: flex; align-items: center; justify-content: space-between; gap: 1.25rem 2.5rem; flex-wrap: wrap; padding-block: 1.35rem; }
+.cookies__texto { margin: 0; max-width: 62ch; font-size: .95rem; line-height: 1.5; color: rgba(255, 255, 255, .78); }
+.cookies__texto a { color: var(--branco); text-decoration: underline; text-underline-offset: .25em; }
+.cookies__acoes { display: flex; gap: .75rem; flex-wrap: wrap; }
+.cookies__acoes .btn { padding: .85rem 1.4rem; font-size: .82rem; }
+@media (max-width: 700px) {
+  .cookies__caixa { align-items: stretch; }
+  .cookies__acoes .btn { flex: 1 1 auto; justify-content: center; }
+}
+
+/* Vídeo do YouTube à espera de autorização */
+.yt-espera { position: absolute; inset: 0; display: grid; place-items: center; overflow: hidden; background: #0e0616; }
+.yt-espera img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .32; }
+.yt-espera__aviso { position: relative; z-index: 2; display: grid; justify-items: center; gap: 1rem; padding: 2rem; text-align: center; }
+.yt-espera__aviso p { margin: 0; max-width: 38ch; font-size: .95rem; color: rgba(255, 255, 255, .82); }
+.yt-espera__link { font-size: .85rem; color: rgba(255, 255, 255, .6); text-decoration: underline; text-underline-offset: .25em; }
+.yt-espera__link:hover { color: var(--branco); }
+
+/* --- Página de texto legal --------------------------------------------- */
+.texto-legal { padding-top: calc(var(--header-h) + clamp(4rem, 10vw, 8rem)); }
+.texto-legal__corpo { max-width: 68ch; margin-top: clamp(2.5rem, 6vw, 4rem); }
+.texto-legal__corpo h2 { font-size: clamp(1.15rem, 1.6vw, 1.45rem); margin: clamp(2.5rem, 5vw, 3.5rem) 0 .9rem; }
+.texto-legal__corpo p { color: rgba(255, 255, 255, .82); line-height: 1.7; }
+.texto-legal__corpo ul { margin: 0 0 1em; padding-left: 1.2rem; color: rgba(255, 255, 255, .82); line-height: 1.7; }
+.texto-legal__corpo li { margin-bottom: .6rem; }
+.texto-legal__corpo a { color: var(--branco); text-decoration: underline; text-underline-offset: .25em; }

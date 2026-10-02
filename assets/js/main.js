@@ -56,6 +56,54 @@
     setTimeout(pronto, 2600);
   }
 
+  /* --- Cookies -----------------------------------------------------------
+     O site em si só guarda duas coisas no aparelho (a abertura já vista e
+     esta escolha). O que de fato pede autorização é o vídeo do YouTube, que
+     só carrega depois do sim. Por isso o aviso tem consequência real. */
+  function cookies() {
+    function lembra(v) { try { localStorage.setItem("youp-cookies", v); } catch (e) {} }
+    function lido() { try { return localStorage.getItem("youp-cookies"); } catch (e) { return null; } }
+
+    // Libera um vídeo específico ao clique, sem mudar a escolha guardada.
+    document.addEventListener("click", function (e) {
+      var botao = e.target.closest && e.target.closest(".yt-espera .btn");
+      if (!botao) return;
+      var caixa = botao.closest(".yt-espera");
+      caixa.outerHTML = iframeYoutube(caixa.getAttribute("data-yt"), caixa.getAttribute("data-titulo"));
+    });
+
+    var refazer = document.getElementById("refazer-cookies");
+    if (refazer) refazer.addEventListener("click", function () { lembra(""); mostra(); });
+
+    function mostra() {
+      if (document.querySelector(".cookies")) return;
+      var el = document.createElement("div");
+      el.className = "cookies";
+      el.setAttribute("role", "dialog");
+      el.setAttribute("aria-label", "Aviso de cookies");
+      el.innerHTML =
+        '<div class="wrap cookies__caixa">' +
+          '<p class="cookies__texto">Este site guarda no seu aparelho só o essencial para funcionar. Os vídeos de case ficam no YouTube e, para tocar, ele guarda informações suas. ' +
+          '<a href="privacidade.html">Ler a política</a>.</p>' +
+          '<div class="cookies__acoes">' +
+            '<button class="btn" type="button" data-escolha="essencial">Só o essencial</button>' +
+            '<button class="btn btn--solid" type="button" data-escolha="tudo">Aceitar os vídeos</button>' +
+          "</div>" +
+        "</div>";
+      document.body.appendChild(el);
+      requestAnimationFrame(function () { el.classList.add("is-in"); });
+      $$("button", el).forEach(function (b) {
+        b.addEventListener("click", function () {
+          lembra(b.getAttribute("data-escolha"));
+          el.classList.remove("is-in");
+          setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 500);
+        });
+      });
+    }
+
+    if (!lido()) setTimeout(mostra, 1400);
+  }
+
   /* --- Header e menu --------------------------------------------------- */
   function header() {
     var cur = page === "case" ? "cases" : page;
@@ -419,10 +467,26 @@
      ID de 11 caracteres do YouTube. O código reconhece qual é dos dois. */
   function ehYoutube(v) { return /^[A-Za-z0-9_-]{11}$/.test(v); }
 
+  function consentiuVideo() {
+    try { return localStorage.getItem("youp-cookies") === "tudo"; } catch (e) { return false; }
+  }
+
+  function iframeYoutube(v, titulo) {
+    return '<iframe src="https://www.youtube-nocookie.com/embed/' + v + '?rel=0&autoplay=1" title="' + esc(titulo || "Vídeo") +
+      '" loading="lazy" allow="autoplay; accelerometer; encrypted-media; picture-in-picture" allowfullscreen></iframe>';
+  }
+
   function playerDe(v, cartaz, titulo) {
     if (ehYoutube(v)) {
-      return '<iframe src="https://www.youtube-nocookie.com/embed/' + v + '?rel=0" title="' + esc(titulo || "Vídeo") +
-        '" loading="lazy" allow="accelerometer; encrypted-media; picture-in-picture" allowfullscreen></iframe>';
+      if (consentiuVideo()) return iframeYoutube(v, titulo);
+      // Sem autorização o vídeo não carrega: fica a capa e um botão.
+      return '<div class="yt-espera" data-yt="' + v + '" data-titulo="' + esc(titulo || "Vídeo") + '">' +
+        (cartaz ? '<img src="' + cartaz + '" alt="" loading="lazy">' : "") +
+        '<div class="yt-espera__aviso">' +
+          "<p>O vídeo está no YouTube, que guarda informações no seu navegador para tocar.</p>" +
+          '<button class="btn" type="button">Carregar o vídeo ' + ARROW + "</button>" +
+          '<a class="yt-espera__link" href="privacidade.html">Como tratamos isso</a>' +
+        "</div></div>";
     }
     return '<video controls playsinline preload="none"' + (cartaz ? ' poster="' + cartaz + '"' : "") +
       '><source src="' + v + '" type="video/mp4"></video>';
@@ -867,6 +931,7 @@
   if (pages[page]) pages[page]();
   pendencias();
   footer();
+  cookies();
   reveal();
   countUp();
   parallax();
