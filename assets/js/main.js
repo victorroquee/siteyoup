@@ -734,7 +734,8 @@
             (c.resultado ? bloco("O resultado", [c.resultado]) : "") + "</div>" : "") +
         "</div></section>" +
         (c.citacao ? '<section class="section--tight"><div class="wrap"><figure class="case-quote" data-reveal><blockquote>“' + esc(c.citacao.texto) + '”</blockquote><figcaption>' + esc(c.citacao.autor) + "</figcaption></figure></div></section>" : "") +
-        (c.video ? '<section class="section--tight"><div class="wrap"><div class="video-block" data-reveal>' + playerDe(c.video, fotos[0] || "", c.nome) + "</div></div></section>" : "") +
+        (c.video ? '<section class="section--tight"><div class="wrap"><div class="video-block" data-reveal>' + playerDe(c.video, fotos[0] || "", c.nome) + "</div>" +
+          (c.videoCredito ? '<p class="video-credito">Vídeo: ' + esc(c.videoCredito) + "</p>" : "") + "</div></section>" : "") +
         (fotos.length > 1 ? '<section class="section--tight" style="padding-top:0"><div class="wrap"><div class="mosaic">' +
           fotos.slice(1).map(function (f, k) { return '<figure data-reveal data-idx="' + (k + 1) + '"><img src="' + f + '" alt="' + esc(c.nome) + ", foto " + (k + 2) + '" loading="lazy"></figure>'; }).join("") +
         "</div></div></section>" : "") +

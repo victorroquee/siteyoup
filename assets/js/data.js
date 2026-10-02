@@ -2,7 +2,10 @@
  * Conteúdo do site YOUP.
  * Para adicionar um case ou um ano na linha do tempo, edite este arquivo.
  * Fotos de cada case ficam em assets/media/<slug>/ (01.jpg, 02.jpg, ...).
- * Para usar vídeo, coloque o arquivo em assets/media/<slug>/video.mp4 e preencha "video".
+ * Para usar vídeo, preencha "video" de uma destas duas formas:
+ *   video: "assets/media/<slug>/video.mp4"  (arquivo no próprio site)
+ *   video: "JqflfjrcKjo"                    (ID de 11 caracteres do YouTube)
+ * videoCredito é o canal, mostrado embaixo do player.
  * Textos marcados com [A CONFIRMAR] precisam de revisão da YOUP.
  */
 window.YOUP = {
@@ -172,7 +175,8 @@ window.YOUP = {
       meta: [["Cliente", "Red Bull"], ["Atleta", "Pedro Caldas"], ["Local", "Curitiba (PR)"], ["Ano", "2026"]],
       texto: "[A CONFIRMAR: texto completo do case]",
       fotos: 3,
-      video: ""
+      video: "DZcZl-T7vDY",
+      videoCredito: "Red Bull"
     },
     {
       slug: "building-drop-2025",
@@ -192,7 +196,8 @@ window.YOUP = {
       resultado: "Sandro Dias entrou para a história ao quebrar dois Guinness World Records™ simultaneamente: maior drop-in em quarter pipe temporário (70 metros de plataforma) e maior velocidade em quarter pipe temporário (103,8 km/h). A descida durou 8 segundos e submeteu o atleta a um pico de 3,9 G, equivalente a quase quatro vezes seu próprio peso. O projeto repercutiu na imprensa internacional, foi celebrado por nomes como Tony Hawk e Ryan Sheckler, e consolidou um marco que, segundo o próprio Hawk, “saltou cinco vezes além do que todos os outros já fizeram”.",
       citacao: { texto: "Esse sonho estava sendo planejado havia 13 anos. Não importa o quão longe seus sonhos possam parecer, nunca desista deles.", autor: "Sandro Dias" },
       fotos: 3,
-      video: ""
+      video: "JqflfjrcKjo",
+      videoCredito: "Red Bull"
     },
     {
       slug: "ferias-de-wake-2022",
@@ -211,7 +216,8 @@ window.YOUP = {
       resultado: "Pedro Caldas executou, próximo à Muralha (árvore de cerca de 60 metros que é cartão-postal de Afuá), o primeiro Double Front Roll da história realizado no winch, fora de um cable park. Um marco para o wakeboard mundial, registrado em uma produção Red Bull que projetou Afuá e a cultura ribeirinha amazônica para audiências do Brasil e do exterior.",
       citacao: { texto: "Foi ótimo estar ali e levar meu esporte para aquelas pessoas. Fiquei orgulhoso da beleza do meu País, da minha terra.", autor: "Pedro Caldas" },
       fotos: 3,
-      video: ""
+      video: "vapq157W3AI",
+      videoCredito: "Abdala Brothers"
     },
     {
       slug: "sonhos-concretos-2020",
@@ -231,7 +237,8 @@ window.YOUP = {
       resultado: "Sonhos Concretos: O Skate Encontra Niemeyer, com direção de Hugo Haddad, estreou na Red Bull TV em 10 de junho de 2020 e teve ampla repercussão na imprensa de cultura, esporte e publicidade, sendo reconhecido como um dos cases mais criativos de branded content do ano. O projeto consolidou a parceria histórica entre a Red Bull e o universo do skate brasileiro, e prestou tributo ao legado de um dos maiores arquitetos da era moderna por uma via inédita: transformando seus monumentos em pistas de uma sessão de skate única na história.",
       citacao: { texto: "Esses lugares eram imagináveis para o skate só nos sonhos mais profundos. Viver isso tudo é mágico. Poder reinterpretar as obras de Niemeyer com o skate é memorável.", autor: "Pedro Barros" },
       fotos: 3,
-      video: ""
+      video: "xceuWCtrdGA",
+      videoCredito: "Red Bull Skateboarding"
     },
     {
       slug: "conquista-da-estaiada-2017",
@@ -251,7 +258,8 @@ window.YOUP = {
       resultado: "Felipe Camargo conquistou a Ponte Estaiada em uma única cordada de 138 metros e hasteou a bandeira no topo, abrindo oficialmente a 11ª Virada Esportiva de São Paulo. A ação rendeu ampla cobertura na imprensa esportiva e de comportamento, projetou a escalada brasileira para um público de massa e consolidou um marco simbólico: a fusão entre um esporte de natureza e um dos ícones arquitetônicos da maior metrópole do país.",
       citacao: { texto: "Geralmente não se escala grandes paredes em uma só cordada, nem existe corda longa o suficiente para isso. Tive que mandar fazer uma corda especial, de 200 metros. Como a Ponte Estaiada é um cartão-postal impressionante da cidade, isto se torna ainda mais espetacular.", autor: "Felipe Camargo" },
       fotos: 1,
-      video: ""
+      video: "SWg0URFCP9E",
+      videoCredito: "Mitsubishi Motors"
     },
     {
       slug: "skate-run-2015",
@@ -265,7 +273,8 @@ window.YOUP = {
       meta: [["Cliente", "YOUP (projeto proprietário)"], ["Local", "São Paulo (SP)"], ["Período", "2015-2024"], ["Última edição", "2024"]],
       texto: "Um evento único, uma incrível corrida de skate pelas principais ruas do Brasil. Competição “Freeride”, onde o objetivo é se divertir e, claro, tentar fazer o menor tempo possível do percurso de 8 km. Democrático, um evento para todas as idades, sexo e categorias!",
       fotos: 3,
-      video: ""
+      video: "B-tizns7zuA",
+      videoCredito: "Skate Run"
     },
     {
       slug: "vert-evolution-2013",
@@ -283,7 +292,8 @@ window.YOUP = {
       ],
       resultado: "O evento reuniu 11.000 espectadores presenciais na Praça da Luz e teve transmissão ao vivo para mais de 165 países, levando o skate vertical brasileiro para uma audiência verdadeiramente global. Realizado no feriado da Proclamação da República, o Red Bull Vert Evolution consolidou-se como um marco do esporte no país e estabeleceu um novo padrão de produção e formato para competições da modalidade.",
       fotos: 3,
-      video: ""
+      video: "atGM8jDEjIY",
+      videoCredito: "Red Bull"
     },
     {
       slug: "dia-d-2006",

@@ -733,3 +733,10 @@ p { margin: 0 0 1em; }
 
 /* Bloco escondido por não ter conteúdo real ainda: some de verdade. */
 [hidden] { display: none !important; }
+
+/* Crédito do canal embaixo do vídeo do case. */
+.video-credito {
+  margin: .9rem 0 0;
+  font-family: var(--font-display); font-weight: var(--peso-cabecalho);
+  font-size: .78rem; text-transform: uppercase; color: rgba(255, 255, 255, .45);
+}
