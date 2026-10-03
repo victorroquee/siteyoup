@@ -379,7 +379,7 @@ p { margin: 0 0 1em; }
   .selo__icone { width: 20px; height: 20px; margin-bottom: .55rem; }
   .selo__valor { font-size: 1.05rem; white-space: normal; }
   .selo__rotulo { font-size: .68rem; line-height: 1.25; }
-}}
+}
 
 /* Trilho de cases */
 .rail { display: grid; grid-auto-flow: column; grid-auto-columns: clamp(270px, 30vw, 460px); gap: 1.25rem; overflow-x: auto; scroll-snap-type: x mandatory; padding-inline: var(--gutter); padding-bottom: 1.5rem; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.3) transparent; }
@@ -843,7 +843,9 @@ p { margin: 0 0 1em; }
    zero: não existe diferença para aparecer. Os 6,5% de fade são exatamente a
    margem vazia que o arquivo tem em volta das marcas, então nada é cortado. */
 .orbita__video {
-  transform: scale(1.12);
+  /* O conjunto fica melhor um pouco mais para a direita: a coluna da esquerda
+     tem texto e a da direita, ar. */
+  transform: translateX(1.2%) scale(1.12);
   --fade: 6.5%;
   -webkit-mask-image:
     linear-gradient(to right, transparent 0, #000 var(--fade), #000 calc(100% - var(--fade)), transparent 100%),

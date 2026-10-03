@@ -127,6 +127,18 @@ meia tela.
 **Abertura.** A tela de entrada mostra só o logotipo. A faixa roxa que corria
 embaixo dele saiu a pedido.
 
+**Foto do hero no celular.** A foto do case é deitada e o hero do celular é
+uma coluna em pé: cortando uma na outra, o navegador esticava 1700 px de
+altura para os 2500 que uma tela de 3x pede, e a abertura chegava mole. Em
+tela até 760 px entra o corte em pé pronto, em `assets/media/hero-cel/`, feito
+do mesmo arquivo com `crop` + `scale=lanczos` + `unsharp` em 1240x2684. Se
+faltar o corte de algum case, o `onerror` traz a foto original de volta.
+
+Para refazer (quando mudar o case em destaque ou a ordem dos cases), o corte
+sai de `assets/media/<slug>/01.jpg` com o mesmo enquadramento que o
+`posHeroCel` do `data.js` define: a conta está no histórico do repositório, no
+commit que criou a pasta.
+
 **Hero no celular.** A descrição do case (o "2020 · Sonhos Concretos" e a
 linha abaixo dele) sai da tela, e a régua de slides encolhe de 28 para 16 px
 por traço. No celular o título já ocupa a cena inteira e esses dois elementos

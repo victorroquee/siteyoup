@@ -766,8 +766,19 @@
     // O case em destaque abre o slideshow; os demais seguem na ordem de data.js
     var dest = YOUP.destaque();
     var slides = [dest].concat(D.cases.filter(function (c) { return c !== dest; })).filter(function (c) { return c.fotos > 0; }).slice(0, 5);
+
+    /* A foto do case é deitada e o hero do celular é uma coluna em pé: cortar
+       uma na outra deixava o navegador esticar 1700 px de altura para os 2500
+       da tela, e a abertura chegava mole. Em tela pequena entra o corte em pé
+       já pronto, feito do mesmo arquivo e no tamanho que o aparelho pede. Se
+       o corte faltar para algum case, a foto original volta sozinha. */
+    var cel = window.innerWidth <= 760;
     media.innerHTML = slides.map(function (c, i) {
-      return '<div class="hero__slide' + (i === 0 ? " is-active" : "") + '"><img src="' + YOUP.capa(c) + '" alt="' + esc(c.nome) + '"' + (c.posHeroCel ? ' style="--pos-cel:' + c.posHeroCel + '"' : "") + (i ? ' loading="lazy"' : "") + "></div>";
+      var foto = YOUP.capa(c);
+      var fonte = cel ? "assets/media/hero-cel/" + c.slug + ".jpg" : foto;
+      return '<div class="hero__slide' + (i === 0 ? " is-active" : "") + '"><img src="' + fonte + '" alt="' + esc(c.nome) + '"' +
+        (cel ? ' data-original="' + foto + '" onerror="this.onerror=null;this.src=this.dataset.original"' : "") +
+        (c.posHeroCel && !cel ? ' style="--pos-cel:' + c.posHeroCel + '"' : "") + (i ? ' loading="lazy"' : "") + "></div>";
     }).join("");
     var cap = $(".hero__caption");
     var dots = $(".hero__dots");
