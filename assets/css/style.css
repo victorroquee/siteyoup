@@ -219,9 +219,6 @@ p { margin: 0 0 1em; }
 /* No celular, o case pode definir o enquadramento da foto de abertura (posHeroCel no data.js) */
 @media (max-width: 760px) {
   .hero__slide img { object-position: var(--pos-cel, 30% 50%); }
-  /* No celular o título já ocupa a cena: a descrição do case e a régua larga
-     de slides tomavam o meio da tela sem precisar. Fica só a régua, curta. */
-  .hero__caption { display: none; }
 }
 .hero__slide { opacity: 0; transition: opacity var(--t-cena) var(--ease); }
 .hero__slide.is-active { opacity: 1; }
@@ -235,13 +232,14 @@ p { margin: 0 0 1em; }
 .hero__content { position: absolute; inset: auto 0 0 0; z-index: 2; padding-bottom: var(--ev-3); }
 .hero__content .wrap { display: flex; justify-content: space-between; align-items: flex-end; gap: 2rem; flex-wrap: wrap; }
 .hero__title .eyebrow { display: block; margin-bottom: 1.25rem; }
-.hero__caption { max-width: 22rem; font-size: .9rem; color: rgba(255,255,255,.8); }
-.hero__caption strong { display: block; font-family: var(--font-display); text-transform: uppercase; font-size: .82rem; color: var(--branco); margin-bottom: .3rem; }
-.hero__dots { display: flex; gap: .5rem; margin-top: 1rem; }
+/* O canto é só a régua de slides. A descrição do case que ficava acima dela
+   (ano, nome, chamada e "Ver case") saiu a pedido: o hero fica a foto, a
+   frase da marca e a marcação de quantas fotos passam. */
+.hero__dots { display: flex; gap: .5rem; }
 .hero__dots button { width: 28px; height: 2px; background: rgba(255,255,255,.35); padding: 0; position: relative; overflow: hidden; }
 .hero__dots button.is-active::after { content: ""; position: absolute; inset: 0; background: var(--roxo-luz); animation: dot var(--t-slide) linear forwards; transform-origin: left; }
 @media (max-width: 760px) {
-  .hero__dots { gap: .35rem; margin-top: 0; }
+  .hero__dots { gap: .35rem; }
   .hero__dots button { width: 16px; }
 }
 @keyframes dot { from { transform: scaleX(0); } to { transform: scaleX(1); } }
@@ -331,54 +329,29 @@ p { margin: 0 0 1em; }
 .feature { position: relative; min-height: 88svh; display: flex; align-items: flex-end; overflow: hidden; }
 .feature__media { position: absolute; inset: 0; }
 .feature__media img { width: 100%; height: 100%; object-fit: cover; }
-/* Dois véus: um de cima para baixo e um da esquerda, porque o texto cai
-   sobre a fachada clara do prédio. Preto puro, como nas referências. */
+/* Um véu só, de cima para baixo, com o escuro onde o texto cai. Antes havia
+   um segundo véu vindo da esquerda, de quando o bloco era alinhado ali: com o
+   texto centrado ele escurecia metade da fachada de graça. */
 .feature::after {
   content: ""; position: absolute; inset: 0; pointer-events: none;
-  background:
-    linear-gradient(90deg, rgba(20,9,28,.88) 0%, rgba(20,9,28,.45) 42%, transparent 68%),
-    linear-gradient(180deg, rgba(20,9,28,.5) 0%, rgba(20,9,28,.12) 24%, rgba(20,9,28,.72) 70%, rgba(20,9,28,.96) 100%);
+  background: linear-gradient(180deg, rgba(20,9,28,.46) 0%, rgba(20,9,28,.1) 26%, rgba(20,9,28,.76) 66%, rgba(20,9,28,.97) 100%);
 }
-.feature__body { position: relative; z-index: 2; padding-block: var(--ev-4); }
-.feature__logo { width: clamp(110px, 12vw, 165px); height: auto; margin-bottom: var(--ev-2); }
-.feature__titulo { max-width: 14ch; }
-.feature__sub { margin: 1.1rem 0 0; max-width: 46ch; font-size: clamp(1.05rem, 1.3vw, 1.25rem); color: rgba(255, 255, 255, .82); }
+/* O bloco fica centrado, ancorado na base da foto. Com os selos fora sobrou
+   uma coluna só de texto curto, e alinhada à esquerda ela deixava a metade
+   direita da cena vazia. Os max-width continuam de pé, agora com margem auto,
+   senão a linha estica de ponta a ponta e para de se ler. */
+.feature__body { position: relative; z-index: 2; padding-block: var(--ev-4); text-align: center; }
+/* O logo é img, e img no site é display:block: text-align não o centraliza. */
+.feature__logo { width: clamp(110px, 12vw, 165px); height: auto; margin: 0 auto var(--ev-2); }
+.feature__titulo { max-width: 14ch; margin-inline: auto; }
+.feature__sub { margin: 1.1rem auto 0; max-width: 46ch; font-size: clamp(1.05rem, 1.3vw, 1.25rem); color: rgba(255, 255, 255, .82); }
+/* O respiro antes do botão vinha da margem dos selos, que saíram. */
+.feature__body .btn { margin-top: var(--ev-3); }
 /* Etiqueta discreta de case em destaque */
 .feature__etiqueta {
   margin: 0 0 var(--e-3);
   font-family: var(--font-display); font-weight: var(--peso-cabecalho);
   font-size: .78rem; text-transform: uppercase; color: rgba(255, 255, 255, .62);
-}
-
-/* Os três selos: ícone fino, número e rótulo curto. Sem caixa, sem cor cheia. */
-.feature__selos {
-  list-style: none; margin: var(--ev-3) 0; padding: 0;
-  display: flex; flex-wrap: wrap; gap: 0;
-  border-top: 1px solid var(--linha); border-bottom: 1px solid var(--linha);
-}
-.feature__selos li {
-  display: flex; align-items: center; gap: .85rem;
-  padding: 1.05rem var(--e-4) 1.05rem 0;
-}
-.feature__selos li + li { padding-left: var(--e-4); border-left: 1px solid var(--linha); }
-.selo__icone { width: 26px; height: 26px; flex: 0 0 26px; color: var(--roxo-luz); }
-.selo__texto { display: block; }
-.selo__valor {
-  display: block; font-family: var(--font-display); font-weight: var(--peso-titulo);
-  font-size: clamp(1.05rem, 1.3vw, 1.25rem); line-height: 1.1; white-space: nowrap;
-}
-.selo__rotulo { display: block; margin-top: .15rem; font-size: .84rem; line-height: 1.3; color: rgba(255, 255, 255, .62); }
-/* No celular os três selos viram três colunas, não uma lista: a leitura é de
-   relance, e empilhado isso tomava meia tela para dizer três números. */
-@media (max-width: 760px) {
-  .feature__selos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; }
-  .feature__selos li { display: block; padding: 1rem .75rem; }
-  .feature__selos li + li { padding-left: .75rem; }
-  .feature__selos li:first-child { padding-left: 0; }
-  .feature__selos li:last-child { padding-right: 0; }
-  .selo__icone { width: 20px; height: 20px; margin-bottom: .55rem; }
-  .selo__valor { font-size: 1.05rem; white-space: normal; }
-  .selo__rotulo { font-size: .68rem; line-height: 1.25; }
 }
 
 /* Trilho de cases */
@@ -673,6 +646,12 @@ p { margin: 0 0 1em; }
     background: var(--roxo); border-color: var(--roxo);
   }
   .servico { scroll-margin-top: calc(var(--header-h) + 4.2rem); }
+  /* Aba: a etapa escolhida é a única na tela. Os três blocos empilhados davam
+     uma rolagem longa em que a barra presa no topo só acendia sozinha, sem
+     nunca parecer uma escolha. A classe vem do JS, então sem ele os três
+     continuam à vista, um atrás do outro, como antes. */
+  .servicos--abas .servico { display: none; }
+  .servicos--abas .servico.is-aberto { display: grid; }
 }
 
 /* --- Contato -----------------------------------------------------------
@@ -833,8 +812,10 @@ p { margin: 0 0 1em; }
 /* A caixa tem a proporção do arquivo (1204x1120), cortado no conteúdo: sem
    sobra em volta, a cena ocupa tudo o que a coluna dá. */
 .orbita { position: relative; width: 100%; aspect-ratio: 1176 / 1094; }
-/* O vídeo passa um pouco da coluna: dentro dela ele ficava pequeno demais e
-   a cena virava um selo girando no canto.
+/* O vídeo cabe na coluna. Antes ele passava dela (scale 1.12) e a cena saía
+   maior do que precisava; em .95 ela fica contida, sem virar um selo girando
+   no canto, que foi o motivo do scale existir. No celular não muda nada: lá o
+   transform é none e a cena já ocupa a tela toda.
 
    A máscara é o que faz o quadro sumir. O fundo do arquivo é a cor da página,
    mas cada navegador converte vídeo de um jeito e sobra 1 ou 2 níveis de
@@ -845,7 +826,7 @@ p { margin: 0 0 1em; }
 .orbita__video {
   /* O conjunto fica melhor um pouco mais para a direita: a coluna da esquerda
      tem texto e a da direita, ar. */
-  transform: translateX(1.2%) scale(1.12);
+  transform: translateX(1.2%) scale(.95);
   --fade: 6.5%;
   -webkit-mask-image:
     linear-gradient(to right, transparent 0, #000 var(--fade), #000 calc(100% - var(--fade)), transparent 100%),

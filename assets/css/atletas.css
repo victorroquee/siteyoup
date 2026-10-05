@@ -39,9 +39,11 @@
 .at-hero__title {
   font-family: var(--font-display); font-weight: var(--peso-titulo); text-transform: uppercase;
   font-size: clamp(4.2rem, 22.5vw, 23rem);   /* ~90% da largura */
-  line-height: .85; margin: .15em 0 .2em -.04em;
+  /* Sem a etiqueta em cima e a frase embaixo, o título é o único filho do
+     bloco: as margens que separavam os três sairiam como um vão enorme na
+     base (.2em de um corpo de 23rem). O respiro vem do padding do bloco. */
+  line-height: .85; margin: 0 0 0 -.04em;
 }
-.at-hero .lead { max-width: none; }
 
 /* 2. INTRO --------------------------------------------------------------- */
 .at-intro .statement { max-width: 30ch; }

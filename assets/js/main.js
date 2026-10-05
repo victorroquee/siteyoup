@@ -456,8 +456,10 @@
   // Rótulo de ano do case: usa o período (ex.: "2015-2024") quando houver
   function anoDe(c) { return c.periodo || c.ano || ""; }
 
-  /* Ícones de selo: mesmo viewBox, mesmo traço de 1.5, sem preenchimento.
-     É o mesmo desenho das setas do site, para não parecer biblioteca de fora. */
+  /* Ícones: mesmo viewBox, mesmo traço de 1.5, sem preenchimento. É o mesmo
+     desenho das setas do site, para não parecer biblioteca de fora. Hoje só a
+     medalha está em uso, no selo de recorde; os outros ficam de reserva para
+     quando um case pedir outro símbolo. */
   var SELOS = {
     medalha: '<circle cx="12" cy="14.5" r="6"/><path d="M12 11.6l1 2 2.2.3-1.6 1.5.4 2.2-2-1-2 1 .4-2.2L8.8 14l2.2-.3z"/><path d="M8.5 9L6 2.5h12L15.5 9"/>',
     rampa: '<path d="M3 4v16h18"/><path d="M21 20c-9 0-14-5-14-13"/><path d="M4 8.5l3-4 3 4"/>',
@@ -467,10 +469,10 @@
     relogio: '<circle cx="12" cy="12" r="9"/><path d="M12 6.5V12l3.5 2"/>'
   };
 
-  /* Selo de recorde. Só aparece em case que declara `selo` no data.js, e o
-     desenho é o mesmo da medalha dos selos da home: o logo oficial do
-     Guinness é marca registrada e não está no kit que a YOUP mandou, então
-     aqui o que vale é o nome escrito e os recordes, não uma imitação. */
+  /* Selo de recorde. Só aparece em case que declara `selo` no data.js, e usa
+     a medalha do conjunto acima: o logo oficial do Guinness é marca
+     registrada e não está no kit que a YOUP mandou, então aqui o que vale é o
+     nome escrito e os recordes, não uma imitação do selo. */
   function seloDeRecorde(c) {
     if (!c.selo) return "";
     return '<aside class="recorde" data-reveal>' +
@@ -479,13 +481,6 @@
       '<ul class="recorde__marcas">' + c.selo.marcas.map(function (m) { return "<li>" + esc(m) + "</li>"; }).join("") + "</ul>" +
       (c.selo.nota ? '<p class="recorde__nota">' + esc(c.selo.nota) + "</p>" : "") +
       "</div></aside>";
-  }
-
-  function selo(s) {
-    var d = SELOS[s.icone] || SELOS.medalha;
-    return '<li><svg class="selo__icone" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">' + d + "</svg>" +
-      '<span class="selo__texto"><span class="selo__valor">' + esc(s.valor) + '</span>' +
-      '<span class="selo__rotulo">' + esc(s.rotulo) + "</span></span></li>";
   }
 
   // Prévia em vídeo do card: montada a partir das fotos do próprio case.
@@ -708,14 +703,50 @@
       return '<a href="#servico-' + i + '" data-i="' + i + '">' + s.verbo + "</a>";
     }).join("");
     var links = $$("a", indice), blocos = $$(".servico", el);
+    // No celular as três etapas viram abas: a escolhida é a única na tela.
+    // Empilhados, os três blocos davam uma rolagem longa em que a barra presa
+    // no topo só acendia sozinha, sem nunca parecer uma escolha. No desktop o
+    // índice continua sendo atalho de rolagem, com os três blocos à vista.
+    var abas = window.matchMedia("(max-width: 860px)");
 
-    function acende(k) { links.forEach(function (a, n) { a.classList.toggle("is-ativo", n === k); }); }
+    // `is-aberto` entra sempre, nos dois tamanhos: quem decide se ela esconde
+    // algo é o CSS do celular, e assim virar a tela não precisa recalcular nada.
+    function acende(k) {
+      links.forEach(function (a, n) {
+        a.classList.toggle("is-ativo", n === k);
+        if (n === k) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current");
+      });
+      blocos.forEach(function (b, n) { b.classList.toggle("is-aberto", n === k); });
+      // O bloco que estava fechado nunca entrou no reveal: sem caixa na tela,
+      // a conta de posição nunca o alcança e ele abriria em branco, com o
+      // opacity: 0 de pé. Abrindo por toque, ele já nasce visível.
+      if (abas.matches) {
+        blocos[k].classList.add("is-in");
+        $$("[data-reveal]", blocos[k]).forEach(function (e) { e.classList.add("is-in"); });
+      }
+    }
+
+    // A classe de aba vem do JS: sem ele os três blocos continuam visíveis.
+    function modo() { el.classList.toggle("servicos--abas", abas.matches); }
+    modo();
     acende(0);
-    // Tocar numa etapa acende na hora, sem esperar a rolagem chegar lá.
-    links.forEach(function (a, n) { a.addEventListener("click", function () { acende(n); }); });
+    if (abas.addEventListener) abas.addEventListener("change", modo);
 
+    // Tocar numa etapa acende na hora, sem esperar a rolagem chegar lá. No
+    // celular ela troca o bloco, e aí o salto de âncora não serve: a barra já
+    // está na tela e o conteúdo novo nasce logo abaixo dela.
+    links.forEach(function (a, n) {
+      a.addEventListener("click", function (ev) {
+        if (abas.matches) ev.preventDefault();
+        acende(n);
+      });
+    });
+
+    // A rolagem só manda no desktop: no celular há um bloco só na tela, e
+    // deixar o observador falar faria a aba se trocar sozinha.
     if (window.IntersectionObserver) {
       var io = new IntersectionObserver(function (entradas) {
+        if (abas.matches) return;
         entradas.forEach(function (e) {
           if (!e.isIntersecting) return;
           acende(blocos.indexOf(e.target));
@@ -780,7 +811,6 @@
         (cel ? ' data-original="' + foto + '" onerror="this.onerror=null;this.src=this.dataset.original"' : "") +
         (c.posHeroCel && !cel ? ' style="--pos-cel:' + c.posHeroCel + '"' : "") + (i ? ' loading="lazy"' : "") + "></div>";
     }).join("");
-    var cap = $(".hero__caption");
     var dots = $(".hero__dots");
     dots.innerHTML = slides.map(function (c, i) { return '<button aria-label="' + esc(c.nome) + '"' + (i === 0 ? ' class="is-active"' : "") + "></button>"; }).join("");
     var idx = 0, timer;
@@ -789,8 +819,6 @@
       s[idx].classList.remove("is-active"); d[idx].classList.remove("is-active");
       idx = (n + s.length) % s.length;
       s[idx].classList.add("is-active"); void d[idx].offsetWidth; d[idx].classList.add("is-active");
-      var c = slides[idx];
-      cap.innerHTML = '<strong>' + anoDe(c) + " · " + esc(c.nome) + "</strong>" + esc(c.chamada) + ' <a class="link-arrow" href="' + caseUrl(c) + '" style="margin-top:.6rem">Ver case ' + ARROW + "</a>";
       clearTimeout(timer);
       if (!reduce) timer = setTimeout(function () { go(idx + 1); }, TEMPO_SLIDE);
     }
@@ -938,10 +966,7 @@
           '<img class="feature__logo" src="' + dest.logo + '" alt="Red Bull Building Drop" loading="lazy" data-reveal>' +
           '<h2 class="display-l feature__titulo" data-reveal data-reveal-delay="1">' + esc(dest.nome) + "</h2>" +
           '<p class="feature__sub" data-reveal data-reveal-delay="1">' + esc(dest.chamada) + "</p>" +
-          '<ul class="feature__selos" data-reveal data-reveal-delay="2">' +
-            (dest.selos || []).map(selo).join("") +
-          "</ul>" +
-          '<a class="btn" href="' + caseUrl(dest) + '" data-reveal data-reveal-delay="3">Ver o case ' + ARROW + "</a>" +
+          '<a class="btn" href="' + caseUrl(dest) + '" data-reveal data-reveal-delay="2">Ver o case ' + ARROW + "</a>" +
         "</div>";
       // A trilha abre pelo case em destaque, como a grade de Nossos Cases.
       var primeiro = YOUP.destaque();

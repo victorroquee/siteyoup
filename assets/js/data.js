@@ -200,13 +200,6 @@ window.YOUP = {
       logo: "assets/media/logos/building-drop.png",
       chamada: "Sandro Dias quebra 2 recordes mundiais.",
       destaques: ["2 Guinness World Records™", "Drop-in de 70 m em quarter pipe temporário", "103,8 km/h de velocidade máxima"],
-      // Os três selos do case em destaque na home: ícone, número e rótulo curto.
-      // Ícones disponíveis: medalha, rampa, velocimetro, publico, tv, relogio.
-      selos: [
-        { icone: "medalha", valor: "2", rotulo: "Guinness World Records™" },
-        { icone: "rampa", valor: "70 m", rotulo: "Drop em quarter pipe" },
-        { icone: "velocimetro", valor: "103,8 km/h", rotulo: "Velocidade máxima" }
-      ],
       meta: [["Cliente", "Red Bull"], ["Atleta", "Sandro “Mineirinho” Dias"], ["Local", "Porto Alegre (RS)"], ["Ano", "2025"]],
       desafio: "Transformar a fachada curva do Centro Administrativo Fernando Ferrari (CAFF), prédio modernista de 22 andares e quase 89 metros de altura em Porto Alegre, na maior rampa de skate do mundo. O CAFF era, há décadas, uma lenda urbana entre os skatistas brasileiros: um prédio com formato de quarter pipe natural que ninguém tinha coragem de descer. O objetivo: tirar essa lenda do imaginário e colocá-la nos Guinness World Records, com o hexacampeão mundial de vert Sandro Dias aos 50 anos.",
       entrega: [

@@ -49,10 +49,12 @@ as regras bloqueiam os dois. E o `Accept-Ranges` é o que deixa adiantar vídeo.
 
 **Cache.** O CDN da Hostinger respeita o `Expires` do `.htaccess`, e com dois
 dias de validade o site ficava remendado depois de publicar: metade dos
-navegadores pegava a folha nova e metade a velha. Folha e script agora valem
-10 minutos e o HTML não é guardado. Os links deles levam `?v=AAAAMMDD`: ao
-mudar CSS ou JS de forma que não possa esperar, basta subir esse número em
-todas as páginas que o cache antigo deixa de ter o que entregar.
+navegadores pegava a folha nova e metade a velha. Folha, script e HTML agora
+valem zero segundo: o site ainda muda toda hora, e esquecer de subir o `?v=`
+deixava metade dos navegadores com a versão velha. Os links de CSS e JS levam
+`?v=AAAAMMDD` mesmo assim, como segunda tranca: ao mexer neles, subir esse
+número em todas as páginas faz o cache antigo deixar de ter o que entregar.
+Hoje está em `?v=20261004`.
 
 A senha do SSH tem `@!` no fim, o que quebra o `sshpass -e`: usar arquivo com
 `-f`, e os `-o` na linha, senão o cliente tenta chave pública primeiro e leva
@@ -114,18 +116,46 @@ sem recarregar, porque recarregar voltaria o filme para o começo. Com
 sim com controle e tela cheia, deixou de tocar sozinho para os dois não
 rodarem juntos.
 
-**Ver, Ouvir, Sentir no celular.** O índice dos serviços deixa de ser três
-links soltos e vira uma barra de etapas presa no topo, com a parte que está
-sendo lida acesa numa pílula roxa. Antes ele rolava para fora da tela antes de
-alguém ver que havia uma seleção. Tocar numa etapa acende na hora, sem esperar
-a rolagem chegar lá.
+**Case em destaque, centrado.** Os três selos (2 Guinness, 70 m, 103,8 km/h)
+saíram a pedido. Sem eles sobrou uma coluna só de texto curto, e alinhada à
+esquerda ela deixava a metade direita da foto vazia, com o conjunto parecendo
+torto. O bloco passou a ser centrado, ancorado na base. Junto saiu o véu que
+vinha da esquerda no `.feature::after`: ele existia para o texto se ler sobre
+a fachada clara do prédio, e com o texto no meio só escurecia metade da foto
+de graça. Ficou o véu de cima para baixo, com o escuro onde o texto cai. Os
+números não se perderam: continuam nos `destaques` e no `selo` do case.
 
-**Selos do case em destaque no celular.** Os três viram três colunas, não uma
-lista empilhada: são três números para ler de relance, e empilhados tomavam
-meia tela.
+O logo precisa de `margin: 0 auto` explícito. No site `img` é `display: block`,
+então `text-align: center` sozinho não o move.
+
+**Ver, Ouvir, Sentir no celular.** O índice dos serviços deixa de ser três
+links soltos e vira uma barra de etapas presa no topo, com a parte selecionada
+acesa numa pílula roxa. Antes ele rolava para fora da tela antes de alguém ver
+que havia uma seleção.
+
+E a etapa é mesmo uma escolha: tocar nela deixa só o bloco dela na tela, VER
+mostra Content & Digital e esconde os outros dois. Os três empilhados davam
+uma rolagem longa em que a barra só acendia sozinha, sem nunca parecer que
+alguém podia mandar nela. No desktop nada muda: os três continuam à vista e o
+índice segue sendo atalho de rolagem.
+
+A classe `servicos--abas` entra pelo JS, então sem ele os três continuam
+visíveis. Um detalhe que custou caro: o bloco fechado não tem caixa na tela, e
+o `reveal()` mede posição, então ele nunca ganhava o `is-in` e abria **em
+branco**, com o `opacity: 0` de pé. Por isso `acende()` marca o bloco como
+revelado na hora de abrir. Vale para qualquer coisa que nasça escondida.
 
 **Abertura.** A tela de entrada mostra só o logotipo. A faixa roxa que corria
 embaixo dele saiu a pedido.
+
+**Hero de Atletas.** A etiqueta "YOUP × Red Bull · MotoGP 2026" e a frase "A
+gente vive o esporte no grau máximo." saíram a pedido, e o título ficou filho
+único do bloco. As margens que separavam os três (`.15em` em cima, `.2em`
+embaixo) viraram um vão enorme na base, porque `.2em` de um corpo que chega a
+23rem é quase 5rem de nada. Agora o título não tem margem vertical e o respiro
+vem do `padding-bottom` do `.at-hero__content`. O `<title>` e as metatags de
+compartilhamento continuam com os dois textos: eles não aparecem na tela e é
+o que o buscador e o WhatsApp leem.
 
 **Foto do hero no celular.** A foto do case é deitada e o hero do celular é
 uma coluna em pé: cortando uma na outra, o navegador esticava 1700 px de
@@ -139,10 +169,11 @@ sai de `assets/media/<slug>/01.jpg` com o mesmo enquadramento que o
 `posHeroCel` do `data.js` define: a conta está no histórico do repositório, no
 commit que criou a pasta.
 
-**Hero no celular.** A descrição do case (o "2020 · Sonhos Concretos" e a
-linha abaixo dele) sai da tela, e a régua de slides encolhe de 28 para 16 px
-por traço. No celular o título já ocupa a cena inteira e esses dois elementos
-cobriam o meio da foto. No desktop continuam os dois.
+**Hero sem descrição do case.** O canto do hero mostrava ano, nome, chamada e
+um "Ver case" da foto que estava passando. Saiu inteiro, a pedido, nos dois
+tamanhos. Ficou a foto, a frase da marca e a régua de slides, que no celular
+encolhe de 28 para 16 px por traço. O caminho para os cases continua no menu
+e na trilha logo abaixo.
 
 **Hover do card.** Passar o mouse no card toca o filme do case, não mais só
 a prévia. Os dois trabalham juntos: a prévia montada com as fotos
@@ -164,19 +195,21 @@ abaixo de "O resultado". O logo oficial do Guinness é marca registrada e não
 veio no kit da YOUP, então a placa usa o desenho de medalha do próprio site:
 o que vale ali é o nome escrito e os dois recordes, não uma imitação do selo.
 
-**Vídeo da órbita.** Três arquivos em `assets/media/marca/`, todos 24 fps e
+**Vídeo da órbita.** Dois arquivos em `assets/media/marca/`, os dois 24 fps e
 11 segundos, em loop solto, sem depender de rolagem:
 
 | Arquivo | Para quem | Tamanho |
 |---|---|---|
-| `orbita.webm` | padrão, 1204 px, fundo transparente | 1,8 MB |
-| `orbita-cel.webm` | tela até 860 px, 740 px de largura | 0,7 MB |
-| `orbita.mp4` | reserva para quem não lê alfa em webm (Safari) | 1,1 MB |
+| `orbita.mp4` | padrão, 1204 px | 1,8 MB |
+| `orbita-cel.mp4` | tela até 860 px, 740 px de largura | 0,7 MB |
 
-O webm vem primeiro porque tem fundo transparente de verdade: é ele que faz a
-órbita parecer desenhada na página e não colada num quadro. O `orbita()` no
-`main.js` troca pelo arquivo de celular quando a tela é pequena, onde a cena
-tem menos da metade da largura e o download pesa mais.
+Já foi webm com fundo transparente, que é o que faria a órbita parecer
+desenhada na página em vez de colada num quadro. Não deu: o Safari pintava o
+alfa de preto e aparecia um retângulo no meio da seção. Os dois voltaram para
+mp4 achatado sobre o `--vinho` da página, e quem resolve o encontro com o
+fundo é o degradê da borda, explicado logo abaixo. O `orbita()` no `main.js`
+troca pelo arquivo de celular quando a tela é pequena, onde a cena tem menos
+da metade da largura e o download pesa mais.
 
 Os três saem cortados no conteúdo (`crop=1204:1120:188:94` sobre o render de
 1480). O arquivo cru tinha 12,8% de sobra à esquerda contra 6,1% à direita, o
@@ -184,9 +217,14 @@ que deixava a cena maior do que precisava e visivelmente torta para a
 esquerda. Cortado, ele fica centrado e a mesma caixa mostra a órbita 23%
 maior.
 
-O tamanho na tela é 595 px no desktop (coluna `.88fr` da grade) e 94% da
-coluna no celular, o que dá 329 px numa tela de 390. Os arquivos têm cerca do dobro disso porque em
-tela retina o vídeo na medida exata fica mole.
+O tamanho na tela sai da coluna `1.12fr` da grade do manifesto, com um
+`scale(.95)` por cima: numa tela de 1440 a caixa tem 671 px e a cena desenha
+638 px. O scale já foi 1.12, e aí a órbita passava da coluna e ficava maior do
+que a cena pedia; em .95 ela fica contida. Baixar muito mais é que é o risco:
+o scale nasceu justamente para a órbita não virar um selo girando no canto. No
+celular o transform é `none` e a cena ocupa 94% da coluna, o que dá 329 px numa
+tela de 390. Os arquivos têm cerca do dobro disso porque em tela retina o
+vídeo na medida exata fica mole.
 
 **O retângulo mais escuro.** O fundo do arquivo é a cor exata da página, mas
 cada navegador converte vídeo de um jeito: o Chrome pinta `#14091b` e o Safari
@@ -206,17 +244,14 @@ node render.mjs --fps 24 --dur 11 --sub 4 --w 1480 --h 1336 --alpha \
   --out out/youp-orbita-alta-alpha.webm
 ```
 
-Desse arquivo saem os três: o `orbita.webm` é ele reencodado em `crf 33`, o
-`orbita-cel.webm` é a mesma coisa em 740 px, e o `orbita.mp4` é ele achatado
-sobre o `--vinho` da página com `overlay`. O mp4 precisa do fundo exatamente
-no `--vinho` (senão aparece um retângulo no meio da seção) e precisa de faixa
-de cor limitada (`-color_range tv`, flags bt709), pois em faixa cheia o Chrome
-escurece tudo e o retângulo volta. O webm sai com
-`libvpx-vp9 -pix_fmt yuva420p -auto-alt-ref 0`, que é o que preserva o alfa.
+Desse arquivo saem os dois: o `orbita.mp4` é ele achatado sobre o `--vinho`
+da página com `overlay`, e o `orbita-cel.mp4` é a mesma coisa em 740 px. O
+fundo precisa ser exatamente o `--vinho` (senão aparece um retângulo no meio
+da seção) e a faixa de cor precisa ser limitada (`-color_range tv`, flags
+bt709), pois em faixa cheia o Chrome escurece tudo e o retângulo volta.
 
 Com o vídeo tocando, o logotipo de reserva que fica atrás sai de cena
-(`.orbita.is-vivo`): o webm é transparente e deixaria o logo aparecer por trás
-das marcas. Quem não conseguir tocar vídeo continua vendo o logotipo.
+(`.orbita.is-vivo`). Quem não conseguir tocar vídeo continua vendo o logotipo.
 
 **Faixa em duotone.** As seis fotos de bastidores vêm de eventos diferentes,
 cada uma com uma luz. O preto e branco apaga a cor de origem e o roxo entra
